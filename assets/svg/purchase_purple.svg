@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 22 24">
+  <g id="Group_2906" data-name="Group 2906" transform="translate(-3002.123 -915)">
+    <g id="Rectangle_2241" data-name="Rectangle 2241" transform="translate(3002.123 915)" fill="none" stroke="#7d5ba6" stroke-width="1">
+      <rect width="22" height="24" rx="4" stroke="none"/>
+      <rect x="0.5" y="0.5" width="21" height="23" rx="3.5" fill="none"/>
+    </g>
+    <line id="Line_22" data-name="Line 22" x2="9.778" transform="translate(3011.642 919.526)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <line id="Line_25" data-name="Line 25" x2="9.778" transform="translate(3011.642 925.986)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <line id="Line_27" data-name="Line 27" x2="9.778" transform="translate(3011.642 932.447)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <line id="Line_23" data-name="Line 23" x2="5.937" transform="translate(3011.642 921.621)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <line id="Line_24" data-name="Line 24" x2="5.937" transform="translate(3011.642 928.082)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <line id="Line_26" data-name="Line 26" x2="5.937" transform="translate(3011.642 934.542)" fill="none" stroke="#7d5ba6" stroke-width="1"/>
+    <g id="check" transform="translate(3004.929 919.014)">
+      <g id="Group_2645" data-name="Group 2645" transform="translate(0 0)">
+        <g id="Layer_2" data-name="Layer 2" transform="translate(0 0)">
+          <g id="Layer_1" data-name="Layer 1">
+            <path id="check-2" data-name="check" d="M1.786,3.159a.229.229,0,0,1-.162-.067L.136,1.6A.229.229,0,0,1,.46,1.28L1.786,2.606,4.256.136A.229.229,0,0,1,4.58.46L1.947,3.092a.229.229,0,0,1-.162.067Z" transform="translate(-0.075 -0.075)" fill="#7d5ba6"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="check-3" data-name="check" transform="translate(3004.929 925.649)">
+      <g id="Group_2645-2" data-name="Group 2645" transform="translate(0 0)">
+        <g id="Layer_2-2" data-name="Layer 2" transform="translate(0 0)">
+          <g id="Layer_1-2" data-name="Layer 1">
+            <path id="check-4" data-name="check" d="M1.786,3.159a.229.229,0,0,1-.162-.067L.136,1.6A.229.229,0,0,1,.46,1.28L1.786,2.606,4.256.136A.229.229,0,0,1,4.58.46L1.947,3.092a.229.229,0,0,1-.162.067Z" transform="translate(-0.075 -0.075)" fill="#7d5ba6"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="check-5" data-name="check" transform="translate(3005.278 932.284)">
+      <g id="Group_2645-3" data-name="Group 2645" transform="translate(0 0)">
+        <g id="Layer_2-3" data-name="Layer 2" transform="translate(0 0)">
+          <g id="Layer_1-3" data-name="Layer 1">
+            <path id="check-6" data-name="check" d="M1.786,3.159a.229.229,0,0,1-.162-.067L.136,1.6A.229.229,0,0,1,.46,1.28L1.786,2.606,4.256.136A.229.229,0,0,1,4.58.46L1.947,3.092a.229.229,0,0,1-.162.067Z" transform="translate(-0.075 -0.075)" fill="#7d5ba6"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

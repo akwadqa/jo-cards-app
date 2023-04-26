@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "542509499023",
+    "project_id": "jocards-com",
+    "storage_bucket": "jocards-com.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542509499023:android:313e3e67db8168d604e6fa",
+        "android_client_info": {
+          "package_name": "com.akwad.jocards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542509499023-6o0hd5jdp62o6clk50giujiogs7rdcgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mfVW9ESAEFWjqlkpRNPm6g5bALzn_Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542509499023-6o0hd5jdp62o6clk50giujiogs7rdcgt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "542509499023-fd9lti36kntlar5and7bokbfdopijukc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akwad.jocards"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
