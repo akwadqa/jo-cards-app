@@ -89,66 +89,66 @@ return handler.next(response);
   }
 
 
-  @GET('method/akwad_smart_app.api.get_home_block')
+  @GET('method/jocards_v2.smart_api.get_home_block')
   Future<HomeModel> getHome();
 
-  @GET('method/akwad_smart_app.api.get_territories')
+  @GET('method/jocards_v2.smart_api.get_territories')
   Future<TerritoriesModel> getTerritories();
-  @GET('method/akwad_smart_app.api.get_items_of_categories')
+  @GET('method/jocards_v2.smart_api.get_items_of_categories')
   Future<ItemCategoryModel> getItemsOfCategory(@Query('category') String category);
 
 
-  @GET('method/akwad_smart_app.api.get_product_details')
+  @GET('method/jocards_v2.smart_api.get_product_details')
   Future<ProductsDetailsModel> getProductDetails(@Query('website_item_id') String id);
 
-  @POST('method/akwad_smart_app.api.app_login')
+  @POST('method/jocards_v2.smart_api.app_login')
   Future<LoginResponseModel> signIn(@Field("usr") String user,@Field("pwd") String password);
 
 
 
-  @POST('method/akwad_smart_app.api.register')
+  @POST('method/jocards_v2.smart_api.register')
   Future<LoginResponseModel> signUp(@Field("data") String registerRequestModel);
 
 
-  @POST('method/akwad_smart_app.api.direct_order')
+  @POST('method/jocards_v2.smart_api.direct_order')
   Future<DirectOrderResponse> directOrder(@Field("items") String directOrderList);
 
 
 
-  @GET('method/akwad_smart_app.api.get_utilities')
+  @GET('method/jocards_v2.smart_api.get_utilities')
   Future<UtilitiesModel> getUtilities();
 
-  @GET('method/akwad_smart_app.api.get_agent_customers')
+  @GET('method/jocards_v2.smart_api.get_agent_customers')
   Future<AgentModel> getAgentCustomers();
-  @GET('method/akwad_smart_app.api.filter_dwr')
+  @GET('method/jocards_v2.smart_api.filter_dwr')
   Future<ShippingOrderResponseModel> getShippingOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
-  @GET('method/akwad_smart_app.api.filter_so')
+  @GET('method/jocards_v2.smart_api.filter_so')
   Future<SalesOrderResponseModel> getSalesOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
-  @GET('method/akwad_smart_app.api.get_categories')
+  @GET('method/jocards_v2.smart_api.get_categories')
   Future<CategoriesModel> getAllCategories();
 
 
-  @GET('method/akwad_smart_app.api.filter_dwrl')
+  @GET('method/jocards_v2.smart_api.filter_dwrl')
   Future<DirectWalletRequestLogModel> getDWRLog(@Query('page_no') int pageNo, @Query('filters') String filter);
 
 
-  @GET('method/akwad_smart_app.api.get_sales_order_detail')
+  @GET('method/jocards_v2.smart_api.get_sales_order_detail')
   Future<SalesOrderDetails> getSalesOrderDetails(@Query("sales_order_id")String salesOrderId);
 
 
-  @POST('method/akwad_smart_app.api.dwr_request_and_transfer')
+  @POST('method/jocards_v2.smart_api.dwr_request_and_transfer')
   Future<TransferShippingResponseModel> requestTransferShipping({@Field('units') String? units,@Field('customer') String? customerName});
 
   @POST('resource/run_custom_method')
   Future<UploadResponseModel> uploadReceipt({@Field('cmd') String? cmd,@Field('doctype') String? doctype,@Field('docname') String? docname,
     @Field('filename') String? fileName,@Field('filedata') String? fileData,@Field('from_form') int? fromForm});
 
-  @POST('method/akwad_smart_app.api.agent_payment_entry')
+  @POST('method/jocards_v2.smart_api.agent_payment_entry')
   Future<AgentPaymentEntryResponse> agentPaymentEntry(@Field('dwr') String dwr, @Field('paid_amount') String paidAmount);
 
-  @POST('method/akwad_smart_app.api.dwr_approval')
+  @POST('method/jocards_v2.smart_api.dwr_approval')
   Future<ResponseModel> dwrApproval(@Field('dwr') String dwr, @Field('status') String status);
 
-  @GET('method/akwad_smart_app.api.app_version')
+  @GET('method/jocards_v2.smart_api.app_version')
   Future<AppVersionModel> getAppVersion();
 }

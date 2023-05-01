@@ -11,6 +11,7 @@ import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/shipping_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -56,98 +57,99 @@ class _WalletScreenState extends State<WalletScreen> {
             child: Column(
               children: [
                 SizedBox(height: widgetSize.getHeight(15, context),),
-                Container(
-                    height: widgetSize.getHeight(150, context), // Border width
-                    decoration: BoxDecoration( borderRadius: BorderRadius.circular(10)),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(Assets.imgWalletHh, fit: BoxFit.cover),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Column(mainAxisSize: MainAxisSize.max,crossAxisAlignment: CrossAxisAlignment.center,children: [
-                            SizedBox(height:widgetSize.getHeight(20, context)),
-                            Text(
-                              'رصيد المحفظة',
-                              style: TextStyle(
-                                fontFamily: 'DIN Next LT W23',
-                                fontSize: widgetSize.getHeight(18, context),
-                                color: const Color(0xbdffffff),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              softWrap: false,
-                            ),
-                            Row(children: [
-                              SizedBox(width: widgetSize.getWidth(35, context),),
-                              SvgPicture.asset(Assets.svgWallet,height: widgetSize.getWidth(45, context),width: widgetSize.getWidth(45, context),color: Colors.white,),
-
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding:  EdgeInsets.symmetric(horizontal: 2),
-                                    child: Text(
-                                      context.watch<AppProvider>().utilitiesModel!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":""
-                                      ,
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: 44,
-                                        color: const Color(0xffffffff),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                decoration: BoxDecoration(                    color: Colors.black.withOpacity(0.2),
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10) )),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Row(children: [
-                                    SizedBox(width: widgetSize.getWidth(23, context),),
-                                    Text(
-                                      'الرصيد المستحق',
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: widgetSize.getHeight(15, context),
-                                        color: const Color(0xffffffff),
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      context.watch<AppProvider>().utilitiesModel!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.unpaidUnits!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.unpaidUnits!:"":"":"",
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: widgetSize.getHeight(15, context),
-                                        color: const Color(0xffffffff),
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                    SizedBox(width: widgetSize.getWidth(23, context),),
-                                  ],),
-                                ),
-                              ),
-                            )
-                          ],),
-                        )
-                      ],
-                    )),
+                const MyWallet(),
+                // Container(
+                //     height: widgetSize.getHeight(150, context), // Border width
+                //     decoration: BoxDecoration( borderRadius: BorderRadius.circular(10)),
+                //     child: Stack(
+                //       children: [
+                //         Positioned.fill(
+                //           child: ClipRRect(
+                //             borderRadius: BorderRadius.circular(10),
+                //             child: Image.asset(Assets.imgWalletHh, fit: BoxFit.cover),
+                //           ),
+                //         ),
+                //         Positioned.fill(
+                //           child: Column(mainAxisSize: MainAxisSize.max,crossAxisAlignment: CrossAxisAlignment.center,children: [
+                //             SizedBox(height:widgetSize.getHeight(20, context)),
+                //             Text(
+                //               'رصيد المحفظة',
+                //               style: TextStyle(
+                //                 fontFamily: 'DIN Next LT W23',
+                //                 fontSize: widgetSize.getHeight(18, context),
+                //                 color: const Color(0xbdffffff),
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //               softWrap: false,
+                //             ),
+                //             Row(children: [
+                //               SizedBox(width: widgetSize.getWidth(35, context),),
+                //               SvgPicture.asset(Assets.svgWallet,height: widgetSize.getWidth(45, context),width: widgetSize.getWidth(45, context),color: Colors.white,),
+                //
+                //               Expanded(
+                //                 child: Align(
+                //                   alignment: Alignment.centerLeft,
+                //                   child: Padding(
+                //                     padding:  EdgeInsets.symmetric(horizontal: 2),
+                //                     child: Text(
+                //                       context.watch<AppProvider>().utilitiesModel!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":""
+                //                       ,
+                //                       style: TextStyle(
+                //                         fontFamily: 'DIN Next LT W23',
+                //                         fontSize: 44,
+                //                         color: const Color(0xffffffff),
+                //                         fontWeight: FontWeight.w500,
+                //                       ),
+                //                       softWrap: false,
+                //                     ),
+                //                   ),
+                //                 ),
+                //               )
+                //             ],),
+                //             Spacer(),
+                //             Align(
+                //               alignment: Alignment.bottomCenter,
+                //               child: Container(
+                //                 decoration: BoxDecoration(                    color: Colors.black.withOpacity(0.2),
+                //                     borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10) )),
+                //                 child: Padding(
+                //                   padding: const EdgeInsets.only(bottom: 5),
+                //                   child: Row(children: [
+                //                     SizedBox(width: widgetSize.getWidth(23, context),),
+                //                     Text(
+                //                       'الرصيد المستحق',
+                //                       style: TextStyle(
+                //                         fontFamily: 'DIN Next LT W23',
+                //                         fontSize: widgetSize.getHeight(15, context),
+                //                         color: const Color(0xffffffff),
+                //                       ),
+                //                       softWrap: false,
+                //                     ),
+                //                     Spacer(),
+                //                     Text(
+                //                       context.watch<AppProvider>().utilitiesModel!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!.unpaidUnits!=null?
+                //                       context.watch<AppProvider>().utilitiesModel!.data!.unpaidUnits!:"":"":"",
+                //                       style: TextStyle(
+                //                         fontFamily: 'DIN Next LT W23',
+                //                         fontSize: widgetSize.getHeight(15, context),
+                //                         color: const Color(0xffffffff),
+                //                       ),
+                //                       softWrap: false,
+                //                     ),
+                //                     SizedBox(width: widgetSize.getWidth(23, context),),
+                //                   ],),
+                //                 ),
+                //               ),
+                //             )
+                //           ],),
+                //         )
+                //       ],
+                //     )),
                 SizedBox(height: widgetSize.getHeight(10, context),),
                 Container(
                   height: widgetSize.getHeight(40, context),

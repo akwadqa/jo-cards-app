@@ -16,10 +16,12 @@ import 'package:jocards/res.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/product_details.dart';
 import 'package:jocards/screens/main_screen/subcategories_screen.dart';
+import 'package:jocards/screens/main_screen/wallet_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/price_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/quick_buy_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/titled_list.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/types_list.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:jocards/screens/widget/loading.dart';
 import 'package:jocards/screens/widget/error.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
@@ -56,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Todo 1 : Add Wallet Container For This Screen
       appBar: buildAppBar(context),
       body: Container(
         child: Padding(
@@ -72,31 +75,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 case Status.COMPLETED:
                   List<HomeBlock> homeList =
                       homeProvider.homsResponse!.data!.homeBlock!;
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: homeList.length,
-                      itemBuilder: (context, index) {
-                        switch (homeList[index].type) {
-                          case "Banner":
-                            List<HomeBlockData>? bannerList =
-                                homeList[index].data!;
-                            currentIndexCarousal[index].putIfAbsent(
-                              index,
-                              () => 0,
-                            );
-                            return buildBanner(
-                                context, homeList, index, bannerList);
-                          case "Categories":
-                            List<HomeBlockData>? categories =
-                                homeList[index].data!;
+                  print(homeList);
+                  return RefreshIndicator(
+                    onRefresh: () => Future.sync(() {
+                      homeProvider.getHomePage();
+                    }),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: homeList.length,
+                        itemBuilder: (context, index) {
+                          switch (homeList[index].type) {
+                            case "Wallet":
+                              return buildWallet();
+                            case "Banner":
+                              List<HomeBlockData>? bannerList =
+                                  homeList[index].data!;
+                              currentIndexCarousal[index].putIfAbsent(
+                                index,
+                                () => 0,
+                              );
+                              return buildBanner(
+                                  context, homeList, index, bannerList);
+                            case "Categories":
+                              List<HomeBlockData>? categories =
+                                  homeList[index].data!;
 
-                            return buildCategory(
-                                homeList, index, context, categories);
+                              return buildCategory(
+                                  homeList, index, context, categories);
 
-                          default:
-                            return Container();
-                        }
-                      });
+                            default:
+                              return Container();
+                          }
+                        }),
+                  );
 
                 case Status.ERROR:
                   return Error(errorMsg: homeProvider.homsResponse!.message);
@@ -269,6 +280,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Padding buildWallet(){
+    return Padding(
+      padding: EdgeInsets.only(top: widgetSize.getHeight(12, context)),
+      child: const MyWallet(),
     );
   }
 

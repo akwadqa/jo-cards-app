@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:provider/provider.dart';
 
 import '../../Network/api_response.dart';
@@ -40,8 +41,19 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
             onRefresh: () => Future.sync(() {
               filters = widget.shippingType == ShippingType.wallet ? context.read<AppProvider>().agentModel?.data != null &&  context.read<AppProvider>().agentModel!.data!.isNotEmpty ? '{"is_transfer": "0"}' : '{}' : '{"is_transfer": "1"}';
               context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
+              context.read<AppProvider>().getUtilities();
             }),
             child: CustomScrollView(slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: widgetSize.getHeight(20, context)),
+                    child: const MyWallet()
+                  ),
+                ),
+              ),
               if(widget.shippingType == ShippingType.customers) ...[
                 SliverToBoxAdapter(
                   child: Align(

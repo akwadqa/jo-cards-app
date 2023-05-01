@@ -34,7 +34,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_home_block',
+              'method/jocards_v2.smart_api.get_home_block',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -57,7 +57,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_territories',
+              'method/jocards_v2.smart_api.get_territories',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -80,7 +80,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_items_of_categories',
+              'method/jocards_v2.smart_api.get_items_of_categories',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -103,7 +103,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_product_details',
+              'method/jocards_v2.smart_api.get_product_details',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -132,7 +132,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.app_login',
+              'method/jocards_v2.smart_api.app_login',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -155,7 +155,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.register',
+              'method/jocards_v2.smart_api.register',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -178,7 +178,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.direct_order',
+              'method/jocards_v2.smart_api.direct_order',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -201,7 +201,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_utilities',
+              'method/jocards_v2.smart_api.get_utilities',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -224,7 +224,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_agent_customers',
+              'method/jocards_v2.smart_api.get_agent_customers',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -253,7 +253,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.filter_dwr',
+              'method/jocards_v2.smart_api.filter_dwr',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -282,7 +282,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.filter_so',
+              'method/jocards_v2.smart_api.filter_so',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -305,7 +305,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_categories',
+              'method/jocards_v2.smart_api.get_categories',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -334,7 +334,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.filter_dwrl',
+              'method/jocards_v2.smart_api.filter_dwrl',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -357,7 +357,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.get_sales_order_detail',
+              'method/jocards_v2.smart_api.get_sales_order_detail',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -388,7 +388,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.dwr_request_and_transfer',
+              'method/jocards_v2.smart_api.dwr_request_and_transfer',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -456,7 +456,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.agent_payment_entry',
+              'method/jocards_v2.smart_api.agent_payment_entry',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -485,7 +485,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.dwr_approval',
+              'method/jocards_v2.smart_api.dwr_approval',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -508,7 +508,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/akwad_smart_app.api.app_version',
+              'method/jocards_v2.smart_api.app_version',
               queryParameters: queryParameters,
               data: _data,
             )

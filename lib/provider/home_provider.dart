@@ -113,6 +113,7 @@ class HomeProvider extends AppProvider {
       homsResponse = ApiResponse.loading("");
       try {
         HomeModel homeModel = await mRestApi.getHome();
+        homeModel.homeBlock!.add(HomeBlock(id: "0", title: "Wallet", type: "Wallet", ));
         if (homeModel.homeBlock != null && homeModel.homeBlock!.isNotEmpty) {
           for (HomeBlock homeBlock in homeModel.homeBlock!) {
             if (homeBlock.type == "Categories") {
