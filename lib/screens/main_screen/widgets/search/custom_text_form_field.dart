@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField({Key? key, this.hintText, this.keyboardType, this.onSaved, this.readOnly = false, this.onTap}) : super(key: key);
+  const CustomTextFormField({Key? key, this.hintText, this.keyboardType, this.onSaved, this.readOnly = false, this.onTap, this.align = TextAlign.start}) : super(key: key);
 
   final String? hintText;
   final TextInputType? keyboardType;
   final void Function(String?)? onSaved;
   final bool readOnly;
   final void Function()? onTap;
+  final TextAlign align;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
       ),
       keyboardType: keyboardType,
       onSaved: onSaved,
+      textAlign: align,
     );
   }
 }

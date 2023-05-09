@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jocards/screens/main_screen/widgets/check_box/akwad_checkbox.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/titled_list.dart';
 import 'package:jocards/screens/main_screen/widgets/search/date_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/search/transfer_check_box.dart';
@@ -16,6 +17,7 @@ enum SearchType {
   walletRequests,
   customersRequests,
   walletRequestsLog,
+  batchLog,
 }
 
 class SearchComponent extends StatelessWidget {
@@ -24,11 +26,12 @@ class SearchComponent extends StatelessWidget {
   final void Function(String filters) onSearch;
   @override
   Widget build(BuildContext context) {
-    String _searchText = searchType == SearchType.walletRequestsLog ? 'البحث  في عمليات المحفظة' : 'البحث في الطلبات';
+    String _searchText = (searchType == SearchType.walletRequestsLog || searchType == SearchType.batchLog) ? 'البحث  في عمليات المحفظة' : 'البحث في الطلبات';
     return TextFormField(
       readOnly: true,
       onTap: () {
         String? _orderNumber;
+        String? _customerName;
         String? _transactionNumber;
         String? _paymentStatus;
         String? _orderStatus;
@@ -47,34 +50,106 @@ class SearchComponent extends StatelessWidget {
                   children: [
                     Text(_searchText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     SizedBox(height: widgetSize.getHeight(10, context)),
-                    if(searchType != SearchType.walletRequestsLog)...[
+                    if(searchType != SearchType.walletRequestsLog && searchType != SearchType.batchLog)...[
                       const Text('رقم الطلب', style: TextStyle(fontWeight: FontWeight.w500)),
                       SizedBox(height: widgetSize.getHeight(10, context)),
                     ],
                     Form(
                       key: _formKey,
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: searchType == SearchType.walletRequestsLog ? 4 : 2,
-                            child: CustomTextFormField(
-                              hintText: 'رقم الطلب',
-                              onSaved: (value) => _orderNumber = value,
-                            ),
-                          ),
-                          const Spacer(),
-                          if(searchType == SearchType.walletRequestsLog)
-                            Expanded(
-                              flex: 4,
-                              child: CustomTextFormField(
-                                hintText: 'رقم التحويل',
-                                onSaved: (value) => _transactionNumber = value,
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: searchType == SearchType.walletRequestsLog ? 4 : searchType == SearchType.walletRequests ? 3 : searchType == SearchType.batchLog ? 1: 2,
+                                child: CustomTextFormField(
+                                  hintText: 'رقم الطلب',
+                                  onSaved: (value) => _orderNumber = value,
+                                ),
                               ),
+                              if(searchType != SearchType.walletRequests && searchType != SearchType.batchLog)
+                                const Spacer(),
+                               if(searchType == SearchType.walletRequests)
+                                Expanded(flex : 3, child: Row(
+                                  children: [
+                                    TransferCheckBox(onChanged: (bool value) => _isTransfer = value),
+                                    const Text("تحويل"),
+                                  ],
+                                ),),
+
+                              if(searchType == SearchType.walletRequestsLog)
+                                Expanded(
+                                  flex: 4,
+                                  child: CustomTextFormField(
+                                    hintText: 'رقم التحويل',
+                                    onSaved: (value) => _transactionNumber = value,
+                                  ),
+                                ),
+
+                              if(searchType == SearchType.batchLog)...[
+                                SizedBox(width: widgetSize.getWidth(10, context)),
+                                Expanded(
+                                  flex: 1,
+                                  child: CustomTextFormField(
+                                    hintText: 'رقم الدفع',
+                                    onSaved: (value) => _transactionNumber = value,
+                                  ),
+                                ),
+                                ],
+                            ],
+                          ),
+                          SizedBox(height: widgetSize.getHeight(10, context)),
+                          if(searchType == SearchType.walletRequests || searchType == SearchType.walletRequestsLog) ...[
+                            CustomTextFormField(
+                              hintText: 'اسم العميل',
+                              onSaved: (value) => _customerName = value,
                             ),
+                            SizedBox(height: widgetSize.getHeight(10, context)),
+                          ],
+                          if(searchType == SearchType.walletRequests || searchType == SearchType.salesRequests ||  searchType == SearchType.walletRequestsLog) ...[
+                            const Text('الإجمالي (دينار)', style: TextStyle(fontWeight: FontWeight.w500)),
+                            SizedBox(height: widgetSize.getHeight(10, context)),
+                            Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: CustomTextFormField(
+                                  readOnly: true,
+                                  hintText: "00",
+                                  align: TextAlign.center,
+                                  onTap: () async {},
+                                ),
+                              ),
+                              const Expanded(child: Center(child: Text('من/إلى'))),
+                              Expanded(
+                                flex: 2,
+                                child: CustomTextFormField(
+                                  readOnly: true,
+                                  hintText: "500000",
+                                  align: TextAlign.center,
+                                  onTap: () async {},
+                                ),
+                              )
+                            ],
+                          ),
+                            SizedBox(height: widgetSize.getHeight(10, context)),
+                          ],
                         ],
                       ),
                     ),
-                    SizedBox(height: widgetSize.getHeight(10, context)),
+                    // TODO 2: إضافة حقل الفئة بس سألي شو بدك تضيفي بقلبه لانو ماله موجود من قبل والداتا مو عنا
+                    if(searchType == SearchType.salesRequests)...[
+                      TitledList(
+                          title: 'حالة الطلب',
+                        height: 200,
+                          child: _ChipsRow(
+                            titles: const ['تعبئة ناجحة لمحفظة البرهان', 'شراء ناجح للبطاقة', 'الطلب ملغي', "طلب منتهي", "فشل الطلب", "تحت الطلب", "طلب مكتمل للأرشفة", "طلب مفتوح", "بإنتظار مكالمة"],
+                            onItemSelected: (String? item) => _paymentStatus =  item
+                          ),
+                      ),
+
+                    ],
                     if(searchType == SearchType.walletRequests || searchType == SearchType.customersRequests)...[
                       TitledList(
                           title: 'حالة الدفع',
@@ -99,21 +174,52 @@ class SearchComponent extends StatelessWidget {
                           child: Row(
                             children: [
                               _ChipsRow(
-                                titles: const ['ايداع', 'خصم'],
+                                titles: const ['  ايداع    ', '  خصم    '],
                                 onItemSelected: (String? item) => _transactionType = item,
                               ),
                               SizedBox(width: widgetSize.getWidth(20, context)),
-                              TransferCheckBox(onChanged: (bool value) => _isTransfer = value),
-                              const Text('تحويل', style: TextStyle(fontWeight: FontWeight.w500)),
+                            //   TransferCheckBox(onChanged: (bool value) => _isTransfer = value),
+                            //   const Text('تحويل', style: TextStyle(fontWeight: FontWeight.w500)),
+                             ],
+                          )
+                      ),
+                      SizedBox(height: widgetSize.getHeight(10, context)),
+                      TitledList(
+                        title: 'حالة الطلب',
+                        height: 100,
+                        child: _ChipsRow(
+                            titles: const ['إيداع من قبل برهان', 'خصم من قبل برهان', 'طلب شحن من قبل العميل', ],
+                            onItemSelected: (String? item) => _paymentStatus =  item
+                        ),
+                      ),
+                      SizedBox(height: widgetSize.getHeight(10, context)),
+                    ],
+                    if(searchType == SearchType.batchLog)...[
+                      TitledList(
+                          title: 'نوع الحركة',
+                          child: Row(
+                            children: [
+                              _ChipsRow(
+                                titles: const ['   التسويات    ', '   الدفعات    '],
+                                onItemSelected: (String? item) => _transactionType = item,
+                              ),
+                              SizedBox(width: widgetSize.getWidth(20, context)),
                             ],
                           )
                       ),
                       SizedBox(height: widgetSize.getHeight(10, context)),
                     ],
-                    const Text('الفترة الزمنية', style: TextStyle(fontWeight: FontWeight.w500)),
+                    if(searchType != SearchType.batchLog) ...[
+                      const Text('الفترة الزمنية', style: TextStyle(fontWeight: FontWeight.w500)),
                     SizedBox(height: widgetSize.getHeight(10, context)),
                     DateWidget(getDateRange: (DateTimeRange? range) => _dateTimeRange = range),
-                    SizedBox(height: widgetSize.getHeight(20, context)),
+                    SizedBox(height: widgetSize.getHeight(20, context)),],
+                    if(searchType == SearchType.batchLog)...[
+                      const Text('الفترة الزمنية', style: TextStyle(fontWeight: FontWeight.w500)),
+                      SizedBox(height: widgetSize.getHeight(10, context)),
+                      DateWidget(getDateRange: (DateTimeRange? range) => _dateTimeRange = range, isFromBatchScreen: true),
+
+                    ],
                     ElevatedButton(
                         onPressed: () {
                           _formKey.currentState!.save();
@@ -121,7 +227,7 @@ class SearchComponent extends StatelessWidget {
                           },
                         child: const Text('بحث'),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
-                            backgroundColor: MaterialStateProperty.all(ColorResources.studio),
+                            backgroundColor: MaterialStateProperty.all(ColorResources.lightBlue),
                             foregroundColor: MaterialStateProperty.all(Colors.white),
                             shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
                     )
@@ -179,6 +285,16 @@ class SearchComponent extends StatelessWidget {
         };
         break;
       case SearchType.walletRequestsLog:
+        filters = {
+          if(orderNumber != null && orderNumber.isNotEmpty) 'order_number': orderNumber,
+          if(transactionNumber != null && transactionNumber.isNotEmpty) 'dwr_number' : transactionNumber,
+          if(transactionType != null && transactionType.isNotEmpty) 'log_type': _getTransactionType(transactionType),
+          if(isTransfer != null) 'is_transfer': isTransfer? '1' : '0',
+          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+        };
+        break;
+      case SearchType.batchLog:
         filters = {
           if(orderNumber != null && orderNumber.isNotEmpty) 'order_number': orderNumber,
           if(transactionNumber != null && transactionNumber.isNotEmpty) 'dwr_number' : transactionNumber,

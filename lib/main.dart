@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
+import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:jocards/screens/splash_screen.dart';
 import 'package:jocards/theme/light_theme.dart';
 import 'package:jocards/utill/app_local.dart';
@@ -58,6 +59,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (_) => HomeProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => SharedNavBarProvider(),
     ),
   ], child:  const MyApp()));
 }

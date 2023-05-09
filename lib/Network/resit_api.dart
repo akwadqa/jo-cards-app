@@ -122,7 +122,7 @@ return handler.next(response);
   Future<AgentModel> getAgentCustomers();
   @GET('method/jocards_v2.smart_api.filter_dwr')
   Future<ShippingOrderResponseModel> getShippingOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
-  @GET('method/jocards_v2.smart_api.filter_so')
+  @GET('method/jocards_v2.smart_api.filter_si')
   Future<SalesOrderResponseModel> getSalesOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
   @GET('method/jocards_v2.smart_api.get_categories')
   Future<CategoriesModel> getAllCategories();

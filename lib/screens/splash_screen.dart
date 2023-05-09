@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:jocards/model/app_version_model.dart';
 import 'package:jocards/provider/app_provider.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/update_screen.dart';
 import 'package:jocards/utill/utitlities.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -171,7 +172,7 @@ class _SplashScreen extends State<SplashScreen> {
         context,
         PageTransition(
           type: PageTransitionType.leftToRight,
-          child: MainScreen(),
+          child: SharedBottomNavigationBar(widget: MainScreen()),
         ),
       );
     } else {

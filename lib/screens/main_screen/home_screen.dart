@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Todo 1 : Add Wallet Container For This Screen
       appBar: buildAppBar(context),
       body: Container(
         child: Padding(

@@ -14,7 +14,6 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
-    // Todo 2 : Where is Favorite Screen
     return Scaffold(
       backgroundColor: ColorResources.whiteSmoke,appBar: buildAppBar(context),
 

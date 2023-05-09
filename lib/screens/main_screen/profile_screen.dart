@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jocards/screens/main_screen/batch_history_screen.dart';
+import 'package:jocards/screens/main_screen/edit_profile_screen.dart';
+import 'package:jocards/screens/main_screen/notification_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/privacy_policy_screen.dart';
 import 'package:jocards/screens/main_screen/purchase_order_history.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/shipping_order_history.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +32,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  XFile? image = XFile("");
+  final ImagePicker _picker = ImagePicker();
+
+  changeImage () async{
+    image = await _picker.pickImage(source: ImageSource.gallery);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: ColorResources.whiteSmoke,
@@ -52,15 +62,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
               }),
               child: ListView(padding: EdgeInsets.zero,shrinkWrap: true,children: [
-               Padding(
-                 padding:  EdgeInsets.only(top: 10),
-                 child: Container(     width:widgetSize.getWidth(120, context),
-                        height: widgetSize.getWidth(120, context),
+               Align(
+              alignment : Alignment.center,
+                 child: Padding(
+                   padding: const EdgeInsets.only(top: 10),
+                   child: Stack(
+                     children:[
+                       Image.asset(Assets.profileBorder),
+                       Positioned(
+                         top: widgetSize.getHeight(18, context),
+                         right: widgetSize.getWidth(16, context),
+                         child: Stack(
+                           children: [
+                             image!.path == ""
+                                 ? Container(
 
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: ColorResources.moonYellow,width:5),color: ColorResources.gainsboro),
-                     child: Center(child: SvgPicture.asset(Assets.svgProfiless,))),
+                                 width:widgetSize.getWidth(90, context),
+                                  height: widgetSize.getWidth(90, context),
+
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: ColorResources.gainsboro
+                                  ),
+                               child: Center(child: SvgPicture.asset(Assets.svgProfiless,)))
+                                 : Container(
+
+                                   width:widgetSize.getWidth(90, context),
+                                   height: widgetSize.getWidth(90, context),
+
+                                 decoration: const BoxDecoration(
+                                     shape: BoxShape.circle,
+                                     color: ColorResources.gainsboro
+                                 ),
+                                 child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                     child: Image.file(File(image!.path), fit: BoxFit.fill,))),
+                             Positioned(
+                                bottom: 0,
+                                 child: GestureDetector(
+                                   onTap: () {
+                                     setState(()  {
+                                       changeImage();
+                                     });
+                                   },
+                                   child: Container(
+                                     decoration: const BoxDecoration(
+                                         shape: BoxShape.circle,
+                                         color: Colors.white
+                                     ),
+                                     padding: const EdgeInsets.all(5),
+                                     child: Container(
+                                       padding: const EdgeInsets.all(3),
+                                       decoration: const BoxDecoration(
+                                           shape: BoxShape.circle,
+                                           color: ColorResources.studio
+                                       ),
+                                       child: Icon(Icons.settings, color: Colors.white,),
+                                     ),
+                                   ),
+                                 )
+                             ),
+                           ],
+                         ),
+                       ),
+                   ]),
+                 ),
                ),
 
                 Padding(
@@ -133,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: const ShippingOrderHistory(shippingType: ShippingType.wallet),
+                                  child: SharedBottomNavigationBar(widget: const ShippingOrderHistory(shippingType: ShippingType.wallet)),
                                 ),
                               );
                             },
@@ -171,7 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: PurchaseOrderHistory(),
+                                  child: SharedBottomNavigationBar(widget : PurchaseOrderHistory()),
                                 ),
                               );
                             },
@@ -206,13 +272,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
+                            // if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: const ShippingOrderHistory(shippingType: ShippingType.customers,),
+                                  child: SharedBottomNavigationBar(widget: const ShippingOrderHistory(shippingType: ShippingType.customers,)),
                                 ),
                               );
                             },
@@ -246,13 +312,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
 
-                            if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
+                            // if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: const BatchHistoryScreen(),
+                                  child:  SharedBottomNavigationBar(widget: BatchHistoryScreen()),
                                 ),
                               );
                             },
@@ -294,6 +360,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ],
 
+                Visibility(
+                  visible: Platform.isAndroid,
+                  child: SafeOnTap(onSafeTap: ()async{
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: SharedBottomNavigationBar(widget: EditProfileScreen()),
+                      ),
+                    );
+                  },
+                    child: Padding(
+                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                      child: Column(
+                        children: [
+                          Row(children: [
+                            SvgPicture.asset(Assets.svgPrinter),
+                            SizedBox(width: widgetSize.getWidth(10, context),),
+                            Text(
+                              "تعديل الملف الشخصي",
+                              style: TextStyle(
+
+                                fontSize: widgetSize.getHeight(16, context),
+                                color: const  Color(0xff6b6b6b),
+                                fontWeight: FontWeight.w500,
+                              ),
+
+                            ),
+
+                            const Spacer(),
+                            const RotatedBox(
+                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
+                          ],),
+                          SizedBox(height: widgetSize.getHeight(10, context),),
+                          Container(height: 1,
+                            color: ColorResources.light_grey.withOpacity(0.5),)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: Platform.isAndroid,
+                  child: SafeOnTap(onSafeTap: ()async{
+                    // Navigator.push(
+                    //   context,
+                    //   PageTransition(
+                    //     type: PageTransitionType.fade,
+                    //     child: SharedBottomNavigationBar(widget: EditProfileScreen()),
+                    //   ),
+                    // );
+                  },
+                    child: Padding(
+                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                      child: Column(
+                        children: [
+                          Row(children: [
+                            SvgPicture.asset(Assets.svgPrinter),
+                            SizedBox(width: widgetSize.getWidth(10, context),),
+                            Text(
+                              "سجل الطلبات",
+                              style: TextStyle(
+
+                                fontSize: widgetSize.getHeight(16, context),
+                                color: const  Color(0xff6b6b6b),
+                                fontWeight: FontWeight.w500,
+                              ),
+
+                            ),
+
+                            const Spacer(),
+                            const RotatedBox(
+                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
+                          ],),
+                          SizedBox(height: widgetSize.getHeight(10, context),),
+                          Container(height: 1,
+                            color: ColorResources.light_grey.withOpacity(0.5),)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
                   Visibility(
                     visible: Platform.isAndroid,
@@ -302,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         PageTransition(
                           type: PageTransitionType.fade,
-                          child: PrintScreen(DirectOrderResponse()),
+                          child: SharedBottomNavigationBar(widget: PrintScreen(DirectOrderResponse())),
                         ),
                       );
                     },
@@ -479,6 +627,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
 ],
 
                 if(userModel!=null)...[
+                  SafeOnTap(onSafeTap: (){
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: SharedBottomNavigationBar(widget : NotificationScreen()),
+                      ),
+                    );
+                  },
+                    child: Padding(
+                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                      child: Column(
+                        children: [
+                          Row(children: [
+                            const Icon(Icons.person_remove_alt_1_outlined),
+                            SizedBox(width: widgetSize.getWidth(10, context),),
+                            Text(
+                              "الإشعارات",
+                              style: TextStyle(
+
+                                fontSize: widgetSize.getHeight(16, context),
+                                color: const  Color(0xff6b6b6b),
+                                fontWeight: FontWeight.w500,
+                              ),
+
+                            ),
+
+                            Spacer(),
+                            const RotatedBox(
+                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18,))
+                          ],),
+                          SizedBox(height: widgetSize.getHeight(10, context),),
+                          Container(height: 1,
+                            color: ColorResources.light_grey.withOpacity(0.5),)
+                        ],
+                      ),
+                    ),
+                  ),
                   SafeOnTap(onSafeTap: () => _showDeleteConfirmationDialog(context),
                     child: Padding(
                       padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),

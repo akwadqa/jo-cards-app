@@ -5,8 +5,9 @@ import '../../../../utill/strings.dart';
 import '../../../../utill/widget_size.dart';
 
 class DateWidget extends StatefulWidget {
-  const DateWidget({Key? key, required this.getDateRange}) : super(key: key);
+  const DateWidget({Key? key, required this.getDateRange,  this.isFromBatchScreen = false}) : super(key: key);
   final void Function(DateTimeRange? range) getDateRange;
+  final bool isFromBatchScreen;
 
   @override
   State<DateWidget> createState() => _DateWidgetState();
@@ -44,7 +45,7 @@ class _DateWidgetState extends State<DateWidget> {
             }
         ),
         SizedBox(height: widgetSize.getHeight(20, context)),
-        Row(
+        if (!widget.isFromBatchScreen) Row(
           children: [
             Expanded(
               flex: 2,

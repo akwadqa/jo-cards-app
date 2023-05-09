@@ -282,7 +282,7 @@ class _restApi implements restApi {
     )
             .compose(
               _dio.options,
-              'method/jocards_v2.smart_api.filter_so',
+              'method/jocards_v2.smart_api.filter_si',
               queryParameters: queryParameters,
               data: _data,
             )
