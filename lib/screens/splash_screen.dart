@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:jocards/model/app_version_model.dart';
+import 'package:jocards/notification/my_notification.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/update_screen.dart';
@@ -164,6 +166,23 @@ class _SplashScreen extends State<SplashScreen> {
       _isNeedToUpdate = false;
     }
   }
+  Future<void> _checkNotificationPermission() async{
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+      if (settings.authorizationStatus.name == "authorized"){
+        Provider.of<AppProvider>(context, listen: false).setAgreeNotification(true);
+      }
+      else{
+        Provider.of<AppProvider>(context, listen: false).setAgreeNotification(false);
+      }
+  }
 
   Future<void> _navigate() async {
     if (await Provider.of<AppProvider>(context, listen: false).isUserSigned()) {
@@ -176,6 +195,7 @@ class _SplashScreen extends State<SplashScreen> {
         ),
       );
     } else {
+      print("===================== go to sign in from splash screen =============");
       Navigator.pushReplacement(
         context,
         PageTransition(

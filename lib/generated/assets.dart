@@ -62,5 +62,8 @@ class Assets {
   static const String svgWalletHeader = 'assets/svg/wallet_header.svg';
   static const String svgWhatIcon = 'assets/svg/whatIcon.svg';
   static const String profileBorder = 'assets/img/profile border.png';
+  static const String folder = 'assets/img/Folder.png';
+  static const String notification = 'assets/img/notification.png';
+  static const String alarm = 'assets/img/alarm.png';
 
 }

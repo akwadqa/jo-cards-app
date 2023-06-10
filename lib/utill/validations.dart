@@ -8,10 +8,10 @@ class Validations {
   String prefix = "              ";
 
   String? validateName(String value) {
-    if (value.isEmpty) return '$prefix Name is required.';
+    if (value.isEmpty) return '$prefix الاسم مطلوب. ';
     final RegExp nameExp = new RegExp(r'[^0-9]');
     if (!nameExp.hasMatch(value))
-      return '$prefix Please enter only alphabetical characters.';
+      return '$prefix الرجاء إدخال أحرف فقط. ';
     if (value.isEmpty) return '$prefix الحقل مطلوب';
     return null;
   }
@@ -34,30 +34,30 @@ class Validations {
     if(value!=null){
     final RegExp nameExp =  RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (value.isEmpty||!nameExp.hasMatch(value)) return 'Invalid email address';}
+    if (value.isEmpty||!nameExp.hasMatch(value)) return 'بريد الاكتروني خاطئ';}
     return null;
   }
 
   String? validatePassword(String ?value) {
     if(value!=null)
-    if (value.isEmpty||value.length<4) return 'Invalid password';
+    if (value.isEmpty||value.length<4) return 'كلمة سر خاطئة';
     return null;
   }
 
   String? validateLink(String value) {
-    if (value.isEmpty) return '$prefix link is required.';
+    if (value.isEmpty) return '$prefix الرابط مطلوب. ';
     final RegExp nameExp = new RegExp(
         r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
-    if (!nameExp.hasMatch(value)) return '$prefix Please enter vaild link.';
-    if (value.isEmpty) return '$prefix This failed is require.';
+    if (!nameExp.hasMatch(value)) return '$prefix الرجاء إدخال رابط صالح. ';
+    if (value.isEmpty) return '$prefix الحقل مطلوب. ';
     return null;
   }
 
   String ?validNumber(String ?value) {
     if(value!=null){
-    if (value.isEmpty) return 'number is required';
+    if (value.isEmpty) return 'رقم الهاتف مطلوب';
     final RegExp nameExp = new RegExp(r'^[0-9]*$|[\u0660-\u0669]');
-    if (!nameExp.hasMatch(value)) return '$prefix Please enter vaild pin code.';}
+    if (!nameExp.hasMatch(value)) return '$prefix الرجاء إدخال رقم هاتف صالح. ';}
     return null;
   }
 
@@ -65,9 +65,9 @@ class Validations {
     String patttern = r'(^(?:[0]9)?[0-9]{10,18}$)|(^(?:[0]9)?[\u0660-\u0669]{10,18}$)';
     RegExp regExp =  RegExp(patttern);
     if (value!.length == 0) {
-      return 'Please enter mobile number';
+      return 'الرجاء إدخال رقم الهاتف';
     } else if (!regExp.hasMatch(value)) {
-      return 'Please enter valid mobile number';
+      return 'الرجاء إدخال رفم هاتف صالح';
     }
     return null;
   }

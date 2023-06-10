@@ -27,6 +27,7 @@ class Data {
   final String? customerType;
   final String? territory;
   final String? akdTerritoryAgent;
+  final String? mobileNo;
 
   Data({
     this.name,
@@ -34,6 +35,7 @@ class Data {
     this.customerType,
     this.territory,
     this.akdTerritoryAgent,
+    this.mobileNo
   });
 
   Data.fromJson(Map<String, dynamic> json)
@@ -41,13 +43,15 @@ class Data {
       customerName = json['customer_name'] as String?,
       customerType = json['customer_type'] as String?,
       territory = json['territory'] as String?,
-      akdTerritoryAgent = json['akd_territory_agent'] as String?;
+      akdTerritoryAgent = json['akd_territory_agent'] as String?,
+      mobileNo = json["mobile_no"] as String?;
 
   Map<String, dynamic> toJson() => {
     'name' : name,
     'customer_name' : customerName,
     'customer_type' : customerType,
     'territory' : territory,
-    'akd_territory_agent' : akdTerritoryAgent
+    'akd_territory_agent' : akdTerritoryAgent,
+    "mobile_no": mobileNo,
   };
 }

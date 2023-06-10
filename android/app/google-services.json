@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "542509499023-l3pn19dadmbp02g0fvorgfng9i0c542k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akwad.jocards",
+            "certificate_hash": "ba75e41e8334ab67ea0a78d709e144acbeabee78"
+          }
+        },
+        {
           "client_id": "542509499023-6o0hd5jdp62o6clk50giujiogs7rdcgt.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -51,7 +51,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json)
     : itemGroupId = json['item_group_id'] as String?,
       parentItemGroup = json['parent_item_group'] as String?,
-      backgroundColor = json['background_color'] as String?,
+      backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
       categoryView = json['category_view'],
       route = json['route'] as String?,
       image = json['image'] as String?,
@@ -104,10 +104,10 @@ class SubCategories {
   SubCategories.fromJson(Map<String, dynamic> json)
     : itemGroupId = json['item_group_id'] as String?,
       parentItemGroup = json['parent_item_group'] as String?,
-      backgroundColor = json['background_color'] as String?,
+      backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
       categoryView = json['category_view'],
       route = json['route'] as String?,
-      image = json['image'] as String?,
+      image = json['image'] as String? ?? "/files/foreground.png",
       weightage = json['weightage'] as int?,
       websiteTitle = json['website_title'],
       description = json['description'],

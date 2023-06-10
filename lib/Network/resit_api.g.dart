@@ -13,7 +13,7 @@ class _restApi implements restApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://jocards.akwad.qa/api/';
+    baseUrl ??= 'https://www.jocards.com/api/';
   }
 
   final Dio _dio;
@@ -263,7 +263,7 @@ class _restApi implements restApi {
   }
 
   @override
-  Future<SalesOrderResponseModel> getSalesOrders(
+  Future<SalesInvoiceResponseModel> getSalesOrders(
     pageNo,
     filter,
   ) async {
@@ -275,7 +275,7 @@ class _restApi implements restApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<SalesOrderResponseModel>(Options(
+        _setStreamType<SalesInvoiceResponseModel>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -287,7 +287,7 @@ class _restApi implements restApi {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = SalesOrderResponseModel.fromJson(_result.data!);
+    final value = SalesInvoiceResponseModel.fromJson(_result.data!);
     return value;
   }
 
@@ -363,6 +363,31 @@ class _restApi implements restApi {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = SalesOrderDetails.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SalesInvoiceDetails> getSalesInvoiceDetails(salesInvoiceId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'sales_invoice_id': salesInvoiceId
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<SalesInvoiceDetails>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'method/jocards_v2.smart_api.get_sales_invoce_details',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SalesInvoiceDetails.fromJson(_result.data!);
     return value;
   }
 
@@ -514,6 +539,120 @@ class _restApi implements restApi {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = AppVersionModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<PaymentModel> getPaymentModel(
+    filter,
+    pageNo,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'filters': filter,
+      r'page_no': pageNo,
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<PaymentModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'method/jocards_v2.smart_api.payments',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = PaymentModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AppMessageModel> getAppMessage(pageNo) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page_no': pageNo};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AppMessageModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'method/jocards_v2.app_message.app_messages',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = AppMessageModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<UpdatePasswordModel> updatePassword(
+    oldPassword,
+    newPassword,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'old_password': oldPassword,
+      'new_password': newPassword,
+    };
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<UpdatePasswordModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'method/frappe.core.doctype.user.user.update_password',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = UpdatePasswordModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<UpdateTokenModel> updateToken(
+    token,
+    userId,
+    userDeviceType,
+    userDeviceName,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'device_token': token,
+      'user_id': userId,
+      'user_device_type': userDeviceType,
+      'user_device_name': userDeviceName,
+    };
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UpdateTokenModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'method/fcm_frappe.api.device_token',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = UpdateTokenModel.fromJson(_result.data!);
     return value;
   }
 

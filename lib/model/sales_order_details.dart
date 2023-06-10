@@ -56,7 +56,7 @@ class SalesOrderDetailsData {
       status = json['status'] as String?,
       postingTime = json['posting_time'] as String?,
       extraCharges = json['extra_charges'].toString(),
-      grandTotal = json['grand_total'] .toString(),
+      grandTotal = json['grand_total']== null ?"0": json['grand_total'].toString(),
       owner = json['owner'] as String?,
       currency = json['currency'] as String?,
       itemsDetail = (json['items_detail'] as List?)?.map((dynamic e) => ItemsDetail.fromJson(e as Map<String,dynamic>)).toList();
@@ -103,7 +103,7 @@ class ItemsDetail {
   ItemsDetail.fromJson(Map<String, dynamic> json)
     : websiteItemCode = json['website_item_code'] as String?,
       websiteItemName = json['website_item_name'] as String?,
-        backGroundColor = json['background_color'] as String?,
+        backGroundColor = json['background_color'] as String? ?? "#7c5aa6",
       qty = json['qty'].toString(),
       netRate = json['net_rate']. toString(),
       netAmount = json['net_amount'] .toString(),

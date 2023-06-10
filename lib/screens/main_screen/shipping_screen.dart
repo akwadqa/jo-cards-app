@@ -6,7 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/screens/main_screen/main_screen.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../../Network/api_response.dart';
 import '../../generated/assets.dart';
@@ -52,175 +55,176 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Container(
-                        height: widgetSize.getHeight(140, context),
-                        // Border width
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(Assets.imgWalletHh,
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                      height:
-                                          widgetSize.getHeight(20, context)),
-                                  Text(
-                                    'رصيد المحفظة',
-                                    style: TextStyle(
-                                      fontFamily: 'DIN Next LT W23',
-                                      fontSize:
-                                          widgetSize.getHeight(18, context),
-                                      color: const Color(0xbdffffff),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    softWrap: false,
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: widgetSize.getWidth(35, context),
-                                      ),
-                                      SvgPicture.asset(
-                                        Assets.svgWallet,
-                                        height:
-                                            widgetSize.getWidth(45, context),
-                                        width: widgetSize.getWidth(45, context),
-                                        color: Colors.white,
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            child: Text(
-                                              context
-                                                          .watch<AppProvider>()
-                                                          .utilitiesModel !=
-                                                      null
-                                                  ? context
-                                                              .watch<
-                                                                  AppProvider>()
-                                                              .utilitiesModel!
-                                                              .data !=
-                                                          null
-                                                      ? context
-                                                                  .watch<
-                                                                      AppProvider>()
-                                                                  .utilitiesModel!
-                                                                  .data!
-                                                                  .walletBalance !=
-                                                              null
-                                                          ? context
-                                                              .watch<
-                                                                  AppProvider>()
-                                                              .utilitiesModel!
-                                                              .data!
-                                                              .walletBalance!
-                                                          : ""
-                                                      : ""
-                                                  : "",
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: 44,
-                                                color: const Color(0xffffffff),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.2),
-                                          borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10))),
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: widgetSize.getWidth(
-                                                  23, context),
-                                            ),
-                                            Text(
-                                              'الرصيد المستحق',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize.getHeight(
-                                                    15, context),
-                                                color: const Color(0xffffffff),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            Spacer(),
-                                            Text(
-                                              context
-                                                          .read<AppProvider>()
-                                                          .utilitiesModel !=
-                                                      null
-                                                  ? context
-                                                              .read<
-                                                                  AppProvider>()
-                                                              .utilitiesModel!
-                                                              .data !=
-                                                          null
-                                                      ? context
-                                                                  .read<
-                                                                      AppProvider>()
-                                                                  .utilitiesModel!
-                                                                  .data!
-                                                                  .unpaidUnits !=
-                                                              null
-                                                          ? context
-                                                              .read<
-                                                                  AppProvider>()
-                                                              .utilitiesModel!
-                                                              .data!
-                                                              .unpaidUnits!
-                                                          : ""
-                                                      : ""
-                                                  : "",
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize.getHeight(
-                                                    15, context),
-                                                color: const Color(0xffffffff),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            SizedBox(
-                                              width: widgetSize.getWidth(
-                                                  23, context),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
+                    // Container(
+                    //     height: widgetSize.getHeight(140, context),
+                    //     // Border width
+                    //     decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     child: Stack(
+                    //       children: [
+                    //         Positioned.fill(
+                    //           child: ClipRRect(
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             child: Image.asset(Assets.imgWalletHh,
+                    //                 fit: BoxFit.cover),
+                    //           ),
+                    //         ),
+                    //         Positioned.fill(
+                    //           child: Column(
+                    //             mainAxisSize: MainAxisSize.max,
+                    //             crossAxisAlignment: CrossAxisAlignment.center,
+                    //             children: [
+                    //               SizedBox(
+                    //                   height:
+                    //                       widgetSize.getHeight(20, context)),
+                    //               Text(
+                    //                 'رصيد المحفظة',
+                    //                 style: TextStyle(
+                    //                   fontFamily: 'DIN Next LT W23',
+                    //                   fontSize:
+                    //                       widgetSize.getHeight(18, context),
+                    //                   color: const Color(0xbdffffff),
+                    //                   fontWeight: FontWeight.w500,
+                    //                 ),
+                    //                 softWrap: false,
+                    //               ),
+                    //               Row(
+                    //                 children: [
+                    //                   SizedBox(
+                    //                     width: widgetSize.getWidth(35, context),
+                    //                   ),
+                    //                   SvgPicture.asset(
+                    //                     Assets.svgWallet,
+                    //                     height:
+                    //                         widgetSize.getWidth(45, context),
+                    //                     width: widgetSize.getWidth(45, context),
+                    //                     color: Colors.white,
+                    //                   ),
+                    //                   Expanded(
+                    //                     child: Align(
+                    //                       alignment: Alignment.centerLeft,
+                    //                       child: Padding(
+                    //                         padding: EdgeInsets.symmetric(
+                    //                             horizontal: 2),
+                    //                         child: Text(
+                    //                           context
+                    //                                       .watch<AppProvider>()
+                    //                                       .utilitiesModel !=
+                    //                                   null
+                    //                               ? context
+                    //                                           .watch<
+                    //                                               AppProvider>()
+                    //                                           .utilitiesModel!
+                    //                                           .data !=
+                    //                                       null
+                    //                                   ? context
+                    //                                               .watch<
+                    //                                                   AppProvider>()
+                    //                                               .utilitiesModel!
+                    //                                               .data!
+                    //                                               .walletBalance !=
+                    //                                           null
+                    //                                       ? context
+                    //                                           .watch<
+                    //                                               AppProvider>()
+                    //                                           .utilitiesModel!
+                    //                                           .data!
+                    //                                           .walletBalance!
+                    //                                       : ""
+                    //                                   : ""
+                    //                               : "",
+                    //                           style: TextStyle(
+                    //                             fontFamily: 'DIN Next LT W23',
+                    //                             fontSize: 44,
+                    //                             color: const Color(0xffffffff),
+                    //                             fontWeight: FontWeight.w500,
+                    //                           ),
+                    //                           softWrap: false,
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                   )
+                    //                 ],
+                    //               ),
+                    //               Spacer(),
+                    //               Align(
+                    //                 alignment: Alignment.bottomCenter,
+                    //                 child: Container(
+                    //                   decoration: BoxDecoration(
+                    //                       color: Colors.black.withOpacity(0.2),
+                    //                       borderRadius: BorderRadius.only(
+                    //                           bottomRight: Radius.circular(10),
+                    //                           bottomLeft: Radius.circular(10))),
+                    //                   child: Padding(
+                    //                     padding:
+                    //                         const EdgeInsets.only(bottom: 5),
+                    //                     child: Row(
+                    //                       children: [
+                    //                         SizedBox(
+                    //                           width: widgetSize.getWidth(
+                    //                               23, context),
+                    //                         ),
+                    //                         Text(
+                    //                           'الرصيد المستحق',
+                    //                           style: TextStyle(
+                    //                             fontFamily: 'DIN Next LT W23',
+                    //                             fontSize: widgetSize.getHeight(
+                    //                                 15, context),
+                    //                             color: const Color(0xffffffff),
+                    //                           ),
+                    //                           softWrap: false,
+                    //                         ),
+                    //                         Spacer(),
+                    //                         Text(
+                    //                           context
+                    //                                       .read<AppProvider>()
+                    //                                       .utilitiesModel !=
+                    //                                   null
+                    //                               ? context
+                    //                                           .read<
+                    //                                               AppProvider>()
+                    //                                           .utilitiesModel!
+                    //                                           .data !=
+                    //                                       null
+                    //                                   ? context
+                    //                                               .read<
+                    //                                                   AppProvider>()
+                    //                                               .utilitiesModel!
+                    //                                               .data!
+                    //                                               .unpaidUnits !=
+                    //                                           null
+                    //                                       ? context
+                    //                                           .read<
+                    //                                               AppProvider>()
+                    //                                           .utilitiesModel!
+                    //                                           .data!
+                    //                                           .unpaidUnits!
+                    //                                       : ""
+                    //                                   : ""
+                    //                               : "",
+                    //                           style: TextStyle(
+                    //                             fontFamily: 'DIN Next LT W23',
+                    //                             fontSize: widgetSize.getHeight(
+                    //                                 15, context),
+                    //                             color: const Color(0xffffffff),
+                    //                           ),
+                    //                           softWrap: false,
+                    //                         ),
+                    //                         SizedBox(
+                    //                           width: widgetSize.getWidth(
+                    //                               23, context),
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               )
+                    //             ],
+                    //           ),
+                    //         )
+                    //       ],
+                    //     )),
+                    // MyWallet(),
                     SizedBox(
                       height: widgetSize.getHeight(35, context),
                     ),
@@ -442,7 +446,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                                 .uploadReceipt(
                                                                 imageName!,res.data!.data!.name!
                                                                 ,fileData: imageB64!);
-                                                            if (res.status ==
+                                                            if (uploadReceiptRes.status ==
                                                                 Status.COMPLETED) {
 
                                                               Fluttertoast.showToast(
@@ -456,11 +460,11 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                                   toastLength: Toast
                                                                       .LENGTH_LONG);
                                                               // Navigator.pop(navigator.currentContext!);
-                                                              Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => MainScreen()), (route) => false);
+                                                              Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                                             }
                                                             else{
                                                               Fluttertoast.showToast(
-                                                                  backgroundColor: Colors.red,
+                                                                  backgroundColor: ColorResources.studio,
                                                                   textColor: Colors.white,
                                                                   msg:"حدث خطأ تقني  ",
                                                                   timeInSecForIosWeb: 4,
@@ -501,7 +505,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                       ),
                                                       SafeOnTap(
                                                         onSafeTap: () async {
-                                                          Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => MainScreen()), (route) => false);
+                                                          Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                                         },
                                                         child: Row(
                                                           mainAxisAlignment:
@@ -553,7 +557,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                         message = 'يوجد طلب معلق، جاري اتخاذ الاجراء من قبل الادارة.';
                                       }
                                       Fluttertoast.showToast(
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: ColorResources.studio,
                                           textColor: Colors.white,
                                           msg: message ?? "",
                                           timeInSecForIosWeb: 4,
@@ -676,21 +680,60 @@ class _ShippingScreenState extends State<ShippingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SafeOnTap(
-                    onSafeTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
-                Text(
-                  "محفظتي",
-                  style: TextStyle(
-                    fontSize: widgetSize.getHeight(16, context),
-                    color: const Color(0xffffffff),
-                  ),
-                  softWrap: false,
+                Expanded(
+                  child: SafeOnTap(
+                      onSafeTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Spacer(),
+                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "محفظتي",
+                    style: TextStyle(
+                      fontSize: widgetSize.getHeight(16, context),
+                      color: const Color(0xffffffff),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(children: [
+                          const Text("JD ", style: TextStyle(
+                            fontFamily: 'DIN Next LT W23',
+                            fontSize: 16,
+                            color:  Color(0xffffffff),
+                            fontWeight: FontWeight.w400,
+                          ), softWrap: false,),
+                          Text(
+                            context.watch<AppProvider>().utilitiesModel!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                            style: const TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            softWrap: false,
+                          ),
+                          SizedBox(width: widgetSize.getWidth(5, context)),
+                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                        ],),
+                      ),),
+                  ),
+                )
               ],
             ),
           ),

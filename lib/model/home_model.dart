@@ -48,7 +48,7 @@ class HomeBlock extends ChangeNotifier {
         type = json['type'] as String?,
         title = json['title'] as String?,
         expanded = json['expanded']!=null?json['expanded']:true ,
-        background = json['background'] as String?,
+        background = json['background'] as String? ?? "#7c5aa6",
         view = json['view'],
         data = (json['data'] as List?)?.map((dynamic e) => HomeBlockData.fromJson(e as Map<String,dynamic>)).toList();
 
@@ -59,6 +59,11 @@ class HomeBlock extends ChangeNotifier {
     'view' : view,
     'data' : data?.map((e) => e.toJson()).toList()
   };
+
+  @override
+  toString(){
+    return "HomeBlock{id: $id, type: $type, background: $background, view: $view, data: $data}";
+  }
 }
 
 class HomeBlockData {
@@ -97,8 +102,8 @@ class HomeBlockData {
         bannerView = json['banner_view'],
         viewId = json['view_id'],
         bannerLink = json['banner_link'] as String?,
-        categoryImage = json['category_image'] as String?,
-        backgroundColor = json['background_color'] as String?,
+        categoryImage = json['category_image'] as String? ?? "/files/foreground.png",
+        backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
         categoryName = json['category_name'] as String?,
         categoryTitle = json['category_title'] as String?,
         categoryRoute = json['category_route'] as String?,
@@ -135,8 +140,8 @@ class SubCategories {
 
   SubCategories.fromJson(Map<String, dynamic> json)
       : name = json['name'] as String?,
-        image = json['image'],
-        backgroundColor = json['background_color'],
+        image = json['image']?? "/files/foreground.png" ,
+        backgroundColor = json['background_color'] ?? "#7c5aa6",
         websiteTitle = json['website_title'],
         route = json['route'] as String?,
         categoryView = json['category_view'],

@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/provider/home_provider.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
@@ -46,98 +47,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                   borderRadius: BorderRadius.circular(20)),
               child: ListView(shrinkWrap: true,children: [
 
-                Container(
-                    height: widgetSize.getHeight(140, context), // Border width
-                    decoration: BoxDecoration( borderRadius: BorderRadius.circular(10)),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(Assets.imgWalletHh, fit: BoxFit.cover),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Column(mainAxisSize: MainAxisSize.max,crossAxisAlignment: CrossAxisAlignment.center,children: [
-                            SizedBox(height:widgetSize.getHeight(20, context)),
-                            Text(
-                              'رصيد المحفظة',
-                              style: TextStyle(
-                                fontFamily: 'DIN Next LT W23',
-                                fontSize: widgetSize.getHeight(18, context),
-                                color: const Color(0xbdffffff),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              softWrap: false,
-                            ),
-                            Row(children: [
-                              SizedBox(width: widgetSize.getWidth(35, context),),
-                              SvgPicture.asset(Assets.svgWallet,height: widgetSize.getWidth(45, context),width: widgetSize.getWidth(45, context),color: Colors.white,),
-
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding:  EdgeInsets.symmetric(horizontal: 2),
-                                    child: Text(
-                                      context.watch<AppProvider>().utilitiesModel!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                                      context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":""
-                                      ,
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: 44,
-                                        color: const Color(0xffffffff),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                decoration: BoxDecoration(                    color: Colors.black.withOpacity(0.2),
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10) )),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Row(children: [
-                                    SizedBox(width: widgetSize.getWidth(23, context),),
-                                    Text(
-                                      'الرصيد المستحق',
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: widgetSize.getHeight(15, context),
-                                        color: const Color(0xffffffff),
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      context.read<AppProvider>().utilitiesModel!=null?
-                                      context.read<AppProvider>().utilitiesModel!.data!=null?
-                                      context.read<AppProvider>().utilitiesModel!.data!.unpaidUnits!=null?
-                                      context.read<AppProvider>().utilitiesModel!.data!.unpaidUnits!:"":"":"",
-                                      style: TextStyle(
-                                        fontFamily: 'DIN Next LT W23',
-                                        fontSize: widgetSize.getHeight(15, context),
-                                        color: const Color(0xffffffff),
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                    SizedBox(width: widgetSize.getWidth(23, context),),
-                                  ],),
-                                ),
-                              ),
-                            )
-                          ],),
-                        )
-                      ],
-                    )),
+               // MyWallet(),
                 SizedBox(height: widgetSize.getHeight(35, context),),
 
 
@@ -437,7 +347,20 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
       ],
     ),);
   }
+  late List<SearchFieldListItem<Data>> suggestions ;
 
+  @override
+  void initState() {
+    super.initState();
+    suggestions = context.read<AppProvider>().agentModel!.data!
+        .map(
+          (e) => SearchFieldListItem<Data>(
+        e.customerName!,
+        item: e,
+      ),
+    )
+        .toList();
+  }
 
   PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
@@ -455,33 +378,75 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                 top: widgetSize.getHeight(30, context),
                 right: widgetSize.getWidth(16, context),
                 left: widgetSize.getWidth(16, context)),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-                SafeOnTap(onSafeTap: () { Navigator.pop(context); },
-                    child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
-                Text(
-                 "محفظتي",
-                  style: TextStyle(
-                    fontSize: widgetSize.getHeight(16, context),
-                    color: const Color(0xffffffff),
-                  ),
-                  softWrap: false,
+                Expanded(
+                  child: SafeOnTap(onSafeTap: () { Navigator.pop(context); },
+                      child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Spacer(),
+                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                   "محفظتي",
+                    style: TextStyle(
+                      fontSize: widgetSize.getHeight(16, context),
+                      color: const Color(0xffffffff),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(children: [
+                          const Text("JD ", style: TextStyle(
+                            fontFamily: 'DIN Next LT W23',
+                            fontSize: 16,
+                            color:  Color(0xffffffff),
+                            fontWeight: FontWeight.w400,
+                          ), softWrap: false,),
+                          Text(
+                            context.watch<AppProvider>().utilitiesModel!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                            style: const TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            softWrap: false,
+                          ),
+                          SizedBox(width: widgetSize.getWidth(5, context)),
+                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                        ],),
+                      ),),
+                  ),
+                )
 
               ],
             ),
           ),
         ));
   }
-
-
   Widget mobileTextFormField() {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SearchField<Data>(
+        onSearchTextChanged: (value){
+          setState(() {
+            getSearchResult(value);
+          });
+          return suggestions;
+        },
         controller: mobileController,
         searchInputDecoration: InputDecoration(
           border: OutlineInputBorder(
@@ -505,19 +470,46 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
           ),
         ),
         hint: "هاتف المستخدم المرتبط به",
-        suggestions: context.read<AppProvider>().agentModel!.data!
-            .map(
-              (e) => SearchFieldListItem<Data>(
-            e.customerName!,
-            item: e,
-          ),
-        )
-            .toList(),
+        onSubmit: (value){
+          setState(() {
+            getSearchResult(value);
+          });
+        },
+        suggestions: suggestions,
         validator: Validations().filedRequired,
       ),
     );
   }
 
+  getSearchResult(String? value) {
+    if(value != null){
+      List<Data> dataNumbers = context.read<AppProvider>().agentModel!.data!.where((element) => element.mobileNo!.contains(value)).toList();
+      List<Data> dataNames = context.read<AppProvider>().agentModel!.data!.where((element) => element.customerName!.contains(value)).toList();
+      final RegExp numberExp = RegExp(r'[^0-9]+$');
+      final List<String> numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      if(value.isNotEmpty) {
+        if (numbers.contains(value[0])) {
+          setState(() {
+            suggestions = dataNumbers.map((e) =>
+                SearchFieldListItem<Data>(
+                  e.mobileNo!,
+                  item: e,
+                )).toList();
+          });
+        }
+        else {
+          setState(() {
+            suggestions = dataNames.map((e) =>
+                SearchFieldListItem<Data>(
+                  e.customerName!,
+                  item: e,
+                )).toList();
+          });
+        }
+      }
+
+    }
+  }
   Widget transferAmountTextFormField() {
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -536,7 +528,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
   }
 
   Future<void> showAgentCustomersName(BuildContext context) async {
-    if( context.read<AppProvider>().agentModel!=null&&context.read<AppProvider>().agentModel!.data!=null&&context.read<AppProvider>().agentModel!.data!.isNotEmpty) {
+    if( context.read<AppProvider>().getUserInfo()!.customerType == "Agent") {
       var res = await showMaterialModalBottomSheet(
         expand: false,
         context: context,

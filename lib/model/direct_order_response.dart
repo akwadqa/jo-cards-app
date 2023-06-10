@@ -10,7 +10,7 @@ class DirectOrderResponse {
    String? grandTotal;
    String? owner;
    String? currency;
-   String? orderId;
+   String? invoiceId;
    List<OrderItems>? orderItems;
   String? excType;
   String? serverMessages;
@@ -24,7 +24,7 @@ class DirectOrderResponse {
     this.date,
     this.postingTime,
     this.status,
-    this.orderId,
+    this.invoiceId,
     this.orderItems,
     this.extraCharges,
     this.grandTotal,
@@ -46,7 +46,7 @@ class DirectOrderResponse {
         owner = json['owner'] as String?,
         currency = json['currency'] as String?,
       status = json['status'] as String?,
-      orderId = json['order_id'] as String?,
+      invoiceId = json['invoice_id'] as String?,
         excType = json['exc_type'] as String?,
         serverMessages = json['_server_messages'] as String?,
       orderItems = (json['order_items'] as List?)?.map((dynamic e) => OrderItems.fromJson(e as Map<String,dynamic>)).toList();
@@ -57,7 +57,7 @@ class DirectOrderResponse {
     'date' : date,
     'posting_time' : postingTime,
     'status' : status,
-    'order_id' : orderId,
+    'invoice_id' : invoiceId,
     'order_items' : orderItems?.map((e) => e.toJson()).toList()
   };
 }
@@ -86,8 +86,8 @@ class OrderItems {
     : websiteItemName = json['website_item_name'] as String?,
       websiteItemCode = json['website_item_code'] as String?,
       quantity = json['quantity'].toString(),
-      itemImage = json['website_item_image'] as String?,
-        backgroundColor = json['background_color'] as String?,
+      itemImage = json['website_item_image'] as String? ?? "/files/foreground.png",
+        backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
       totalAmount = json['total_amount'].toString(),
       stockDetails = (json['stock_details'] as List?)?.map((dynamic e) => StockDetails.fromJson(e as Map<String,dynamic>)).toList();
 

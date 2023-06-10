@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/product_details.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:jocards/utill/color_resources.dart';
 import 'package:jocards/utill/strings.dart';
@@ -106,199 +107,332 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                              shrinkWrap: true,
                              physics: NeverScrollableScrollPhysics(),
                              itemCount:items.length,
-                             itemBuilder: (context, childIndex) => SafeOnTap(
-                               onSafeTap: (){
-                                 Navigator.push(
-                                   context,
-                                   PageTransition(
-                                     type: PageTransitionType.bottomToTop,
-                                     child: ProductDetailsScreen(items[childIndex].productTitle!,items[childIndex].websiteItemId!),
-                                   ),
-                                 );
-                               },
-                               child: Container(
-                                 decoration: BoxDecoration(
-                                     color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                                 child: Column(
-                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                   children: [
-                                     Stack(
-                                       children: [
-                                         Padding(
-                                           padding: EdgeInsets.symmetric(
-                                               vertical: widgetSize.getHeight(10, context),
-                                               horizontal: widgetSize.getWidth(14, context)),
-                                           child: CachedNetworkImage(
-                                             imageUrl: Strings.BASR_URl +
-                                                 items[childIndex].websiteImage!,
-                                             imageBuilder: (context, imageProvider) => AspectRatio(
-                                               aspectRatio: 1,
-                                               child: Container(
-                                                 decoration: BoxDecoration(
-                                                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                   shape: BoxShape.rectangle,
-                                                   color: hexToColor(
-                                                       items[childIndex].backgroundColor!),
-                                                   image: DecorationImage(
-                                                       image: imageProvider, fit: BoxFit.contain),
-                                                 ),
-                                               ),
-                                             ),
-                                             placeholder: (context, url) => AspectRatio(
-                                               aspectRatio: 1.2,
-                                               child: Center(
-                                                 child: CircularProgressIndicator(
-                                                     valueColor:
-                                                     new AlwaysStoppedAnimation<Color>(ColorResources.studio)),
-                                               ),
-                                             ),
-                                             errorWidget: (context, url, error) => Center(
-                                               child: Icon(Icons.error),
-                                             ),
-                                           ),
-                                         ),
-                                         if(items[childIndex].discountPercent!=null&&items[childIndex].discountPercent!.isNotEmpty&&items[childIndex].discountPercent!="0.0%")...[
-                                         Positioned(
-                                           top: 4,
-                                           left: 4,
-                                           child: Container(
-                                             decoration: BoxDecoration(
-                                               color: const Color(0xffe46060),
-                                               borderRadius: BorderRadius.circular(11.0),
-                                             ),
-                                             child: Padding(
-                                               padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 8),
-                                               child: Text(
-                                                 items[childIndex].discountPercent!.toString(),
-                                                 style: TextStyle(
-                                                   fontFamily: 'DIN Next LT W23',
-                                                   fontSize: widgetSize.getHeight(12, context),
-                                                   color: const Color(0xffffffff),
-                                                 ),
-                                                 softWrap: false,
-                                               ),
-                                             ),
-                                           ),
-                                         )]
-                                       ],
-                                     ),
-                                     SizedBox(
-                                       height: widgetSize.getHeight(5, context),
-                                     ),
-                                     Align(
-                                       alignment: Alignment.center,
-                                       child: Padding(
-                                         padding:  EdgeInsets.symmetric(horizontal: 1),
-                                         child: Text(
-                                           items[childIndex].productTitle!,
-                                           textAlign: TextAlign.center,
-                                           style: TextStyle(
-
-                                             fontSize: widgetSize.getHeight(14, context),
-                                             color: const Color(0xff191919),
-                                             fontWeight: FontWeight.w700,
-                                           ),
-                                         ),
-                                       ),
-                                     ),
-
-                                     SizedBox(
-                                       height: widgetSize.getHeight(5, context),
-                                     ),
-                                     Align(
-                                       alignment: Alignment.center,
-                                       child: Padding(
-                                         padding:  EdgeInsets.symmetric(horizontal: 1),
-                                         child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                                           children: [
-                                             Text(
-                                               items[childIndex].itemPrice.toString(),
-                                               style: TextStyle(
-                                                 fontFamily: 'DIN Next LT W23',
-                                                 fontSize: widgetSize.getHeight(18, context),
-                                                 color: ColorResources.red,
-                                                 fontWeight: FontWeight.w700,
-                                               ),
-                                               softWrap: false,
-                                             ),
-                                             SizedBox(
-                                               width: widgetSize.getWidth(5, context),
-                                             ),
-                                             Text(
-                                               items[childIndex].currency.toString(),
-                                               style: TextStyle(
-                                                 fontFamily: 'DIN Next LT W23',
-                                                 fontSize: widgetSize.getHeight(14, context),
-                                                 color: ColorResources.red,
-                                               ),
-                                               softWrap: false,
-                                             )
-                                           ],
-                                         ),
-                                       ),
-                                     ),
-
-                                     SizedBox(
-                                       height: widgetSize.getHeight(5, context),
-                                     ),
-                                     if(items[childIndex].inStock!=null&&items[childIndex].inStock==1)...[
-                                     Align(
-                                       alignment: Alignment.centerRight,
-                                       child: Padding(
-                                         padding: EdgeInsets.only(right:widgetSize.getWidth(5, context)),
-                                         child: Row(mainAxisAlignment: MainAxisAlignment.start,
-                                           children: [
-                                            SvgPicture.asset(Assets.svgCheckCircle,height: widgetSize.getHeight(14, context),
-                                                width:widgetSize.getWidth(14, context)),
-                                             SizedBox(
-                                               width: widgetSize.getWidth(5, context),
-                                             ),
-                                             Text(
-                                               'متوفر',
-                                               style: TextStyle(
-                                                 fontFamily: 'DIN Next LT W23',
-                                                 fontSize: widgetSize.getHeight(15, context),
-                                                 color: const Color(0xff2892d7),
-                                               ),
-                                               softWrap: false,
-                                             )
-                                           ],
-                                         ),
-                                       ),
-                                     ),],
-                                     if(items[childIndex].inStock!=null&&items[childIndex].inStock==0)...[
-                                       Align(
-                                         alignment: Alignment.centerRight,
-                                         child: Padding(
-                                           padding:  EdgeInsets.only(right:widgetSize.getWidth(5, context)),
-                                           child: Row(mainAxisAlignment: MainAxisAlignment.start,
-                                             crossAxisAlignment: CrossAxisAlignment.center,
-                                             children: [
-                                               SvgPicture.asset(Assets.svgControlclose,height: widgetSize.getHeight(14, context),
-                                               width:widgetSize.getWidth(14, context),),
-                                               SizedBox(
-                                                 width: widgetSize.getWidth(5, context),
-                                               ),
-                                               Text(
-                                                 'غير متوفر',
-                                                 style: TextStyle(
-                                                   fontFamily: 'DIN Next LT W23',
-                                                   fontSize: widgetSize.getHeight(14, context),
-                                                   color: const Color(0xffff6060),
-                                                 ),
-                                                 softWrap: false,
-                                               )
-                                             ],
-                                           ),
-                                         ),
-                                       ),]
-
-
-                                   ],
-                                 ),
-                               ),
-                             ),
-                           );
+                             itemBuilder: (context, childIndex)                              {
+                                      return SafeOnTap(
+                                        onSafeTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              type: PageTransitionType
+                                                  .bottomToTop,
+                                              child: SharedBottomNavigationBar(
+                                                  widget: ProductDetailsScreen(
+                                                      items[childIndex]
+                                                          .productTitle!,
+                                                      items[childIndex]
+                                                          .websiteItemId!)),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: widgetSize
+                                                            .getHeight(
+                                                                10, context),
+                                                        horizontal:
+                                                            widgetSize.getWidth(
+                                                                14, context)),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: Strings
+                                                              .BASR_URl +
+                                                          items[childIndex]
+                                                              .websiteImage!,
+                                                      imageBuilder: (context,
+                                                              imageProvider) =>
+                                                          AspectRatio(
+                                                        aspectRatio: 1,
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                            shape: BoxShape
+                                                                .rectangle,
+                                                            color: hexToColor(items[
+                                                                    childIndex]
+                                                                .backgroundColor!),
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .contain),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              AspectRatio(
+                                                        aspectRatio: 1.2,
+                                                        child: Center(
+                                                          child: CircularProgressIndicator(
+                                                              valueColor: new AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  ColorResources
+                                                                      .studio)),
+                                                        ),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Center(
+                                                        child:
+                                                            Icon(Icons.error),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (items[childIndex]
+                                                              .discountPercent !=
+                                                          null &&
+                                                      items[childIndex]
+                                                          .discountPercent!
+                                                          .isNotEmpty &&
+                                                      items[childIndex]
+                                                              .discountPercent !=
+                                                          "0.0%") ...[
+                                                    Positioned(
+                                                      top: 4,
+                                                      left: 4,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: const Color(
+                                                              0xffe46060),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      11.0),
+                                                        ),
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 4,
+                                                                  horizontal:
+                                                                      8),
+                                                          child: Text(
+                                                            items[childIndex]
+                                                                .discountPercent!
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'DIN Next LT W23',
+                                                              fontSize: widgetSize
+                                                                  .getHeight(12,
+                                                                      context),
+                                                              color: const Color(
+                                                                  0xffffffff),
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ]
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    5, context),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 1),
+                                                  child: Text(
+                                                    items[childIndex]
+                                                        .productTitle!,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              14, context),
+                                                      color: const Color(
+                                                          0xff191919),
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    5, context),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 1),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        items[childIndex]
+                                                            .itemPrice
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'DIN Next LT W23',
+                                                          fontSize: widgetSize
+                                                              .getHeight(
+                                                                  18, context),
+                                                          color: ColorResources
+                                                              .green,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                        softWrap: false,
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            widgetSize.getWidth(
+                                                                5, context),
+                                                      ),
+                                                      Text(
+                                                        items[childIndex]
+                                                            .currency
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'DIN Next LT W23',
+                                                          fontSize: widgetSize
+                                                              .getHeight(
+                                                                  14, context),
+                                                          color: ColorResources
+                                                              .green,
+                                                        ),
+                                                        softWrap: false,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    5, context),
+                                              ),
+                                              if (items[childIndex].inStock !=
+                                                      null &&
+                                                  items[childIndex].inStock ==
+                                                      1) ...[
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right:
+                                                            widgetSize.getWidth(
+                                                                5, context)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                            Assets
+                                                                .svgCheckCircle,
+                                                            height: widgetSize
+                                                                .getHeight(14,
+                                                                    context),
+                                                            width: widgetSize
+                                                                .getWidth(14,
+                                                                    context)),
+                                                        SizedBox(
+                                                          width: widgetSize
+                                                              .getWidth(
+                                                                  5, context),
+                                                        ),
+                                                        Text(
+                                                          'متوفر',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'DIN Next LT W23',
+                                                            fontSize: widgetSize
+                                                                .getHeight(15,
+                                                                    context),
+                                                            color: const Color(
+                                                                0xff2892d7),
+                                                          ),
+                                                          softWrap: false,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                              if (items[childIndex].inStock !=
+                                                      null &&
+                                                  items[childIndex].inStock ==
+                                                      0) ...[
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right:
+                                                            widgetSize.getWidth(
+                                                                5, context)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          Assets
+                                                              .svgControlclose,
+                                                          height: widgetSize
+                                                              .getHeight(
+                                                                  14, context),
+                                                          width: widgetSize
+                                                              .getWidth(
+                                                                  14, context),
+                                                        ),
+                                                        SizedBox(
+                                                          width: widgetSize
+                                                              .getWidth(
+                                                                  5, context),
+                                                        ),
+                                                        Text(
+                                                          'غير متوفر',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'DIN Next LT W23',
+                                                            fontSize: widgetSize
+                                                                .getHeight(14,
+                                                                    context),
+                                                            color: const Color(
+                                                                0xffff6060),
+                                                          ),
+                                                          softWrap: false,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                  });
                             } else
                               return Container();
 

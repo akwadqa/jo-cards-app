@@ -28,7 +28,27 @@ class ShippingOrderHistory extends StatefulWidget {
 }
 
 class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
-  late String filters = widget.shippingType == ShippingType.wallet ? context.read<AppProvider>().agentModel?.data != null &&  context.read<AppProvider>().agentModel!.data!.isNotEmpty ? '{"is_transfer": "0"}' : '{}' : '{"is_transfer": "1"}';
+  late String filters = setIsTransfer();
+  // widget.shippingType == ShippingType.customers ? context.read<AppProvider>().getUserInfo()!.customerType == "Agent" ? '{"is_transfer": "1"}' : '{}' : '{"is_transfer": "0"}';
+  String setIsTransfer(){
+    if(widget.shippingType == ShippingType.customers){
+      if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent"){
+        return '{"is_transfer": "1"}';
+      }
+      else{
+        return '{}';
+      }
+    }
+    else{
+      if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent"){
+        return '{"is_transfer": "0"}';
+      }
+      else{
+        return '{}';
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,60 +59,28 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
               horizontal: widgetSize.getWidth(15, context)),
           child: RefreshIndicator(
             onRefresh: () => Future.sync(() {
-              filters = widget.shippingType == ShippingType.wallet ? context.read<AppProvider>().agentModel?.data != null &&  context.read<AppProvider>().agentModel!.data!.isNotEmpty ? '{"is_transfer": "0"}' : '{}' : '{"is_transfer": "1"}';
+              filters = setIsTransfer();
+              // widget.shippingType == ShippingType.customers ? context.read<AppProvider>().getUserInfo()!.customerType == "Agent" ? '{"is_transfer": "1"}' : '{}' : '{"is_transfer": "0"}';
               context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
               context.read<AppProvider>().getUtilities();
             }),
             child: CustomScrollView(slivers: <Widget>[
-              SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: widgetSize.getHeight(20, context)),
-                    child: const MyWallet()
-                  ),
-                ),
-              ),
-              if(widget.shippingType == ShippingType.customers) ...[
-                SliverToBoxAdapter(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: widgetSize.getHeight(20, context)),
-                      child: Text(
-                        'إجمالي الصندوق',
-                        style: TextStyle(
-                          fontFamily: 'DIN Next LT W23',
-                          fontSize: widgetSize.getHeight(19, context),
-                          color: const Color(0xff2e2e2e),
-                          fontWeight: FontWeight.w700,
-                        ),
-                        softWrap: false,
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.all(
-                        widgetSize.getHeight(8, context)),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                          widgetSize.getHeight(10, context)),
-                    ),
-                    child: Center(child: Text('${context.read<AppProvider>().utilitiesModel!.data?.payableAmount} دينار أردني', style: const TextStyle(color: ColorResources.red, fontSize: 20, fontWeight: FontWeight.w500),)),
-                  ),
-                ),
-              ],
+              // SliverToBoxAdapter(
+              //   child: Align(
+              //     alignment: Alignment.centerRight,
+              //     child: Padding(
+              //       padding: EdgeInsets.only(
+              //           top: widgetSize.getHeight(20, context)),
+              //       child: const MyWallet()
+              //     ),
+              //   ),
+              // ),
               SliverToBoxAdapter(
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: widgetSize.getHeight(20, context)),
+                        vertical: widgetSize.getHeight(10, context)),
                     child: Text(
                       'الطلبات',
                       style: TextStyle(
@@ -115,6 +103,87 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                     },
                   )
               ),
+
+                SliverToBoxAdapter(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Consumer<HomeProvider>(
+                            builder: (context, homeProvider, child) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
+                                child: Container(
+                                  padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
+                                  height: widgetSize.getHeight(100, context),
+                                  width: MediaQuery.of(context).size.width/3.5,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Text("المبلغ المدفوع", softWrap: true,textAlign: TextAlign.center,),
+                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "":homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid} دينار ', softWrap: true,),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                        ),
+                        Consumer<HomeProvider>(
+                            builder: (context, homeProvider, child) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
+                                child: Container(
+                                  padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
+                                  height: widgetSize.getHeight(100, context),
+                                  width: MediaQuery.of(context).size.width/3.5,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Text("المبلغ الغير مدفوع", softWrap: true, textAlign: TextAlign.center,),
+                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                        ),
+                        Consumer<HomeProvider>(
+                          builder: (context, homeProvider, child) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
+                              child: Container(
+                                padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
+                                height: widgetSize.getHeight(100, context),
+                                width: MediaQuery.of(context).size.width/3.5,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    const Text("المبلغ المتبقي", softWrap: true, textAlign: TextAlign.center,),
+                                    Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)<0 ?0.0:(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)} دينار ', softWrap: true,),
+
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        )
+                      ]
+                  ),
+                ),
               SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
               PagedSliverList<int, ShippingOrdeData>(
 
@@ -410,7 +479,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 ],
                                               ),
                                             ),
-                                            if(context.read<AppProvider>().agentModel?.data != null &&  context.read<AppProvider>().agentModel!.data!.isNotEmpty && item.workflowState == 'Pending' && item.docstatus == 0 && widget.shippingType == ShippingType.customers)
+                                            if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent" && item.workflowState == 'Pending' && item.docstatus == 0 && widget.shippingType == ShippingType.customers)
                                             SizedBox(
                                               width: 100,
                                               child: DropdownButtonFormField<String>(
@@ -472,7 +541,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   }
                                                 },),
                                             ),
-                                            if(context.read<AppProvider>().agentModel?.data != null &&  context.read<AppProvider>().agentModel!.data!.isNotEmpty && item.workflowState == 'Approved' && item.docstatus == 1 && (item.status == 'Partially Paid' || item.status == 'Unpaid') && widget.shippingType == ShippingType.customers)
+                                            if(context.read<AppProvider>().getUserInfo()!.customerType =="Agent" && item.workflowState == 'Approved' && item.docstatus == 1 && (item.status == 'Partially Paid' || item.status == 'Unpaid') && widget.shippingType == ShippingType.customers)
                                               Container(
                                                 decoration: const BoxDecoration(color: ColorResources.summerSky),
                                                 child: Material(
@@ -633,7 +702,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                             }
                             else{
                               Fluttertoast.showToast(
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: ColorResources.studio,
                                   textColor: Colors.white,
                                   msg: res.message ?? "",
                                   timeInSecForIosWeb: 4,
@@ -670,23 +739,63 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                 right: widgetSize.getWidth(16, context),
                 left: widgetSize.getWidth(16, context)),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SafeOnTap(
-                    onSafeTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
-                Text(
-                  widget.shippingType == ShippingType.wallet ? "طلبات شحن المحفظة" : "طلبات شحن العملاء",
-                  style: TextStyle(
-                    fontSize: widgetSize.getHeight(16, context),
-                    color: const Color(0xffffffff),
-                  ),
-                  softWrap: false,
+                Expanded(
+                  child: SafeOnTap(
+                      onSafeTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Spacer(),
+                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    widget.shippingType == ShippingType.wallet ? "طلبات شحن المحفظة" : "طلبات شحن العملاء",
+                    style: TextStyle(
+                      fontSize: widgetSize.getHeight(16, context),
+                      color: const Color(0xffffffff),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ),
+                SizedBox(width: widgetSize.getWidth(2, context),),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(8, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(children: [
+                          const Text("JD ", style: TextStyle(
+                            fontFamily: 'DIN Next LT W23',
+                            fontSize: 16,
+                            color:  Color(0xffffffff),
+                            fontWeight: FontWeight.w400,
+                          ), softWrap: true,),
+                          Text(
+                            context.watch<AppProvider>().utilitiesModel!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                            style: const TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            softWrap: false,
+                          ),
+                          SizedBox(width: widgetSize.getWidth(5, context)),
+                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                        ],),
+                      ),),
+                  ),
+                )
               ],
             ),
           ),
@@ -703,6 +812,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
   initial(){
     context.read<HomeProvider>().shippingOrdersPagingController =
         PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
+    context.read<HomeProvider>().shippingOrderResponseModelVar = ShippingOrderResponseModel(totalOrderData: TotalOrderData(totalUnPaid: 0.0, totalPaid: 0.0));
     context
         .read<HomeProvider>()
         .shippingOrdersPagingController!

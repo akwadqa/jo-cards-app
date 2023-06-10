@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -439,14 +440,23 @@ autoPrint=!autoPrint;
               SafeOnTap(onSafeTap: ()async{
                 await  context.read<AppProvider>().enableMerchantNamePrint(printMerchantName);
                 await  context.read<AppProvider>().enableDisablePrintAfterDirectOrder(autoPrint);
-                if(!androidInfo.model!.contains("TPS")) {
-                  await context.read<AppProvider>().saveBluetoothDevice(
-                      jsonEncode(_device!.toMap()));
-                  _disconnect();
-                  _connect();
+                if(_device == null){
+                  Fluttertoast.showToast(
+                      backgroundColor: ColorResources.nightRider,
+                      textColor: Colors.white,
+                      msg: "الرجاء اختيار جهاز من القائمة",
+                      timeInSecForIosWeb: 4,
+                      toastLength: Toast.LENGTH_LONG);
                 }
-                Navigator.pop(context);
-
+                else {
+                  if (!androidInfo.model!.contains("TPS")) {
+                    await context.read<AppProvider>().saveBluetoothDevice(
+                        jsonEncode(_device!.toMap()));
+                    _disconnect();
+                    _connect();
+                  }
+                  Navigator.pop(context);
+                }
               },
                 child: Container(
                   height: widgetSize.getHeight(60, context),
@@ -502,7 +512,7 @@ autoPrint=!autoPrint;
    await bluetooth.printCustom("******************************************", 0, 0);
 
    await bluetooth.printCustom("Date: ${directOrderResponse.date}   Time:${directOrderResponse.postingTime!.split(".")[0]}", 0, 0);
-   await bluetooth.printCustom("Order No : ${directOrderResponse.orderId!.toString()}", 0, 1);
+   await bluetooth.printCustom("Order No : ${directOrderResponse.invoiceId!.toString()}", 0, 1);
    await bluetooth.printCustom("******************************************", 0, 0);
  }
 

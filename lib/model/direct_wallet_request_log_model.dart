@@ -3,28 +3,41 @@ class DirectWalletRequestLogModel {
   final String? message;
   final Pagination? pagination;
   final List<DirectWalletRequestLogData>? data;
+  final TotalData? totalData;
 
   DirectWalletRequestLogModel({
     this.statusCode,
     this.message,
     this.pagination,
     this.data,
+    this.totalData
   });
 
   DirectWalletRequestLogModel.fromJson(Map<String, dynamic> json)
     : statusCode = json['status_code'] as int?,
       message = json['message'] as String?,
       pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null,
-      data = (json['data'] as List?)?.map((dynamic e) => DirectWalletRequestLogData.fromJson(e as Map<String,dynamic>)).toList();
+      data = (json['data'] as List?) != null ? (json['data'] as List?)?.map((dynamic e) => DirectWalletRequestLogData.fromJson(e as Map<String,dynamic>)).toList() : null,
+      totalData = (json['total'] as Map<String,dynamic>?) != null ? TotalData.fromMap(json["total"]) : null;
 
   Map<String, dynamic> toJson() => {
     'status_code' : statusCode,
     'message' : message,
     'pagination' : pagination?.toJson(),
-    'data' : data?.map((e) => e.toJson()).toList()
+    'data' : data?.map((e) => e.toJson()).toList(),
+    "total" : totalData
   };
 }
+class TotalData{
+  final dynamic totalPaid;
+  final dynamic totalUnPaid;
 
+  TotalData(this.totalUnPaid, this.totalPaid);
+
+  TotalData.fromMap(Map<String, dynamic> json):
+      totalPaid = json["total_paid"] as dynamic,
+      totalUnPaid = json["total_unpaid"] as dynamic;
+}
 class Pagination {
     dynamic totalItems;
  dynamic totalPages;
@@ -73,7 +86,7 @@ class DirectWalletRequestLogData {
 
   DirectWalletRequestLogData.fromJson(Map<String, dynamic> json)
     : refId = json['ref_id'] as String?,
-      dwrLogId = json['so_id'] as String?,
+      dwrLogId = json['dwr_log_id'] as String?,
       date = json['date'] as String?,
       time = json['time'] as String?,
       logType = json['log_type'] as String?,

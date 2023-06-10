@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:jocards/model/categories_model.dart';
+import 'package:jocards/model/invoice_order_details.dart';
+import 'package:jocards/model/login_response_model.dart';
+import 'package:jocards/model/sales_invoice_response_model.dart';
 import 'package:jocards/screens/main_screen/categories_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/subcategories_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
-import 'package:cached_network_image/cached_network_image.dart';import 'package:page_transition/page_transition.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../Network/api_response.dart';
@@ -34,6 +39,7 @@ class PurchaseOrderHistory extends StatefulWidget {
 // si ===> instead
 class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
   String filters = '{}';
+  LoginResponseModel? userModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,9 +51,20 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
           child: RefreshIndicator(
             onRefresh: () => Future.sync(() {
               filters = '{}';
-              context.read<HomeProvider>().salesOrdersDataPagingController?.refresh();
+              context.read<HomeProvider>().salesInvoiceDataPagingController?.refresh();
+              context.read<AppProvider>().getUtilities();
             }),
             child: CustomScrollView(slivers: <Widget>[
+              // SliverToBoxAdapter(
+              //   child: Align(
+              //     alignment: Alignment.centerRight,
+              //     child: Padding(
+              //         padding: EdgeInsets.only(
+              //             top: widgetSize.getHeight(20, context)),
+              //         child: const MyWallet()
+              //     ),
+              //   ),
+              // ),
               SliverToBoxAdapter(
                 child: Align(
                   alignment: Alignment.centerRight,
@@ -72,17 +89,17 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                   searchType: SearchType.salesRequests,
                   onSearch: (String filters) {
                     this.filters = filters;
-                    context.read<HomeProvider>().salesOrdersDataPagingController!.refresh();
+                    context.read<HomeProvider>().salesInvoiceDataPagingController!.refresh();
                   },
                 )
               ),
               SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
-              PagedSliverList<int, SalesOrderData>(
+              PagedSliverList<int, SalesInvoiceData>(
                   shrinkWrapFirstPageIndicators: false,
                   pagingController: context
                       .read<HomeProvider>()
-                      .salesOrdersDataPagingController!,
-                  builderDelegate: PagedChildBuilderDelegate<SalesOrderData>(
+                      .salesInvoiceDataPagingController!,
+                  builderDelegate: PagedChildBuilderDelegate<SalesInvoiceData>(
                       firstPageProgressIndicatorBuilder: (_) =>
                           Loading(loadingText: ""),
                       newPageProgressIndicatorBuilder: (_) => Padding(
@@ -106,7 +123,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                       firstPageErrorIndicatorBuilder: (_) => Error(
                           errorMsg:
                               Provider.of<HomeProvider>(context, listen: false)
-                                  .salesOrdersDataPagingController!
+                                  .salesInvoiceDataPagingController!
                                   .error!
                                   .toString()),
                       itemBuilder: (context, item, index) => Padding(
@@ -153,13 +170,13 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                               Radius.circular(
                                                                   10)),
                                                       shape: BoxShape.rectangle,
-                                                      color: hexToColor(item
-                                                                  .items![0]
-                                                                  .backgroundColor !=
-                                                              null
-                                                          ? item.items![0]
+                                                      color: item
+                                                          .items![0]
+                                                          .backgroundColor !=
+                                                          null
+                                                          ? hexToColor( item.items![0]
                                                               .backgroundColor!
-                                                          : ""),
+                                                          ): Colors.white,
                                                       image: DecorationImage(
                                                           image: imageProvider,
                                                           fit: BoxFit.contain),
@@ -210,12 +227,12 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                               height: widgetSize.getHeight(
                                                   25, context),
                                             ),
-                                            SafeOnTap(
+                                            if(userModel!.customerType == "Agent") SafeOnTap(
                                               onSafeTap: () async {
                                                 context
                                                     .read<HomeProvider>()
-                                                    .getPurchaseOrderDetails(item
-                                                        .salesOrderId
+                                                    .getPurchaseInvoiceDetails(item
+                                                        .salesInvoiceId
                                                         .toString())
                                                     .then((result) {
                                                   if (result.data != null &&
@@ -234,8 +251,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                         response.postingTime;
                                                     directOrderResponse.owner =
                                                         response.owner;
-                                                    directOrderResponse.orderId =
-                                                        response.salesOrderId;
+                                                    directOrderResponse.invoiceId =
+                                                        response.salesInvoiceId;
                                                     directOrderResponse
                                                         .orderItems = [];
                                                     var orderItems = OrderItems(
@@ -285,10 +302,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                 homeProvider,
                                                                 child) {
                                                           if (homeProvider
-                                                                  .salesOrderDetailsResponse !=
+                                                                  .salesInvoiceDetailsResponse !=
                                                               null) {
                                                             switch (homeProvider
-                                                                .salesOrderDetailsResponse!
+                                                                .salesInvoiceDetailsResponse!
                                                                 .status!) {
                                                               case Status.LOADING:
                                                                 return Container(
@@ -300,16 +317,16 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                   child: Loading(
                                                                       loadingText:
                                                                           homeProvider
-                                                                              .salesOrderDetailsResponse!
+                                                                              .salesInvoiceDetailsResponse!
                                                                               .message),
                                                                 );
 
                                                               case Status
                                                                   .COMPLETED:
-                                                                SalesOrderDetailsData?
+                                                                SalesInvoiceDetailsData?
                                                                     items =
                                                                     homeProvider
-                                                                        .salesOrderDetailsResponse!
+                                                                        .salesInvoiceDetailsResponse!
                                                                         .data!
                                                                         .data;
                                                                 if (items !=
@@ -566,7 +583,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                               if (items.grandTotal != null &&
                                                                                   item.grandTotal != "0.0") ...[
                                                                                 Text(
-                                                                                  item.grandTotal!,
+                                                                                  item.grandTotal!.toString(),
                                                                                   style: TextStyle(
                                                                                     fontFamily: 'DIN Next LT W23',
                                                                                     fontSize: 20,
@@ -717,7 +734,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                         .width,
                                                                     child: Error(
                                                                         errorMsg: homeProvider
-                                                                            .salesOrderDetailsResponse!
+                                                                            .salesInvoiceDetailsResponse!
                                                                             .message));
                                                             }
                                                           }
@@ -779,7 +796,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 softWrap: false,
                                               ),
                                               SelectableText(
-                                                item.salesOrderId!,
+                                                item.salesInvoiceId!,
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
@@ -802,7 +819,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 softWrap: false,
                                               ),
                                               Text(
-                                                item.order_status.toString(),
+                                                item.invoiceStatus.toString(),
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
@@ -846,7 +863,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  item.grandTotal!,
+                                                  item.grandTotal!.toString(),
                                                   style: TextStyle(
                                                       fontFamily:
                                                           'DIN Next LT W23',
@@ -943,23 +960,62 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                 right: widgetSize.getWidth(16, context),
                 left: widgetSize.getWidth(16, context)),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SafeOnTap(
-                    onSafeTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
-                Text(
-                  "الطلبات",
-                  style: TextStyle(
-                    fontSize: widgetSize.getHeight(16, context),
-                    color: const Color(0xffffffff),
-                  ),
-                  softWrap: false,
+                Expanded(
+                  child: SafeOnTap(
+                      onSafeTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Spacer(),
+                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    "الطلبات",
+                    style: TextStyle(
+                      fontSize: widgetSize.getHeight(16, context),
+                      color: const Color(0xffffffff),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(children: [
+                          const Text("JD ", style: TextStyle(
+                            fontFamily: 'DIN Next LT W23',
+                            fontSize: 16,
+                            color:  Color(0xffffffff),
+                            fontWeight: FontWeight.w400,
+                          ), softWrap: false,),
+                          Text(
+                            context.watch<AppProvider>().utilitiesModel!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                            style: const TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            softWrap: false,
+                          ),
+                          SizedBox(width: widgetSize.getWidth(5, context)),
+                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                        ],),
+                      ),),
+                  ),
+                )
               ],
             ),
           ),
@@ -971,19 +1027,35 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeProvider>().salesOrdersDataPagingController =
+    userModel= context.read<AppProvider>().getUserInfo();
+    context.read<HomeProvider>().salesInvoiceDataPagingController =
         PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
     context
         .read<HomeProvider>()
-        .salesOrdersDataPagingController!
+        .salesInvoiceDataPagingController!
         .addPageRequestListener((pageKey) {
-      context.read<HomeProvider>().fetchSalesOrders(pageKey, filters);
+      context.read<HomeProvider>().fetchSalesInvoices(pageKey, filters);
     });
+    initlizeCategory();
+  }
+
+  initlizeCategory() async {
+    List<String> items = [];
+    ApiResponse<CategoriesModel> apiResponse =await context.read<HomeProvider>().getAllCategories();
+    if (apiResponse.status == Status.COMPLETED) {
+      if(apiResponse.data!.data != null){
+        List<Data>? list = apiResponse.data!.data;
+        for(int i=0; i< list!.length; i++){
+          items.add(list[i].itemGroupId!);
+        }
+      }
+    }
+    context.read<HomeProvider>().setItems = items;
   }
 
   @override
   void dispose() {
-    context.read<HomeProvider>().salesOrdersDataPagingController!.dispose();
+    context.read<HomeProvider>().salesInvoiceDataPagingController!.dispose();
     super.dispose();
   }
 }

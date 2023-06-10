@@ -1,15 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/Network/api_response.dart';
 import 'package:jocards/generated/assets.dart';
+import 'package:jocards/main.dart';
+import 'package:jocards/model/login_response_model.dart';
 import 'package:jocards/model/register_request_model.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/home_screen.dart';
 import 'package:jocards/screens/main_screen/main_screen.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:jocards/screens/widget/sign_up_header.dart';
 import 'package:jocards/screens/widget/textformfield.dart';
@@ -181,14 +186,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
  /*                                         var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
                                           context.read<AppProvider>().setSignInUser(true,  json.encode(res.data!), token);*/
                                           try{
-                                            var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
+                                          var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
                                             await context.read<AppProvider>().setSignInUser(true, json.encode(res.data!) ,token);
+                                            await context.read<AppProvider>().setOldPassword(password);
                                             await context.read<AppProvider>().getUtilities();
+                                            if(await Provider.of<AppProvider>(context, listen: false).isUserSigned()){
+                                              LoginResponseModel? userInfo = Provider.of<AppProvider>(context, listen: false).getUserInfo();
+                                              String deviceType = "";
+                                              if(Platform.isAndroid){
+                                                await FirebaseMessaging.instance.subscribeToTopic("android");
+                                                deviceType = "android";
+                                              }
+                                              if(Platform.isIOS){
+                                                await FirebaseMessaging.instance.subscribeToTopic("ios");
+                                                deviceType = "ios";
+                                              }
+                                              Provider.of<AppProvider>(context, listen: false).sendUpdateToken(await Provider.of<AppProvider>(context, listen: false).getFirebaseToken(), userInfo!.profileDetails!.email!, deviceType, androidInfo.device);
+                                            }
                                             await registrationSuccessDialog(res.data!.message!);
                                           }
                                           catch(e){
                                             Fluttertoast.showToast(
-                                                backgroundColor: Colors.red,
+                                                backgroundColor: ColorResources.studio,
                                                 textColor: Colors.white,
                                                 msg: res.data!.message ?? "",
                                                 timeInSecForIosWeb: 4,
@@ -198,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         }
                                         else{
                                           Fluttertoast.showToast(
-                                              backgroundColor: Colors.red,
+                                              backgroundColor: ColorResources.studio,
                                               textColor: Colors.white,
                                               msg: res.data!.message ?? "",
                                               timeInSecForIosWeb: 4,
@@ -620,12 +639,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding:  EdgeInsets.symmetric(horizontal: widgetSize.getWidth(90, context)),
                     child: SafeOnTap(
                       onSafeTap: ()async{
-                      await  Navigator.pushReplacement(
+                      await  Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(
                             type: PageTransitionType.fade,
-                            child: MainScreen(),
-                          ), );
+                            child: SharedBottomNavigationBar(widget: MainScreen()),
+                          ), (route)=> false);
                         Navigator.pop(context);
                       },
                       child: Container(

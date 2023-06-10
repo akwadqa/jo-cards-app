@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TransferCheckBox extends StatefulWidget {
-  const TransferCheckBox({Key? key, required this.onChanged}) : super(key: key);
+  const TransferCheckBox({Key? key, required this.onChanged, required this.isTransfer}) : super(key: key);
   final void Function(bool value) onChanged;
+  final bool isTransfer;
 
   @override
   State<TransferCheckBox> createState() => _TransferCheckBoxState();
@@ -13,6 +14,7 @@ class _TransferCheckBoxState extends State<TransferCheckBox> {
 
   @override
   void initState() {
+    _isTransfer = widget.isTransfer;
     widget.onChanged(_isTransfer);
     super.initState();
   }

@@ -13,8 +13,10 @@ import 'package:jocards/model/home_model.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/res.dart';
+import 'package:jocards/screens/main_screen/notification_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/product_details.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/subcategories_screen.dart';
 import 'package:jocards/screens/main_screen/wallet_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/price_widget.dart';
@@ -78,14 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   return RefreshIndicator(
                     onRefresh: () => Future.sync(() {
                       homeProvider.getHomePage();
+                      context.read<AppProvider>().getUtilities();
                     }),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: homeList.length,
                         itemBuilder: (context, index) {
                           switch (homeList[index].type) {
-                            case "Wallet":
-                              return buildWallet();
                             case "Banner":
                               List<HomeBlockData>? bannerList =
                                   homeList[index].data!;
@@ -101,7 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               return buildCategory(
                                   homeList, index, context, categories);
-
+                            // case "Wallet":
+                            //   return buildWallet();
                             default:
                               return Container();
                           }
@@ -167,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 PageTransition(
                   type: PageTransitionType.fade,
-                  child: SubCategroiesScreen(list.indexOf(categories[childIndex]),categories[childIndex].categoryName!,false),
+                  child: SharedBottomNavigationBar(widget: SubCategroiesScreen(list.indexOf(categories[childIndex]),categories[childIndex].categoryName!,false)),
                 ),
               );
               }
@@ -282,12 +284,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding buildWallet(){
-    return Padding(
-      padding: EdgeInsets.only(top: widgetSize.getHeight(12, context)),
-      child: const MyWallet(),
-    );
-  }
+  // Padding buildWallet(){
+  //   return Padding(
+  //     padding: EdgeInsets.only(top: widgetSize.getHeight(12, context)),
+  //     child: const MyWallet(),
+  //   );
+  // }
 
   Padding buildBanner(BuildContext context, List<HomeBlock> homeList, int index,
       List<HomeBlockData> bannerList) {
@@ -442,49 +444,97 @@ class _HomeScreenState extends State<HomeScreen> {
                 right: widgetSize.getWidth(16, context),
                 left: widgetSize.getWidth(16, context)),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Container(
-                    height: widgetSize.getHeight(50, context),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(
-                          width: 1.0, color: const Color(0x00ebebeb)),
-                    ),
-                    child: Padding(
+                // Expanded(
+                //   child: Container(
+                //     height: widgetSize.getHeight(50, context),
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xffffffff),
+                //       borderRadius: BorderRadius.circular(10.0),
+                //       border: Border.all(
+                //           width: 1.0, color: const Color(0x00ebebeb)),
+                //     ),
+                //     child: Padding(
+                //       padding: EdgeInsets.symmetric(
+                //           horizontal: widgetSize.getWidth(20, context)),
+                //       child: Row(
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         children: [
+                //           Text(
+                //             'البحث في البطاقات',
+                //             style: TextStyle(
+                //               fontFamily: 'DIN Next LT W23',
+                //               fontSize: widgetSize.getHeight(14, context),
+                //               color: const Color(0xff848484),
+                //             ),
+                //             softWrap: false,
+                //           ),
+                //           const Spacer(),
+                //           Image.asset(
+                //             Assets.imgSearch,
+                //             height: widgetSize.getHeight(24, context),
+                //             width: widgetSize.getWidth(24, context),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
+                  flex: 1,
+                  child: Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: widgetSize.getWidth(20, context)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'البحث في البطاقات',
-                            style: TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: widgetSize.getHeight(14, context),
-                              color: const Color(0xff848484),
-                            ),
-                            softWrap: false,
-                          ),
-                          const Spacer(),
-                          Image.asset(
-                            Assets.imgSearch,
-                            height: widgetSize.getHeight(24, context),
-                            width: widgetSize.getWidth(24, context),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
                       horizontal: widgetSize.getWidth(10, context)),
+                      child: SafeOnTap( onSafeTap: ()async {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.leftToRight,
+                            child: const SharedBottomNavigationBar(widget: NotificationScreen(),)));
+                        },
+                        child:  Icon(Icons.notifications_active_outlined, color: Colors.white, size: widgetSize.getHeight(28, context),)),),
+                ),
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+                Expanded(
+                  flex: 2,
                   child: Image.asset(
                     Assets.imgHomeLogo,
                     height: widgetSize.getHeight(50, context),
                     width: widgetSize.getWidth(60, context),
+                  ),
+                ),
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                        child: SizedBox(
+                          width: widgetSize.getWidth(100, context),
+                          child: Row(children: [
+                            const Text("JD ", style: TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ), softWrap: false,),
+                            Text(
+                             context.watch<AppProvider>().utilitiesModel!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 16,
+                                color:  Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                          ],),
+                        ),),
                   ),
                 )
               ],

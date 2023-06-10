@@ -44,7 +44,7 @@ Future<void> shareOrder(DirectOrderResponse res, BuildContext context) async {
     }
     shareString= shareString+res.date!+"\n"
         +res.postingTime!.split(".")[0]+"\n";
-    shareString = shareString + "رقم الطلب: "+ res. orderId!+"\n"+ _separator(SeparatorType.dash) +"\n";
+    shareString = shareString + "رقم الطلب: "+ res. invoiceId!+"\n"+ _separator(SeparatorType.dash) +"\n";
     shareString = shareString + context.read<AppProvider>().utilitiesModel!.data!.companyName!+"\n";
     shareString = shareString + context.read<AppProvider>().utilitiesModel!.data!.mobileNo!;
     await  Share.share(shareString);
@@ -89,14 +89,14 @@ forceSignOut(DioError error) async {
     if (error.response?.statusCode == 401) {
         if(sharedPreferences.getString(Strings.Token)!=null){
             Fluttertoast.showToast(
-                backgroundColor: Colors.red,
+                backgroundColor: ColorResources.studio,
                 textColor: Colors.white,
                 msg:error.response!.data["message"] ?? '',
                 timeInSecForIosWeb: 10,
                 toastLength: Toast.LENGTH_LONG);
             await Provider.of<AppProvider>(navigator.currentContext!,listen:false).setSignOutUser();
 
-
+            print("===================== go to sign in from utilites ===========");
             Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                 SignInScreen()), (Route<dynamic> route) => false);
         }}
@@ -208,7 +208,7 @@ Future<void> printOnBluetoothPrinter(DirectOrderResponse directOrderResponse,Uti
         await bluetooth.printCustom(s.refNo!, 1, 1);
         await bluetooth.printCustom(_separator(), 1, 1);
         await bluetooth.printCustom("Date: ${directOrderResponse.date} Time:${directOrderResponse.postingTime!.split(".")[0]}", 1, 1);
-        await bluetooth.printCustom("Order No : ${directOrderResponse.orderId!.toString()}", 1, 1);
+        await bluetooth.printCustom("Order No : ${directOrderResponse.invoiceId!.toString()}", 1, 1);
         await bluetooth.printCustom(_separator(), 1, 1);
         await bluetooth.printCustom(context.read<AppProvider>().utilitiesModel!.data!.companyName!, 1, 1);
         await bluetooth.printCustom("Phone:", 1, 1);
@@ -243,7 +243,7 @@ Future<void> printOnTelpo(DirectOrderResponse directOrderResponse,UtilitiesModel
         d.add(PrintRow(text: s.refNo!,fontSize: 2,position: 1));
         d.add(PrintRow(text: _separator() ,fontSize: 2,position:1));
         d.add(PrintRow(text: "Date: ${directOrderResponse.date} Time:${directOrderResponse.postingTime!.split(".")[0]}",fontSize: 1,position: 1));
-        d.add(PrintRow(text: "Order No.: ${directOrderResponse.orderId!.toString()}",fontSize: 2,position: 1));
+        d.add(PrintRow(text: "Order No.: ${directOrderResponse.invoiceId!.toString()}",fontSize: 2,position: 1));
         d.add(PrintRow(text: _separator() ,fontSize: 2,position:1));
         d.add(PrintRow(text: context.read<AppProvider>().utilitiesModel!.data!.companyName!,fontSize: 2,position: 1));
         d.add(PrintRow(text: "Phone:",fontSize: 2,position: 1));

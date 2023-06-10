@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       HomeScreen(),
       CategoriesScreen(),
       WalletScreen(),
-      FavoriteScreen(),
+      //FavoriteScreen(),
       ProfileScreen()
     ];
   }

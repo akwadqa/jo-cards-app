@@ -1,11 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jocards/model/response_model.dart';
+import 'package:jocards/model/update_profile_model.dart';
+import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/batch_history_screen.dart';
 import 'package:jocards/screens/main_screen/edit_profile_screen.dart';
+import 'package:jocards/screens/main_screen/notification_details_screen.dart';
 import 'package:jocards/screens/main_screen/notification_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/privacy_policy_screen.dart';
@@ -15,6 +21,7 @@ import 'package:jocards/screens/main_screen/shipping_order_history.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../Network/api_response.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
 import '../../model/direct_order_response.dart';
@@ -35,9 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   XFile? image = XFile("");
   final ImagePicker _picker = ImagePicker();
 
-  changeImage () async{
-    image = await _picker.pickImage(source: ImageSource.gallery);
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: ColorResources.whiteSmoke,
@@ -56,85 +60,187 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: RefreshIndicator(
               onRefresh: () => Future.sync(() {
-                userModel= context.read<AppProvider>().getUserInfo();
+                setState(() {
+                  userModel= context.read<AppProvider>().getUserInfo();
+                });
                 SchedulerBinding.instance.addPostFrameCallback((_) async {
                   context.read<AppProvider>().getAgentCustomers();
+                  context.read<AppProvider>().getUtilities();
+                  context.read<AppProvider>().getUserInfo();
                 });
               }),
               child: ListView(padding: EdgeInsets.zero,shrinkWrap: true,children: [
-               Align(
-              alignment : Alignment.center,
-                 child: Padding(
-                   padding: const EdgeInsets.only(top: 10),
-                   child: Stack(
-                     children:[
-                       Image.asset(Assets.profileBorder),
-                       Positioned(
-                         top: widgetSize.getHeight(18, context),
-                         right: widgetSize.getWidth(16, context),
-                         child: Stack(
-                           children: [
-                             image!.path == ""
-                                 ? Container(
+               // Padding(
+               //   padding: const EdgeInsets.only(top: 10),
+               //   child: Stack(
+               //     children:[
+               //       Center(child: Image.asset(Assets.profileBorder)),
+               //       Center(
+               //         // top: widgetSize.getHeight(18, context),
+               //         // right: widgetSize.getWidth(16, context),
+               //         child: Stack(
+               //           children: [
+               //            ( image!.path == "" || image == null)
+               //                 ? Container(
+               //
+               //                 width:widgetSize.getWidth(90, context),
+               //                  height: widgetSize.getWidth(90, context),
+               //
+               //                  decoration: const BoxDecoration(
+               //                      shape: BoxShape.circle,
+               //                      color: ColorResources.gainsboro
+               //                  ),
+               //               child: Center(child: SvgPicture.asset(Assets.svgProfiless,)))
+               //                 : Container(
+               //
+               //                   width:widgetSize.getWidth(90, context),
+               //                   height: widgetSize.getWidth(90, context),
+               //
+               //                 decoration: const BoxDecoration(
+               //                     shape: BoxShape.circle,
+               //                     color: ColorResources.gainsboro
+               //                 ),
+               //                 child: ClipRRect(
+               //                    borderRadius: BorderRadius.circular(50),
+               //                     child: Image.file(File(image!.path), fit: BoxFit.fill,))),
+               //             Positioned(
+               //                bottom: 0,
+               //                 child: GestureDetector(
+               //                   onTap: () {
+               //                     setState(()  {
+               //                       changeImage();
+               //                     });
+               //                   },
+               //                   child: Container(
+               //                     decoration: const BoxDecoration(
+               //                         shape: BoxShape.circle,
+               //                         color: Colors.white
+               //                     ),
+               //                     padding: const EdgeInsets.all(5),
+               //                     child: Container(
+               //                       padding: const EdgeInsets.all(3),
+               //                       decoration: const BoxDecoration(
+               //                           shape: BoxShape.circle,
+               //                           color: ColorResources.studio
+               //                       ),
+               //                       child: Icon(Icons.settings, color: Colors.white,),
+               //                     ),
+               //                   ),
+               //                 )
+               //             ),
+               //           ],
+               //         ),
+               //       ),
+               //   ]),
+               // ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: AssetImage(Assets.profileBorder))
+                    ),
+                    padding: const EdgeInsets.all(18),
+                    child: Center(
+                      child: Stack(
+                        children: [
+                           Container(
 
-                                 width:widgetSize.getWidth(90, context),
-                                  height: widgetSize.getWidth(90, context),
+                              width:widgetSize.getWidth(90, context),
+                              height: widgetSize.getWidth(90, context),
 
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorResources.gainsboro
+                              ),
+                              child: ( userModel!=null && userModel!.profileDetails!=null && userModel!.profileDetails!.userImage!=null && image!.path.isEmpty)?
+                                  ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(userModel!.profileDetails!.userImage!, fit: BoxFit.fill,))
+                                  :( image!.path.isNotEmpty )
+                                  ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.file(File(image!.path), fit: BoxFit.fill,))
+                                  : Center(child: SvgPicture.asset(Assets.svgProfiless,))
+                              ),
+                          Positioned(
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () async{
+                                  XFile? image2 = await _picker.pickImage(source: ImageSource.gallery);
+                                  if(image2 != null){
+                                    ApiResponse<UpdateProfileModel> resForUpdateProfile = await context.read<HomeProvider>().updateProfile(image2, jsonEncode({}));
+                                    if(resForUpdateProfile.status == Status.COMPLETED){
+                                      setState(() {image = image2;});
+
+                                      /// Save New Data In Shared Preferences
+                                      var token = "${userModel!.keyDetails!.apiKey!}:${userModel!.keyDetails!.apiSecret!}";
+                                      await context.read<AppProvider>().setSignInUser(true, json.encode( LoginResponseModel(
+                                          message : userModel!.message,
+                                          homePage : userModel!.homePage,
+                                          fullName:  userModel!.fullName,
+                                          customerID: userModel!.customerID,
+                                          user: userModel!.user,
+                                          keyDetails: userModel!.keyDetails,
+                                          customerType: userModel!.customerType,
+                                          profileDetails: ProfileDetails(
+                                            firstName:  userModel!.profileDetails!.firstName,
+                                            lastName:  userModel!.profileDetails!.lastName,
+                                            email:  userModel!.profileDetails!.email,
+                                            mobileNo:  userModel!.profileDetails!.mobileNo,
+                                            gender: userModel!.profileDetails!.gender,
+                                            companyName:  userModel!.profileDetails!.companyName,
+                                            customerAgent: userModel!.profileDetails!.customerAgent,
+                                            userImage: resForUpdateProfile.data!.data!.userImage,
+                                          )
+                                      )) ,token);
+
+                                      Fluttertoast.showToast(
+                                          backgroundColor: Colors.green,
+                                          textColor: Colors.white,
+                                          msg: resForUpdateProfile.data?.message ?? "",
+                                          timeInSecForIosWeb: 4,
+                                          toastLength: Toast.LENGTH_LONG);
+                                    }
+                                    else{
+                                      Fluttertoast.showToast(
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          msg: resForUpdateProfile.data?.message ?? "",
+                                          timeInSecForIosWeb: 4,
+                                          toastLength: Toast.LENGTH_LONG);
+                                    }
+                                  }
+                                },
+                                child: Container(
                                   decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: ColorResources.gainsboro
+                                      color: Colors.white
                                   ),
-                               child: Center(child: SvgPicture.asset(Assets.svgProfiless,)))
-                                 : Container(
-
-                                   width:widgetSize.getWidth(90, context),
-                                   height: widgetSize.getWidth(90, context),
-
-                                 decoration: const BoxDecoration(
-                                     shape: BoxShape.circle,
-                                     color: ColorResources.gainsboro
-                                 ),
-                                 child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                     child: Image.file(File(image!.path), fit: BoxFit.fill,))),
-                             Positioned(
-                                bottom: 0,
-                                 child: GestureDetector(
-                                   onTap: () {
-                                     setState(()  {
-                                       changeImage();
-                                     });
-                                   },
-                                   child: Container(
-                                     decoration: const BoxDecoration(
-                                         shape: BoxShape.circle,
-                                         color: Colors.white
-                                     ),
-                                     padding: const EdgeInsets.all(5),
-                                     child: Container(
-                                       padding: const EdgeInsets.all(3),
-                                       decoration: const BoxDecoration(
-                                           shape: BoxShape.circle,
-                                           color: ColorResources.studio
-                                       ),
-                                       child: Icon(Icons.settings, color: Colors.white,),
-                                     ),
-                                   ),
-                                 )
-                             ),
-                           ],
-                         ),
-                       ),
-                   ]),
-                 ),
-               ),
+                                  padding: const EdgeInsets.all(5),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: ColorResources.studio
+                                    ),
+                                    child: Icon(Icons.settings, color: Colors.white,),
+                                  ),
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
                 Padding(
                   padding:  EdgeInsets.only(top:widgetSize.getHeight(5, context)),
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(userModel!=null&&userModel!.profileDetails!=null&&userModel!.profileDetails!.firstName!=null&&userModel!.profileDetails!.lastName!=null?
-                    userModel!.profileDetails!.firstName!+" "+userModel!.profileDetails!.lastName!:'زائر',
+                    "${userModel!.profileDetails!.firstName!} ${userModel!.profileDetails!.lastName!}":'زائر',
                       style: TextStyle(
 
                         fontSize: widgetSize.getHeight(20, context),
@@ -147,14 +253,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
 
 
-                if(userModel!=null&&context.read<AppProvider>().utilitiesModel!=null&&context.read<AppProvider>().utilitiesModel!.data!=null&&
-                    context.read<AppProvider>().utilitiesModel!.data!.companyName!=null)...[
+                if(userModel!=null&&userModel!.profileDetails!=null && userModel!.profileDetails!.companyName !=null )...[
                   Padding(
                     padding:  EdgeInsets.only(top:widgetSize.getHeight(5, context)),
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        context.read<AppProvider>().utilitiesModel!.data!.companyName!,
+                        userModel!.profileDetails!.companyName!,
                         style: TextStyle(
 
                           fontSize: widgetSize.getHeight(16, context),
@@ -188,12 +293,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                     child: Padding(
                       padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Wrap(
-                          spacing: widgetSize.getWidth(10, context),
-                          runSpacing: widgetSize.getWidth(10, context),
+                      child: Column(
+                        // alignment: Alignment.center,
+                        // child: Wrap(
+                        //   spacing: widgetSize.getWidth(10, context),
+                        //   runSpacing: widgetSize.getWidth(10, context),
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+/// FILTER DWR is transfer = 0
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
@@ -209,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(22.0),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -232,6 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
+/// FILTER SI
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
@@ -247,7 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(22.0),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -271,8 +381,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],),
                                 ),
                               ),
+                            )],
                             ),
+                            SizedBox(height: widgetSize.getHeight(5, context)),
+                            if(userModel != null && userModel!.customerType == "Agent")
+                            Row (
+                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children : [
+/// FILTER DWR is transfer = 1
                             // if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
+                            if(userModel!.customerType == "Agent Customer" || userModel!.customerType == "Agent")
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
@@ -288,7 +406,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(22.0),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -311,8 +429,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-
+/// PAYMENT
                             // if(context.watch<AppProvider>().agentModel?.data != null &&  context.watch<AppProvider>().agentModel!.data!.isNotEmpty)
+                            if(userModel!.customerType == "Agent")
                             SafeOnTap(onSafeTap: (){
                               Navigator.push(
                                 context,
@@ -328,12 +447,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(22.0),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SizedBox(width: widgetSize.getWidth(10, context),),
-                                      SvgPicture.asset(Assets.svgShippingPurple,width: 20,),
+                                      SvgPicture.asset(Assets.svgPurchasePurple,width: 20,),
                                       SizedBox(width: widgetSize.getWidth(15, context),),
                                       Text(
                                         'سجل الدفعات',
@@ -351,97 +470,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
+                          ])
                           ],
-                        ),
-                      ),
-                    ),
+                      //   ),
+                      // ),
+                    ),),
                   ),
                   SizedBox(height: widgetSize.getHeight(30, context),)
 
                 ],
 
-                Visibility(
-                  visible: Platform.isAndroid,
-                  child: SafeOnTap(onSafeTap: ()async{
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.fade,
-                        child: SharedBottomNavigationBar(widget: EditProfileScreen()),
-                      ),
-                    );
-                  },
-                    child: Padding(
-                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
-                      child: Column(
-                        children: [
-                          Row(children: [
-                            SvgPicture.asset(Assets.svgPrinter),
-                            SizedBox(width: widgetSize.getWidth(10, context),),
-                            Text(
-                              "تعديل الملف الشخصي",
-                              style: TextStyle(
+                if(userModel!=null) SafeOnTap(onSafeTap: ()async{
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child: SharedBottomNavigationBar(widget: EditProfileScreen()),
+                    ),
+                  );
+                },
+                  child: Padding(
+                    padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                    child: Column(
+                      children: [
+                        Row(children: [
+                          SvgPicture.asset(Assets.svgProfile),
+                          SizedBox(width: widgetSize.getWidth(10, context),),
+                          Text(
+                            "تعديل الملف الشخصي",
+                            style: TextStyle(
 
-                                fontSize: widgetSize.getHeight(16, context),
-                                color: const  Color(0xff6b6b6b),
-                                fontWeight: FontWeight.w500,
-                              ),
-
+                              fontSize: widgetSize.getHeight(16, context),
+                              color: const  Color(0xff6b6b6b),
+                              fontWeight: FontWeight.w500,
                             ),
 
-                            const Spacer(),
-                            const RotatedBox(
-                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
-                          ],),
-                          SizedBox(height: widgetSize.getHeight(10, context),),
-                          Container(height: 1,
-                            color: ColorResources.light_grey.withOpacity(0.5),)
-                        ],
-                      ),
+                          ),
+
+                          const Spacer(),
+                          const RotatedBox(
+                              quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
+                        ],),
+                        SizedBox(height: widgetSize.getHeight(10, context),),
+                        Container(height: 1,
+                          color: ColorResources.light_grey.withOpacity(0.5),)
+                      ],
                     ),
                   ),
                 ),
-                Visibility(
-                  visible: Platform.isAndroid,
-                  child: SafeOnTap(onSafeTap: ()async{
-                    // Navigator.push(
-                    //   context,
-                    //   PageTransition(
-                    //     type: PageTransitionType.fade,
-                    //     child: SharedBottomNavigationBar(widget: EditProfileScreen()),
-                    //   ),
-                    // );
-                  },
-                    child: Padding(
-                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
-                      child: Column(
-                        children: [
-                          Row(children: [
-                            SvgPicture.asset(Assets.svgPrinter),
-                            SizedBox(width: widgetSize.getWidth(10, context),),
-                            Text(
-                              "سجل الطلبات",
-                              style: TextStyle(
-
-                                fontSize: widgetSize.getHeight(16, context),
-                                color: const  Color(0xff6b6b6b),
-                                fontWeight: FontWeight.w500,
-                              ),
-
-                            ),
-
-                            const Spacer(),
-                            const RotatedBox(
-                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
-                          ],),
-                          SizedBox(height: widgetSize.getHeight(10, context),),
-                          Container(height: 1,
-                            color: ColorResources.light_grey.withOpacity(0.5),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Visibility(
+                //   visible: Platform.isAndroid,
+                //   child: SafeOnTap(onSafeTap: ()async{
+                //     // Navigator.push(
+                //     //   context,
+                //     //   PageTransition(
+                //     //     type: PageTransitionType.fade,
+                //     //     child: SharedBottomNavigationBar(widget: EditProfileScreen()),
+                //     //   ),
+                //     // );
+                //   },
+                //     child: Padding(
+                //       padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                //       child: Column(
+                //         children: [
+                //           Row(children: [
+                //             SvgPicture.asset(Assets.folder),
+                //             SizedBox(width: widgetSize.getWidth(10, context),),
+                //             Text(
+                //               "سجل الطلبات",
+                //               style: TextStyle(
+                //
+                //                 fontSize: widgetSize.getHeight(16, context),
+                //                 color: const  Color(0xff6b6b6b),
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //
+                //             ),
+                //
+                //             const Spacer(),
+                //             const RotatedBox(
+                //                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
+                //           ],),
+                //           SizedBox(height: widgetSize.getHeight(10, context),),
+                //           Container(height: 1,
+                //             color: ColorResources.light_grey.withOpacity(0.5),)
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                   Visibility(
                     visible: Platform.isAndroid,
@@ -627,21 +744,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 ],
 
                 if(userModel!=null)...[
-                  SafeOnTap(onSafeTap: (){
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.fade,
-                        child: SharedBottomNavigationBar(widget : NotificationScreen()),
-                      ),
-                    );
-                  },
+                  SafeOnTap(
+                    onSafeTap: ()async {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.leftToRight,
+                              child: SharedBottomNavigationBar(widget: NotificationScreen(),)));
+
+                    },
                     child: Padding(
                       padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
                       child: Column(
                         children: [
                           Row(children: [
-                            const Icon(Icons.person_remove_alt_1_outlined),
+                            Icon(Icons.notifications_active_outlined),
                             SizedBox(width: widgetSize.getWidth(10, context),),
                             Text(
                               "الإشعارات",
@@ -653,14 +770,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
 
                             ),
-
                             Spacer(),
-                            const RotatedBox(
-                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18,))
+                            RotatedBox(
+                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
                           ],),
                           SizedBox(height: widgetSize.getHeight(10, context),),
                           Container(height: 1,
                             color: ColorResources.light_grey.withOpacity(0.5),)
+
                         ],
                       ),
                     ),

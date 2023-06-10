@@ -6,12 +6,20 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:jocards/model/app_message_model.dart';
 import 'package:jocards/model/direct_order_response.dart';
 import 'package:jocards/model/home_model.dart';
+import 'package:jocards/model/invoice_order_details.dart';
 import 'package:jocards/model/item_category_model.dart';
 import 'package:jocards/model/login_response_model.dart';
+import 'package:jocards/model/payment_model.dart';
 import 'package:jocards/model/response_model.dart';
+import 'package:jocards/model/sales_invoice_response_model.dart';
 import 'package:jocards/model/territories_model.dart';
+import 'package:jocards/model/update_password_model.dart';
+import 'package:jocards/model/update_token_model.dart';
+import 'package:jocards/utill/color_resources.dart';
 import 'package:jocards/utill/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/http.dart';
@@ -39,7 +47,8 @@ part 'resit_api.g.dart';
 
 
 // @RestApi(baseUrl: "https://app.jocards.com/api/")
-@RestApi(baseUrl: "https://jocards.akwad.qa/api/")
+// @RestApi(baseUrl: "https://jocards.akwad.qa/api/")
+@RestApi(baseUrl: "https://www.jocards.com/api/")
 abstract class restApi {
   factory restApi(Dio dio, {BuildContext ?context, String ?baseUrl}) {
     dio.interceptors
@@ -61,7 +70,7 @@ return handler.next(options);
           if(response.data['status_code'] == 401 && response.data['message'] == 'token invalid'){
             if(sharedPreferences.getString(Strings.Token)!=null){
               Fluttertoast.showToast(
-                  backgroundColor: Colors.red,
+                  backgroundColor: ColorResources.studio,
                   textColor: Colors.white,
                   msg: 'انتهت صلاحية جلستك الرجاء تسجيل الدخول مرة اخرى',
                   timeInSecForIosWeb: 10,
@@ -123,7 +132,7 @@ return handler.next(response);
   @GET('method/jocards_v2.smart_api.filter_dwr')
   Future<ShippingOrderResponseModel> getShippingOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
   @GET('method/jocards_v2.smart_api.filter_si')
-  Future<SalesOrderResponseModel> getSalesOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
+  Future<SalesInvoiceResponseModel> getSalesOrders(@Query('page_no') int pageNo, @Query('filters') String filter);
   @GET('method/jocards_v2.smart_api.get_categories')
   Future<CategoriesModel> getAllCategories();
 
@@ -134,6 +143,9 @@ return handler.next(response);
 
   @GET('method/jocards_v2.smart_api.get_sales_order_detail')
   Future<SalesOrderDetails> getSalesOrderDetails(@Query("sales_order_id")String salesOrderId);
+
+  @GET('method/jocards_v2.smart_api.get_sales_invoce_details')
+  Future<SalesInvoiceDetails> getSalesInvoiceDetails(@Query("sales_invoice_id")String salesInvoiceId);
 
 
   @POST('method/jocards_v2.smart_api.dwr_request_and_transfer')
@@ -151,4 +163,69 @@ return handler.next(response);
 
   @GET('method/jocards_v2.smart_api.app_version')
   Future<AppVersionModel> getAppVersion();
+  
+  @GET("method/jocards_v2.smart_api.payments")
+  Future<PaymentModel> getPaymentModel(@Query('filters') String filter, @Query('page_no') int pageNo,);
+
+  @GET("method/jocards_v2.app_message.app_messages")
+  Future<AppMessageModel> getAppMessage(@Query('page_no') int pageNo,);
+
+  // @POST("method/jocards_v2.smart_api.password_reset")
+  // Future<ResponseModel> resetPassword(@Query('user') String email);
+
+  // @POST("method/jocards_v2.smart_api.update_profile")
+  // @MultiPart()
+  // Future<ResponseModel> updateProfile(@Part(name: "file") File? file, @Part(name: "data") String? data);
+
+  @POST("method/frappe.core.doctype.user.user.update_password")
+  Future<UpdatePasswordModel> updatePassword(@Field("old_password") String oldPassword, @Field("new_password") String newPassword);
+
+  @POST("method/fcm_frappe.api.device_token")
+  Future<UpdateTokenModel> updateToken(@Field("device_token") String token, @Field("user_id") String userId, @Field("user_device_type") String userDeviceType, @Field("user_device_name") String userDeviceName);
+
 }
+
+// @RestApi(baseUrl: "https://tbd.akwad.qa/api/")
+// abstract class notiicationApi{
+//   factory notiicationApi(Dio dio, {BuildContext ?context, String ?baseUrl}) {
+//     dio.interceptors
+//         .add(InterceptorsWrapper(onRequest: (RequestOptions  options,RequestInterceptorHandler handler) {
+//       options.connectTimeout = 60000;
+//       options.receiveTimeout = 60000;
+//
+//       return handler.next(options);
+//     },onResponse: (Response response,ResponseInterceptorHandler handler) async {
+//       if(response.data['status_code'] == 401 && response.data['message'] == 'token invalid'){
+//         // if(sharedPreferences.getString(Strings.Token)!=null){
+//         //   Fluttertoast.showToast(
+//         //       backgroundColor: Colors.red,
+//         //       textColor: Colors.white,
+//         //       msg: 'انتهت صلاحية جلستك الرجاء تسجيل الدخول مرة اخرى',
+//         //       timeInSecForIosWeb: 10,
+//         //       toastLength: Toast.LENGTH_LONG);
+//         //   await Provider.of<AppProvider>(navigator.currentContext!,listen:false).setSignOutUser();
+//         //
+//         //
+//         //   Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+//         //       SignInScreen()), (Route<dynamic> route) => false);
+//         // }
+//       }
+//       return handler.next(response);
+//     }, onError: (DioError error,ErrorInterceptorHandler handler) async {
+//       await forceSignOut(error);
+//       return  handler.next(error);
+//     }));
+//
+//     if(kDebugMode){
+//       dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true, logPrint: (logData) {
+//         log(logData.toString());
+//       }));
+//     }
+//
+//     return _notiicationApi(dio, baseUrl: baseUrl);
+//   }
+//
+//   @POST("method/fcm_frappe.api.device_token")
+//   Future<UpdateTokenModel> updateToken(@Field("device_token") String token, @Field("user_id") String userId);
+//
+// }

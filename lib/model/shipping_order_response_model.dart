@@ -3,20 +3,23 @@ class ShippingOrderResponseModel {
   final String? message;
   final List<ShippingOrdeData>? data;
   final Pagination? pagination;
-
+  final TotalOrderData? totalOrderData;
 
   ShippingOrderResponseModel({
     this.statusCode,
     this.message,
     this.data,
-    this.pagination
+    this.pagination,
+    this.totalOrderData
   });
 
   ShippingOrderResponseModel.fromJson(Map<String, dynamic> json)
     : statusCode = json['status_code'] as int?,
       message = json['message'] as String?,
       data = (json['data'] as List?)?.map((dynamic e) => ShippingOrdeData.fromJson(e as Map<String,dynamic>)).toList(),
-        pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null;
+        pagination = (json['pagination'] as Map<String,dynamic>?) != null ? Pagination.fromJson(json['pagination'] as Map<String,dynamic>) : null,
+      totalOrderData = (json['total'] as Map<String,dynamic>?) != null ? TotalOrderData.fromJson(json['total'] as Map<String,dynamic>) : null
+  ;
 
 
   Map<String, dynamic> toJson() => {
@@ -25,6 +28,10 @@ class ShippingOrderResponseModel {
     'pagination' : pagination?.toJson(),
     'data' : data?.map((e) => e.toJson()).toList()
   };
+  @override
+  toString(){
+    return "ShippingOrderResponseModel {statusCode: $statusCode, message: $message, pagination: $pagination, data: $data}";
+  }
 }
 class Pagination {
   final int? totalItems;
@@ -109,4 +116,18 @@ class ShippingOrdeData {
     'customer' : customer,
     'is_transfer' : isTransfer
   };
+}
+class TotalOrderData {
+  final dynamic totalPaid;
+  final dynamic totalUnPaid;
+  TotalOrderData({this.totalPaid, this.totalUnPaid});
+
+  TotalOrderData.fromJson(Map<String, dynamic> json)
+    : totalPaid =  json["total_paid"] as dynamic,
+      totalUnPaid = json["total_unpaid"]  as dynamic;
+
+  @override
+  toString(){
+    return "TotalOrderData {totalPaid: $totalPaid, totalUnPaid: $totalUnPaid}";
+  }
 }

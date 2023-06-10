@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/price_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/sub_categories_list.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/titled_list.dart';
@@ -152,7 +153,7 @@ class QuickBuyWidget extends StatelessWidget {
                         PriceWidget(price: double.parse(item.discountedPrice!), getTotalPriceAndCount: (double totalPrice, int quantity) {
                           totalPrice = totalPrice;
                           count = quantity;
-                        }),
+                        }, productsDetailsData: item,),
                         SizedBox(height: widgetSize.getHeight(16, context)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -399,7 +400,7 @@ class QuickBuyWidget extends StatelessWidget {
                                           ),
                                           Text(
                                             resultOfConfirmDirectOrder
-                                                .data!.orderId!,
+                                                .data!.invoiceId!,
                                             style: TextStyle(
                                               fontFamily: 'DIN Next LT W23',
                                               fontSize: 14,
@@ -732,7 +733,7 @@ class QuickBuyWidget extends StatelessWidget {
                                             .read<AppProvider>()
                                             .getBluetoothDevice() ==
                                             null) {
-                                          var result = await Navigator.push(
+                                          await Navigator.push(
                                             context,
                                             PageTransition(
                                               type: PageTransitionType.fade,
@@ -882,13 +883,13 @@ class QuickBuyWidget extends StatelessWidget {
             context,
             PageTransition(
               type: PageTransitionType.fade,
-              child: MainScreen(),
+              child: SharedBottomNavigationBar(widget: MainScreen()),
             ),
           );
         }
       } else {
         Fluttertoast.showToast(
-            backgroundColor: Colors.red,
+            backgroundColor: ColorResources.studio,
             textColor: Colors.white,
             msg: resultOfConfirmDirectOrder.data!.message!,
             timeInSecForIosWeb: 4,
@@ -1149,7 +1150,7 @@ class QuickBuyWidget extends StatelessWidget {
                                     context.read<AppProvider>().getUtilities();
                                   } else {
                                     Fluttertoast.showToast(
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: ColorResources.studio,
                                         textColor: Colors.white,
                                         msg: res.message ?? "",
                                         timeInSecForIosWeb: 4,

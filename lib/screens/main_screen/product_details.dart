@@ -10,6 +10,7 @@ import 'package:jocards/generated/assets.dart';
 import 'package:jocards/model/direct_order_request_model.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:jocards/utill/color_resources.dart';
 import 'package:jocards/utill/strings.dart';
@@ -43,11 +44,12 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     with SingleTickerProviderStateMixin {
   int count = 1;
+  bool isPressed = false;
   late TabController tabController;
   int selectedIndex = 0;
   final GlobalKey<FormState> _key = GlobalKey();
   bool moreThanAvailableWalletBalance = false;
-
+  double percent = 0.0;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -55,689 +57,127 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       child: Scaffold(
           backgroundColor: ColorResources.gray89,
           appBar: buildAppBar(context),
-          body: Consumer<HomeProvider>(builder: (context, homeProvider, child) {
-            if (homeProvider.productDetailsResponse != null) {
-              switch (homeProvider.productDetailsResponse!.status!) {
-                case Status.LOADING:
-                  return Align(
-                    child: Loading(
-                        loadingText:
-                            homeProvider.productDetailsResponse!.message),
-                  );
+          body: RefreshIndicator(
+            onRefresh: () async{
+              count = 1;
+              isPressed = false;
+              selectedIndex = 0;
+              moreThanAvailableWalletBalance = false;
+                var res = await context.read<HomeProvider>().getProductDetails(widget.id);
+                if (res.data != null && res.data!.data != null) {
+                  var temp = res.data!.data![0];
+                  if (temp.productOptions != null && temp.productOptions!.isNotEmpty) {
+                    for (ProductOptions productOptions in temp.productOptions!) {
+                      multiLineAreaOptions.add(TextEditingController());
+                      textAreaOptions.add(TextEditingController());
+                      numberOptions.add(TextEditingController());
+                    }
+                  }
+                }
+            },
+            child: Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+              if (homeProvider.productDetailsResponse != null) {
+                switch (homeProvider.productDetailsResponse!.status!) {
+                  case Status.LOADING:
+                    return Align(
+                      child: Loading(
+                          loadingText:
+                              homeProvider.productDetailsResponse!.message),
+                    );
 
-                case Status.COMPLETED:
-                  var item =
-                      homeProvider.productDetailsResponse!.data!.data![0];
-                  return ListView(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: widgetSize.getWidth(16, context),
-                            vertical: widgetSize.getHeight(20, context)),
-                        child: Container(
-          decoration:  BoxDecoration(
-            color: hexToColor(item.backgroundColor!),
+                  case Status.COMPLETED:
+                    var item =
+                        homeProvider.productDetailsResponse!.data!.data![0];
+                    return ListView(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: widgetSize.getWidth(16, context),
+                              vertical: widgetSize.getHeight(20, context)),
+                          child: Container(
+            decoration:  BoxDecoration(
+              color: item.backgroundColor == null  ? Colors.white: hexToColor(item.backgroundColor!),
 
-            borderRadius:
-            const BorderRadius.all(Radius.circular(15)),
-            shape: BoxShape.rectangle,),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CachedNetworkImage(
-                              imageUrl: Strings.BASR_URl + item.websiteImage!,
-                              imageBuilder: (context, imageProvider) => AspectRatio(
-                                aspectRatio: 2.46,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(15)),
-                                    shape: BoxShape.rectangle,
+              borderRadius:
+              const BorderRadius.all(Radius.circular(15)),
+              shape: BoxShape.rectangle,),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CachedNetworkImage(
+                                imageUrl: Strings.BASR_URl + item.websiteImage!,
+                                imageBuilder: (context, imageProvider) => AspectRatio(
+                                  aspectRatio: 2.46,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          const BorderRadius.all(Radius.circular(15)),
+                                      shape: BoxShape.rectangle,
 
-                                    image: DecorationImage(
-                                        image: imageProvider, fit: BoxFit.contain),
+                                      image: DecorationImage(
+                                          image: imageProvider, fit: BoxFit.contain),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              placeholder: (context, url) => AspectRatio(
-                                aspectRatio: 2.46,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                      valueColor: new AlwaysStoppedAnimation<Color>(
-                                          ColorResources.studio)),
+                                placeholder: (context, url) => AspectRatio(
+                                  aspectRatio: 2.46,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                        valueColor: new AlwaysStoppedAnimation<Color>(
+                                            ColorResources.studio)),
+                                  ),
                                 ),
-                              ),
-                              errorWidget: (context, url, error) => const AspectRatio(
-                                aspectRatio: 2.46,
-                                child: Center(
-                                  child: Icon(Icons.error),
+                                errorWidget: (context, url, error) => const AspectRatio(
+                                  aspectRatio: 2.46,
+                                  child: Center(
+                                    child: Icon(Icons.error),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Stack(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(vertical: 15),
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(40),
-                                    topRight: Radius.circular(40)),
-                                color: Colors.white),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: widgetSize.getWidth(16, context),
-                                  vertical: widgetSize.getHeight(20, context)),
-                              child: Align(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        item.websiteItemName!,
-                                        style: TextStyle(
-                                          fontFamily: 'DIN Next LT W23',
-                                          fontSize:
-                                              widgetSize.getHeight(23, context),
-                                          color: const Color(0xff2e2e2e),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        textAlign: TextAlign.right,
-                                        softWrap: false,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: widgetSize.getHeight(26, context),
-                                    ),
-                                    if (item.productOptions != null &&
-                                        item.productOptions!.isEmpty) ...[
+                        Stack(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 15),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(40),
+                                      topRight: Radius.circular(40)),
+                                  color: Colors.white),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: widgetSize.getWidth(16, context),
+                                    vertical: widgetSize.getHeight(20, context)),
+                                child: Align(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
                                       Align(
                                         alignment: Alignment.centerRight,
                                         child: Text(
-                                          'التفاصيل',
+                                          item.websiteItemName!,
                                           style: TextStyle(
                                             fontFamily: 'DIN Next LT W23',
-                                            fontSize: widgetSize.getHeight(
-                                                18, context),
-                                            color: const Color(0xff6b6b6b),
-                                            fontWeight: FontWeight.w500,
+                                            fontSize:
+                                                widgetSize.getHeight(23, context),
+                                            color: const Color(0xff2e2e2e),
+                                            fontWeight: FontWeight.w700,
                                           ),
+                                          textAlign: TextAlign.right,
                                           softWrap: false,
                                         ),
                                       ),
                                       SizedBox(
-                                        height:
-                                            widgetSize.getHeight(5, context),
+                                        height: widgetSize.getHeight(26, context),
                                       ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          item.webLongDescription != null
-                                              ? item.webLongDescription!
-                                              : "",
-                                          style: TextStyle(
-                                            fontSize: widgetSize.getHeight(
-                                                16, context),
-                                            color: const Color(0xff2e2e2e),
-                                          ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      ),
-                                    ],
-                                    if (item.productOptions != null &&
-                                        item.productOptions!.isNotEmpty) ...[
-                                      TabBar(
-                                        indicatorColor: ColorResources.studio,
-                                        indicatorSize: TabBarIndicatorSize.tab,
-                                        indicatorWeight: 2,
-                                        indicatorPadding: const EdgeInsets.all(0),
-                                        controller: tabController,
-                                        labelColor: ColorResources.studio,
-                                        unselectedLabelColor:
-                                            ColorResources.dimGray,
-                                        onTap: (int index) {
-                                          setState(() {
-                                            selectedIndex = index;
-                                            tabController.animateTo(index);
-                                          });
-                                        },
-                                        tabs: [
-                                          Tab(
-                                            child: Text('الخيارات',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        widgetSize.getHeight(
-                                                            15, context))),
-                                          ),
-                                          Tab(
-                                            child: Text('التفاصيل',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        widgetSize.getHeight(
-                                                            15, context))),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height:
-                                            widgetSize.getHeight(20, context),
-                                      ),
-                                      IndexedStack(
-                                        index: selectedIndex,
-                                        children: <Widget>[
-                                          Visibility(
-                                            maintainState: true,
-                                            visible: selectedIndex == 0,
-                                            child: Form(
-                                              key: _key,
-                                              child: ListView.builder(
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  shrinkWrap: true,
-                                                  itemCount: item
-                                                      .productOptions!.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    if (item
-                                                            .productOptions![
-                                                                index]
-                                                            .optionType ==
-                                                        "Radio Group") {
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            item
-                                                                .productOptions![
-                                                                    index]
-                                                                .optionName!,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'DIN Next LT W23',
-                                                              fontSize: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                              color: const Color(
-                                                                  0xff6b6b6b),
-                                                            ),
-                                                            softWrap: false,
-                                                          ),
-                                                          SizedBox(
-                                                            height: widgetSize
-                                                                .getHeight(12,
-                                                                    context),
-                                                          ),
-                                                          item
-                                                              .productOptions![
-                                                          index].viewOption == 'Label' ?  Wrap(
-                                                            direction:
-                                                                Axis.horizontal,
-                                                            runSpacing: 10,
-                                                            spacing: 30,
-                                                            children: item
-                                                                .productOptions![
-                                                                    index]
-                                                                .radioGroupOption!
-                                                                .map<Widget>(
-                                                                    (e) =>
-                                                                        SafeOnTap(
-                                                                          onSafeTap:
-                                                                              () {
-                                                                            for (RadioGroupOption item
-                                                                                in item.productOptions![index].radioGroupOption!) {
-                                                                              item.selected = false;
-                                                                            }
-                                                                            item.productOptions![index].answer =
-                                                                                e.name1;
-                                                                            e.selected =
-                                                                                true;
-                                                                            setState(() {});
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: e.selected! ? ColorResources.studio : const Color(0xfff8f2ff),
-                                                                              borderRadius: BorderRadius.circular(14.0),
-                                                                            ),
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                                                              child: Text(
-                                                                                e.name1!,
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'DIN Next LT W23',
-                                                                                  fontSize: widgetSize.getHeight(14, context),
-                                                                                  color: e.selected! ? Colors.white : const Color(0xff2e2e2e),
-                                                                                ),
-                                                                                softWrap: false,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ))
-                                                                .toList(),
-                                                          ) : DropdownButtonFormField<RadioGroupOption>(
-                                                            hint: const Text('اختر الخيار'),
-                                                            decoration: InputDecoration(
-                                                              border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        14.0),
-                                                              ),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        14.0),
-                                                                borderSide: const BorderSide(
-                                                                    color: ColorResources.sliver),
-                                                              ),
-                                                              enabledBorder: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        14.0),
-                                                                borderSide: const BorderSide(
-                                                                    color: ColorResources.sliver),
-                                                              ),
-                                                            ),
-                                                              items: item
-                                                              .productOptions![
-                                                          index]
-                                                              .radioGroupOption!.map((e) => DropdownMenuItem<RadioGroupOption>(value: e, child: Text(e.name1!))).toList(), onChanged: (value){
-                                                            for (RadioGroupOption item
-                                                            in item.productOptions![index].radioGroupOption!) {
-                                                              item.selected = false;
-                                                            }
-                                                            item.productOptions![index].answer =
-                                                                value!.name1;
-                                                            value.selected =
-                                                            true;
-                                                          }),
-                                                          if (item.productOptions!
-                                                                  .length >
-                                                              1) ...[
-                                                            SizedBox(
-                                                              height: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                            ),
-                                                          ]
-                                                        ],
-                                                      );
-                                                    }
-                                                    if (item
-                                                            .productOptions![
-                                                                index]
-                                                            .optionType ==
-                                                        "Text Area") {
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            item
-                                                                .productOptions![
-                                                                    index]
-                                                                .optionName!,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'DIN Next LT W23',
-                                                              fontSize: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                              color: const Color(
-                                                                  0xff6b6b6b),
-                                                            ),
-                                                            softWrap: false,
-                                                          ),
-                                                          SizedBox(
-                                                            height: widgetSize
-                                                                .getHeight(
-                                                                    8, context),
-                                                          ),
-                                                          CustomTextField(
-                                                            maxLines: 6,
-                                                            borderRaduis: 10,
-                                                            obscureText: false,
-                                                            hint: item
-                                                                .productOptions![
-                                                            index].hint,
-                                                            validate: item
-                                                                        .productOptions![
-                                                                            index]
-                                                                        .isMandatory ==
-                                                                    1
-                                                                ? Validations()
-                                                                    .filedRequired
-                                                                : null,
-                                                            hintStyle: item
-                                                                .productOptions![
-                                                            index]
-                                                                .isMandatory ==
-                                                                1 ? const TextStyle(color: ColorResources.red) : null,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            textEditingController:
-                                                                multiLineAreaOptions[
-                                                                    index],
-                                                            onSaved: (String?
-                                                                value) {
-                                                              item
-                                                                  .productOptions![
-                                                                      index]
-                                                                  .answer = value;
-                                                            },
-                                                          ),
-                                                          if (item.productOptions!
-                                                                  .length >
-                                                              1) ...[
-                                                            SizedBox(
-                                                              height: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                            ),
-                                                          ]
-                                                        ],
-                                                      );
-                                                    }
-                                                    if (item
-                                                            .productOptions![
-                                                                index]
-                                                            .optionType ==
-                                                        "Number Input") {
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            item
-                                                                .productOptions![
-                                                                    index]
-                                                                .optionName!,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'DIN Next LT W23',
-                                                              fontSize: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                              color: const Color(
-                                                                  0xff6b6b6b),
-                                                            ),
-                                                            softWrap: false,
-                                                          ),
-                                                          SizedBox(
-                                                            height: widgetSize
-                                                                .getHeight(
-                                                                    8, context),
-                                                          ),
-                                                          CustomTextField(
-                                                            maxLines: 1,
-                                                            borderRaduis: 10,
-                                                            onChanged: (value) {
-                                                              value = changeDigit(value!, NumStrLanguage.English);
-
-                                                             numberOptions[index].text = value;
-                                                              numberOptions[index].selection =
-                                                                  TextSelection.fromPosition(TextPosition(
-                                                                      offset:  numberOptions[index].text.length));
-
-                                                                _key.currentState!.save();
-                                                                setState(() {
-                                                                  getFinalPriceModifier(item);
-
-                                                                });
-
-
-                                                            },
-                                                            hint: item
-                                                                .productOptions![
-                                                            index].hint,
-                                                            obscureText: false,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .number,
-                                                            textEditingController:
-                                                                numberOptions[
-                                                                    index],
-                                                            validate: item
-                                                                        .productOptions![
-                                                                            index]
-                                                                        .isMandatory ==
-                                                                    1
-                                                                ? Validations()
-                                                                    .filedRequired
-                                                                : null,
-                                                            hintStyle: item
-                                                            .productOptions![
-                                                        index]
-                                                            .isMandatory ==
-                                                        1 ? const TextStyle(color: ColorResources.red) : null,
-                                                            onSaved: (String?
-                                                                value) {
-                                                              item
-                                                                  .productOptions![
-                                                                      index]
-                                                                  .answer = value;
-                                                            },
-
-                                                          ),
-
-                                                          if (item.productOptions!
-                                                                  .length >
-                                                              1) ...[
-                                                            SizedBox(
-                                                              height: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                            ),
-                                                          ]
-                                                        ],
-                                                      );
-                                                    }
-                                                    if (item
-                                                            .productOptions![
-                                                                index]
-                                                            .optionType ==
-                                                        "Text Input") {
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            item
-                                                                .productOptions![
-                                                                    index]
-                                                                .optionName!,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'DIN Next LT W23',
-                                                              fontSize: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                              color: const Color(
-                                                                  0xff6b6b6b),
-                                                            ),
-                                                            softWrap: false,
-                                                          ),
-                                                          SizedBox(
-                                                            height: widgetSize
-                                                                .getHeight(
-                                                                    8, context),
-                                                          ),
-                                                          CustomTextField(
-                                                            maxLines: 1,
-                                                            borderRaduis: 10,
-                                                            obscureText: false,
-                                                            hint: item
-                                                                .productOptions![
-                                                            index].hint,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .emailAddress,
-                                                            textEditingController:
-                                                                textAreaOptions[
-                                                                    index],
-                                                            validate: item
-                                                                        .productOptions![
-                                                                            index]
-                                                                        .isMandatory ==
-                                                                    1
-                                                                ? Validations()
-                                                                    .filedRequired
-                                                                : null,
-                                                            hintStyle: item
-                                                                .productOptions![
-                                                            index]
-                                                                .isMandatory ==
-                                                                1 ? const TextStyle(color: ColorResources.red) : null,
-                                                            onSaved: (String?
-                                                                value) {
-                                                              item
-                                                                  .productOptions![
-                                                                      index]
-                                                                  .answer = value;
-                                                            },
-                                                          ),
-                                                          if (item.productOptions!
-                                                                  .length >
-                                                              1) ...[
-                                                            SizedBox(
-                                                              height: widgetSize
-                                                                  .getHeight(15,
-                                                                      context),
-                                                            ),
-                                                          ]
-                                                        ],
-                                                      );
-                                                    }
-                                                    return const Text("");
-                                                  }),
-                                            ),
-                                          ),
-                                          Visibility(
-                                              maintainState: true,
-                                              visible: selectedIndex == 1,
-                                              child: Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                  item.webLongDescription ?? '',
-                                                  style: TextStyle(
-                                                    fontSize: widgetSize
-                                                        .getHeight(16, context),
-                                                    color:
-                                                        const Color(0xff2e2e2e),
-                                                  ),
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                    ],
-                                    Visibility(
-                                      visible: !hideQuantity(item),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: widgetSize.getHeight(
-                                                30, context),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'الكمية',
-                                                style: TextStyle(
-                                                  fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize
-                                                      .getHeight(18, context),
-                                                  color:
-                                                      const Color(0xff6b6b6b),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                softWrap: false,
-                                              ),
-                                              SizedBox(
-                                                width: widgetSize.getWidth(
-                                                    50, context),
-                                              ),
-                                              Expanded(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    SafeOnTap(
-                                                        onSafeTap: () {
-                                                          if(count < 100){
-                                                            setState(() {
-                                                              count = count + 1;
-                                                              getFinalPrice(item);
-                                                            });
-                                                          }
-                                                        },
-                                                        child: SvgPicture.asset(
-                                                            Assets.svgAdd)),
-                                                    SizedBox(
-                                                      width:
-                                                          widgetSize.getWidth(
-                                                              10, context),
-                                                    ),
-                                                    Text(
-                                                      count.toString(),
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'DIN Next LT W23',
-                                                        fontSize: widgetSize
-                                                            .getHeight(
-                                                                16, context),
-                                                        color: const Color(
-                                                            0xff6b6b6b),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                      softWrap: false,
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          widgetSize.getWidth(
-                                                              10, context),
-                                                    ),
-                                                    SafeOnTap(
-                                                        onSafeTap: () {
-                                                          if (count > 1) {
-                                                            setState(() {
-                                                              count = count - 1;
-                                                              getFinalPrice(
-                                                                  item);
-                                                            });
-                                                          }
-                                                        },
-                                                        child: SvgPicture.asset(
-                                                            Assets.svgSub)),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: widgetSize.getHeight(30, context),
-                                    ),
-                                    Column(
-                                      children: [
+                                      if (item.productOptions != null &&
+                                          item.productOptions!.isEmpty) ...[
                                         Align(
                                           alignment: Alignment.centerRight,
                                           child: Text(
-                                            'السعر الإجمالي',
+                                            'التفاصيل',
                                             style: TextStyle(
                                               fontFamily: 'DIN Next LT W23',
                                               fontSize: widgetSize.getHeight(
@@ -750,247 +190,841 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         ),
                                         SizedBox(
                                           height:
-                                              widgetSize.getHeight(8, context),
+                                              widgetSize.getHeight(5, context),
                                         ),
-                                        Container(
-                                          height:
-                                              widgetSize.getHeight(70, context),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xfff6f6f6),
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: const Color(0xffe3e3e3)),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            item.webLongDescription != null
+                                                ? item.webLongDescription!
+                                                : "",
+                                            style: TextStyle(
+                                              fontSize: widgetSize.getHeight(
+                                                  16, context),
+                                              color: const Color(0xff2e2e2e),
+                                            ),
+                                            textAlign: TextAlign.right,
                                           ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                               hideQuantity(item)?getFinalPriceModifier(item): getFinalPrice(item),
-                                                style: TextStyle(
-                                                  fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize
-                                                      .getHeight(32, context),
-                                                  color:
-                                                      const Color(0xff2e2e2e),
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                                softWrap: false,
-                                              ),
-                                              SizedBox(
-                                                width: widgetSize.getWidth(
-                                                    8, context),
-                                              ),
-                                              Text(
-                                                item.currency!,
-                                                style: TextStyle(
-                                                  fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize
-                                                      .getHeight(18, context),
-                                                  color:
-                                                      const Color(0xff9c9c9c),
-                                                ),
-                                                softWrap: false,
-                                              )
-                                            ],
-                                          ),
-                                        )
+                                        ),
                                       ],
-                                    ),
-                                    SizedBox(
-                                      height: widgetSize.getHeight(70, context),
-                                    ),
-                                    if (item.inStock != null &&
-                                        item.inStock == 1) ...[
-                                      SafeOnTap(
-                                        onSafeTap: () async {
-                                          FocusScope.of(context).unfocus();
-                                          if (!moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0) {
-                                            if (context
-                                                    .read<AppProvider>()
-                                                    .getUserInfo() !=
-                                                null) {
-                                              await checkValidationAndDirectRequest(
-                                                  item);
-                                            } else {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SignInScreen(
-                                                            fromSetting: true,
-                                                          )));
-                                            }
-                                          }
-                                        },
-                                        child: Container(
-                                          height:
-                                              widgetSize.getHeight(60, context),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0
-                                                    ? const Color(0xff2892d7)
-                                                    : const Color(0xffa2a2a2),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: const Color(0xff2892d7)),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color(0x401d4c9b),
-                                                offset: Offset(0, 5),
-                                                blurRadius: 11,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0 ? 'متابعة الشراء' : 'لا يوجد رصيد كافي',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize.getHeight(
-                                                    20, context),
-                                                color: const Color(0xffffffff),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                    if (item.inStock != null &&
-                                        item.inStock == 0) ...[
-                                      SafeOnTap(
-                                        onSafeTap: () {},
-                                        child: Container(
-                                          height:
-                                              widgetSize.getHeight(60, context),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffa2a2a2),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: const Color(0xffa2a2a2)),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color(0x401d4c9b),
-                                                offset: Offset(0, 5),
-                                                blurRadius: 11,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'غير متوفر بالمخزون',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize.getHeight(
-                                                    20, context),
-                                                color: const Color(0xffffffff),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ]
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                              left: widgetSize.getWidth(50, context),
-                              child: SafeOnTap(
-                                  onSafeTap: () {
-                                    if (item.shortDescription != null) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0)),
-                                          //this right here
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: widgetSize.getWidth(
-                                                    20, context)),
-                                            child: ListView(
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  height: widgetSize.getHeight(
-                                                      20, context),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    SafeOnTap(
-                                                        onSafeTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: SvgPicture.asset(
-                                                            Assets
-                                                                .svgCancelDirectOrder)),
-                                                    const Spacer(),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: widgetSize.getHeight(
-                                                      10, context),
-                                                ),
-                                                Text(
-                                                  item.shortDescription!,
-                                                  maxLines: null,
+                                      if (item.productOptions != null &&
+                                          item.productOptions!.isNotEmpty) ...[
+                                        TabBar(
+                                          indicatorColor: ColorResources.studio,
+                                          indicatorSize: TabBarIndicatorSize.tab,
+                                          indicatorWeight: 2,
+                                          indicatorPadding: const EdgeInsets.all(0),
+                                          controller: tabController,
+                                          labelColor: ColorResources.studio,
+                                          unselectedLabelColor:
+                                              ColorResources.dimGray,
+                                          onTap: (int index) {
+                                            setState(() {
+                                              selectedIndex = index;
+                                              tabController.animateTo(index);
+                                            });
+                                          },
+                                          tabs: [
+                                            Tab(
+                                              child: Text('الخيارات',
                                                   style: TextStyle(
-                                                    fontFamily:
-                                                        'DIN Next LT W23',
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              15, context))),
+                                            ),
+                                            Tab(
+                                              child: Text('التفاصيل',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              15, context))),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height:
+                                              widgetSize.getHeight(20, context),
+                                        ),
+                                        IndexedStack(
+                                          index: selectedIndex,
+                                          children: <Widget>[
+                                            Visibility(
+                                              maintainState: true,
+                                              visible: selectedIndex == 0,
+                                              child: Form(
+                                                key: _key,
+                                                child: ListView.builder(
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount: item
+                                                        .productOptions!.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      if (item
+                                                              .productOptions![
+                                                                  index]
+                                                              .optionType ==
+                                                          "Radio Group") {
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .optionName!,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'DIN Next LT W23',
+                                                                fontSize: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                                color: const Color(
+                                                                    0xff6b6b6b),
+                                                              ),
+                                                              softWrap: false,
+                                                            ),
+                                                            SizedBox(
+                                                              height: widgetSize
+                                                                  .getHeight(12,
+                                                                      context),
+                                                            ),
+                                                            item
+                                                                .productOptions![
+                                                            index].viewOption == 'Label' ?  Wrap(
+                                                              direction:
+                                                                  Axis.horizontal,
+                                                              runSpacing: 10,
+                                                              spacing: 30,
+                                                              children: item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .radioGroupOption!
+                                                                  .map<Widget>(
+                                                                      (e) =>
+                                                                          SafeOnTap(
+                                                                            onSafeTap:
+                                                                                () {
+                                                                              for (RadioGroupOption item
+                                                                                  in item.productOptions![index].radioGroupOption!) {
+                                                                                item.selected = false;
+                                                                              }
+                                                                              item.productOptions![index].answer =
+                                                                                  e.name1;
+                                                                              e.selected =
+                                                                                  true;
+                                                                              setState(() {});
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              decoration:
+                                                                                  BoxDecoration(
+                                                                                color: e.selected! ? ColorResources.studio : const Color(0xfff8f2ff),
+                                                                                borderRadius: BorderRadius.circular(14.0),
+                                                                              ),
+                                                                              child:
+                                                                                  Padding(
+                                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                                                                child: Text(
+                                                                                  e.name1!,
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'DIN Next LT W23',
+                                                                                    fontSize: widgetSize.getHeight(14, context),
+                                                                                    color: e.selected! ? Colors.white : const Color(0xff2e2e2e),
+                                                                                  ),
+                                                                                  softWrap: false,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ))
+                                                                  .toList(),
+                                                            ) : DropdownButtonFormField<RadioGroupOption>(
+                                                              hint: const Text('اختر الخيار'),
+                                                              decoration: InputDecoration(
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          14.0),
+                                                                ),
+                                                                focusedBorder: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          14.0),
+                                                                  borderSide: const BorderSide(
+                                                                      color: ColorResources.sliver),
+                                                                ),
+                                                                enabledBorder: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          14.0),
+                                                                  borderSide: const BorderSide(
+                                                                      color: ColorResources.sliver),
+                                                                ),
+                                                              ),
+                                                                items: item
+                                                                .productOptions![
+                                                            index]
+                                                                .radioGroupOption!.map((e) => DropdownMenuItem<RadioGroupOption>(value: e, child: Text(e.name1!))).toList(), onChanged: (value){
+                                                              for (RadioGroupOption item
+                                                              in item.productOptions![index].radioGroupOption!) {
+                                                                item.selected = false;
+                                                              }
+                                                              item.productOptions![index].answer =
+                                                                  value!.name1;
+                                                              value.selected =
+                                                              true;
+                                                            }),
+                                                            if (item.productOptions!
+                                                                    .length >
+                                                                1) ...[
+                                                              SizedBox(
+                                                                height: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                              ),
+                                                            ]
+                                                          ],
+                                                        );
+                                                      }
+                                                      if (item
+                                                              .productOptions![
+                                                                  index]
+                                                              .optionType ==
+                                                          "Text Area") {
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .optionName!,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'DIN Next LT W23',
+                                                                fontSize: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                                color: const Color(
+                                                                    0xff6b6b6b),
+                                                              ),
+                                                              softWrap: false,
+                                                            ),
+                                                            SizedBox(
+                                                              height: widgetSize
+                                                                  .getHeight(
+                                                                      8, context),
+                                                            ),
+                                                            CustomTextField(
+                                                              maxLines: 6,
+                                                              borderRaduis: 10,
+                                                              obscureText: false,
+                                                              hint: item
+                                                                  .productOptions![
+                                                              index].hint,
+                                                              validate: item
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? Validations()
+                                                                      .filedRequired
+                                                                  : null,
+                                                              hintStyle: item
+                                                                  .productOptions![
+                                                              index]
+                                                                  .isMandatory ==
+                                                                  1 ? const TextStyle(color: ColorResources.red) : null,
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .multiline,
+                                                              textEditingController:
+                                                                  multiLineAreaOptions[
+                                                                      index],
+                                                              onSaved: (String?
+                                                                  value) {
+                                                                item
+                                                                    .productOptions![
+                                                                        index]
+                                                                    .answer = value;
+                                                              },
+                                                            ),
+                                                            if (item.productOptions!
+                                                                    .length >
+                                                                1) ...[
+                                                              SizedBox(
+                                                                height: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                              ),
+                                                            ]
+                                                          ],
+                                                        );
+                                                      }
+                                                      if (item
+                                                              .productOptions![
+                                                                  index]
+                                                              .optionType ==
+                                                          "Number Input") {
+                                                        if(item.productOptions![index].isPriceModifier == 1) percent = percent + item.productOptions![index].percentage;
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .optionName!,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'DIN Next LT W23',
+                                                                fontSize: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                                color: const Color(
+                                                                    0xff6b6b6b),
+                                                              ),
+                                                              softWrap: false,
+                                                            ),
+                                                            SizedBox(
+                                                              height: widgetSize
+                                                                  .getHeight(
+                                                                      8, context),
+                                                            ),
+                                                            CustomTextField(
+                                                              maxLines: 1,
+                                                              borderRaduis: 10,
+                                                              onChanged: (value) {
+                                                                value = changeDigit(value!, NumStrLanguage.English);
+
+                                                               numberOptions[index].text = value;
+                                                                numberOptions[index].selection =
+                                                                    TextSelection.fromPosition(TextPosition(
+                                                                        offset:  numberOptions[index].text.length));
+
+                                                                  _key.currentState!.save();
+                                                                  setState(() {
+                                                                    getFinalPriceModifier(item);
+
+                                                                  });
+
+
+                                                              },
+                                                              hint: item
+                                                                  .productOptions![
+                                                              index].hint,
+                                                              obscureText: false,
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              textEditingController:
+                                                                  numberOptions[
+                                                                      index],
+                                                              validate: item
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? Validations()
+                                                                      .filedRequired
+                                                                  : null,
+                                                              hintStyle: item
+                                                              .productOptions![
+                                                          index]
+                                                              .isMandatory ==
+                                                          1 ? const TextStyle(color: ColorResources.red) : null,
+                                                              onSaved: (String?
+                                                                  value) {
+                                                                item
+                                                                    .productOptions![
+                                                                        index]
+                                                                    .answer = value;
+                                                              },
+
+                                                            ),
+
+                                                            if (item.productOptions!
+                                                                    .length >
+                                                                1) ...[
+                                                              SizedBox(
+                                                                height: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                              ),
+                                                            ]
+                                                          ],
+                                                        );
+                                                      }
+                                                      if (item
+                                                              .productOptions![
+                                                                  index]
+                                                              .optionType ==
+                                                          "Text Input") {
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .optionName!,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'DIN Next LT W23',
+                                                                fontSize: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                                color: const Color(
+                                                                    0xff6b6b6b),
+                                                              ),
+                                                              softWrap: false,
+                                                            ),
+                                                            SizedBox(
+                                                              height: widgetSize
+                                                                  .getHeight(
+                                                                      8, context),
+                                                            ),
+                                                            CustomTextField(
+                                                              maxLines: 1,
+                                                              borderRaduis: 10,
+                                                              obscureText: false,
+                                                              hint: item
+                                                                  .productOptions![
+                                                              index].hint,
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .emailAddress,
+                                                              textEditingController:
+                                                                  textAreaOptions[
+                                                                      index],
+                                                              validate: item
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? Validations()
+                                                                      .filedRequired
+                                                                  : null,
+                                                              hintStyle: item
+                                                                  .productOptions![
+                                                              index]
+                                                                  .isMandatory ==
+                                                                  1 ? const TextStyle(color: ColorResources.red) : null,
+                                                              onSaved: (String?
+                                                                  value) {
+                                                                item
+                                                                    .productOptions![
+                                                                        index]
+                                                                    .answer = value;
+                                                              },
+                                                            ),
+                                                            if (item.productOptions!
+                                                                    .length >
+                                                                1) ...[
+                                                              SizedBox(
+                                                                height: widgetSize
+                                                                    .getHeight(15,
+                                                                        context),
+                                                              ),
+                                                            ]
+                                                          ],
+                                                        );
+                                                      }
+                                                      return const Text("");
+                                                    }),
+                                              ),
+                                            ),
+                                            Visibility(
+                                                maintainState: true,
+                                                visible: selectedIndex == 1,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    item.webLongDescription ?? '',
+                                                    style: TextStyle(
+                                                      fontSize: widgetSize
+                                                          .getHeight(16, context),
+                                                      color:
+                                                          const Color(0xff2e2e2e),
+                                                    ),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                      Visibility(
+                                        visible: !hideQuantity(item),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: widgetSize.getHeight(
+                                                  30, context),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'الكمية',
+                                                  style: TextStyle(
+                                                    fontFamily: 'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(18, context),
                                                     color:
-                                                        const Color(0xff2e2e2e),
+                                                        const Color(0xff6b6b6b),
+                                                    fontWeight: FontWeight.w500,
                                                   ),
+                                                  softWrap: false,
                                                 ),
                                                 SizedBox(
-                                                  height: widgetSize.getHeight(
-                                                      20, context),
+                                                  width: widgetSize.getWidth(
+                                                      50, context),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      SafeOnTap(
+                                                          onSafeTap: () {
+                                                            if(!isPressed){
+                                                              setState(() {
+                                                                isPressed = true;
+                                                                count = int.parse(item.minimumOrderQuantities!);
+                                                              });
+                                                            }
+                                                            if(item.maximumOrderQuantities == null ? count < 100 : count < int.parse(item.maximumOrderQuantities!)){
+                                                              setState(() {
+                                                                count = count + 1;
+                                                                getFinalPrice(item);
+                                                              });
+                                                            }
+                                                          },
+                                                          child: SvgPicture.asset(
+                                                              Assets.svgAdd)),
+                                                      SizedBox(
+                                                        width:
+                                                            widgetSize.getWidth(
+                                                                10, context),
+                                                      ),
+                                                      Text(
+                                                        (isPressed && item.minimumOrderQuantities != null) ? count.toString() : item.minimumOrderQuantities!,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'DIN Next LT W23',
+                                                          fontSize: widgetSize
+                                                              .getHeight(
+                                                                  16, context),
+                                                          color: const Color(
+                                                              0xff6b6b6b),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                        softWrap: false,
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            widgetSize.getWidth(
+                                                                10, context),
+                                                      ),
+                                                      SafeOnTap(
+                                                          onSafeTap: () {
+                                                            if(!isPressed){
+                                                              setState(() {
+                                                                isPressed = true;
+                                                                count = int.parse(item.minimumOrderQuantities!);
+                                                              });
+                                                            }
+                                                            if (count > 1 && count > int.parse(item.minimumOrderQuantities!)) {
+                                                              setState(() {
+                                                                count = count - 1;
+                                                                getFinalPrice(
+                                                                    item);
+                                                              });
+                                                            }
+                                                          },
+                                                          child: SvgPicture.asset(
+                                                              Assets.svgSub)),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: widgetSize.getHeight(30, context),
+                                      ),
+                                      Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              'السعر الإجمالي',
+                                              style: TextStyle(
+                                                fontFamily: 'DIN Next LT W23',
+                                                fontSize: widgetSize.getHeight(
+                                                    18, context),
+                                                color: const Color(0xff6b6b6b),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              softWrap: false,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height:
+                                                widgetSize.getHeight(8, context),
+                                          ),
+                                          Container(
+                                            height:
+                                                widgetSize.getHeight(70, context),
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xfff6f6f6),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                              border: Border.all(
+                                                  width: 1.0,
+                                                  color: const Color(0xffe3e3e3)),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                 hideQuantity(item) ?getFinalPriceModifier(item): getFinalPrice(item),
+                                                  style: TextStyle(
+                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontSize: widgetSize
+                                                        .getHeight(32, context),
+                                                    color:
+                                                        const Color(0xff2e2e2e),
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                  softWrap: false,
+                                                ),
+                                                SizedBox(
+                                                  width: widgetSize.getWidth(
+                                                      8, context),
+                                                ),
+                                                Text(
+                                                  item.currency!,
+                                                  style: TextStyle(
+                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontSize: widgetSize
+                                                        .getHeight(18, context),
+                                                    color:
+                                                        const Color(0xff9c9c9c),
+                                                  ),
+                                                  softWrap: false,
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: widgetSize.getHeight(70, context),
+                                      ),
+                                      if (item.inStock != null &&
+                                          item.inStock == 1) ...[
+                                        SafeOnTap(
+                                          onSafeTap: () async {
+                                            FocusScope.of(context).unfocus();
+                                            if (!moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0) {
+                                              if (context
+                                                      .read<AppProvider>()
+                                                      .getUserInfo() !=
+                                                  null) {
+                                                await checkValidationAndDirectRequest(
+                                                    item);
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SignInScreen(
+                                                              fromSetting: true,
+                                                            )));
+                                              }
+                                            }
+                                          },
+                                          child: Container(
+                                            height:
+                                                widgetSize.getHeight(60, context),
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0
+                                                      ? const Color(0xff2892d7)
+                                                      : const Color(0xffa2a2a2),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              border: Border.all(
+                                                  width: 1.0,
+                                                  color: const Color(0xff2892d7)),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color(0x401d4c9b),
+                                                  offset: Offset(0, 5),
+                                                  blurRadius: 11,
                                                 ),
                                               ],
                                             ),
+                                            child: Center(
+                                              child: Text(
+                                                !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0 ? 'متابعة الشراء' : 'لا يوجد رصيد كافي',
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize.getHeight(
+                                                      20, context),
+                                                  color: const Color(0xffffffff),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child:
-                                      SvgPicture.asset(Assets.svgProductInfo)))
-                        ],
-                      )
-                    ],
-                  );
+                                        )
+                                      ],
+                                      if (item.inStock != null &&
+                                          item.inStock == 0) ...[
+                                        SafeOnTap(
+                                          onSafeTap: () {},
+                                          child: Container(
+                                            height:
+                                                widgetSize.getHeight(60, context),
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xffa2a2a2),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              border: Border.all(
+                                                  width: 1.0,
+                                                  color: const Color(0xffa2a2a2)),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color(0x401d4c9b),
+                                                  offset: Offset(0, 5),
+                                                  blurRadius: 11,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'غير متوفر بالمخزون',
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize.getHeight(
+                                                      20, context),
+                                                  color: const Color(0xffffffff),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ]
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                                left: widgetSize.getWidth(50, context),
+                                child: SafeOnTap(
+                                    onSafeTap: () {
+                                      if (item.shortDescription != null) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              Dialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0)),
+                                            //this right here
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: widgetSize.getWidth(
+                                                      20, context)),
+                                              child: ListView(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                children: <Widget>[
+                                                  SizedBox(
+                                                    height: widgetSize.getHeight(
+                                                        20, context),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      SafeOnTap(
+                                                          onSafeTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: SvgPicture.asset(
+                                                              Assets
+                                                                  .svgCancelDirectOrder)),
+                                                      const Spacer(),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: widgetSize.getHeight(
+                                                        10, context),
+                                                  ),
+                                                  Text(
+                                                    item.shortDescription!,
+                                                    maxLines: null,
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          'DIN Next LT W23',
+                                                      fontSize: widgetSize
+                                                          .getHeight(18, context),
+                                                      color:
+                                                          const Color(0xff2e2e2e),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: widgetSize.getHeight(
+                                                        20, context),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child:
+                                        SvgPicture.asset(Assets.svgProductInfo)))
+                          ],
+                        )
+                      ],
+                    );
 
-                case Status.ERROR:
-                  return Error(
-                      errorMsg: homeProvider.productDetailsResponse!.message);
+                  case Status.ERROR:
+                    return Error(
+                        errorMsg: homeProvider.productDetailsResponse!.message);
+                }
               }
-            }
-            return Container();
-          })),
+              return Container();
+            }),
+          )),
     );
   }
 
@@ -1242,7 +1276,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 ),
                                                 Text(
                                                   resultOfConfirmDirectOrder
-                                                      .data!.orderId!,
+                                                      .data!.invoiceId!,
                                                   style: const TextStyle(
                                                     fontFamily: 'DIN Next LT W23',
                                                     fontSize: 14,
@@ -1647,7 +1681,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                       child: SafeOnTap(
                                         onSafeTap: () {
                                           Navigator.pop(context, true);
-                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => MainScreen()), (route) => false);
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -1725,7 +1759,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             context,
             PageTransition(
               type: PageTransitionType.fade,
-              child: MainScreen(),
+              child: SharedBottomNavigationBar(widget: MainScreen()),
             ),
           );
         }
@@ -1801,6 +1835,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
               //this right here
+          /// Dialog for ( تأكيد الشراء )
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widgetSize.getWidth(20, context)),
@@ -2040,9 +2075,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProductDetailsScreen(item.websiteItemName!, item.websiteItemId!)));
                                       } else {
                                         Fluttertoast.showToast(
-                                            backgroundColor: Colors.red,
+                                            backgroundColor: ColorResources.nightRider,
                                             textColor: Colors.white,
-                                            msg: res.message ?? "",
+                                            msg: res.message == "Error During Communication: Error while Communication with Server with StatusCode : EXPECTATION FAILED" ?"منته من المتجر": "",
                                             timeInSecForIosWeb: 4,
                                             toastLength: Toast.LENGTH_LONG);
                                       }
@@ -2129,7 +2164,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   getFinalPrice(ProductsDetailsData item) {
     double finalPrice = 0.0;
-    finalPrice = (double.parse(item.discountedPrice!)) * count;
+    finalPrice = (!isPressed) ?(double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) : (double.parse(item.discountedPrice!)) * count  ;
     if (context.read<AppProvider>().utilitiesModel != null &&
         context.read<AppProvider>().utilitiesModel!.data != null &&
         context.read<AppProvider>().utilitiesModel!.data!.walletBalance !=
@@ -2163,8 +2198,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     if (tempList.isNotEmpty) {
       for (ProductOptions p in tempList) {
         if (p.answer != null && p.answer!.isNotEmpty) {
-          finalPrice = (double.parse(item.discountedPrice!)) * count +
-              double.parse(p.answer!);
+          finalPrice = (!isPressed && percent == 0.0)
+              ? (double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) + double.parse(p.answer!)
+          :(!isPressed && percent != 0.0)
+              ? (double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) + (double.parse(p.answer!)+ ((double.parse(p.answer!) * (p.percentage/100))))
+              : (double.parse(item.discountedPrice!)) * count + double.parse(p.answer!);
         }
       }
     }
@@ -2189,6 +2227,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     }
 
     return finalPrice.toStringAsFixed(4);
+  }
+
+  void calculatePercentPrice(double additionalData, double percentage){
+    double amount = ((percentage/100) * additionalData) + additionalData;
+    setState(() {
+      percent = percent + amount;
+    });
   }
 
   @override

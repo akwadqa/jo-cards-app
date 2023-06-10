@@ -6,6 +6,7 @@ class LoginResponseModel {
   final String? customerID;
   final KeyDetails? keyDetails;
   final ProfileDetails? profileDetails;
+  final String? customerType;
 
   LoginResponseModel({
     this.message,
@@ -15,6 +16,7 @@ class LoginResponseModel {
     this.user,
     this.keyDetails,
     this.profileDetails,
+    this.customerType
   });
 
   LoginResponseModel.fromJson(Map<String, dynamic> json)
@@ -24,7 +26,8 @@ class LoginResponseModel {
         customerID = json['customer_id'] as String?,
       user = json['user'] as String?,
       keyDetails = (json['key_details'] as Map<String,dynamic>?) != null ? KeyDetails.fromJson(json['key_details'] as Map<String,dynamic>) : null,
-      profileDetails = (json['profile_details'] as Map<String,dynamic>?) != null ? ProfileDetails.fromJson(json['profile_details'] as Map<String,dynamic>) : null;
+      profileDetails = (json['profile_details'] as Map<String,dynamic>?) != null ? ProfileDetails.fromJson(json['profile_details'] as Map<String,dynamic>) : null,
+      customerType = json["customer_type"] as String?;
 
   Map<String, dynamic> toJson() => {
     'message' : message,
@@ -33,7 +36,8 @@ class LoginResponseModel {
     'user' : user,
     'customer_id' : customerID,
     'key_details' : keyDetails?.toJson(),
-    'profile_details' : profileDetails?.toJson()
+    'profile_details' : profileDetails?.toJson(),
+    "customer_type": customerType,
   };
 }
 
@@ -54,6 +58,11 @@ class KeyDetails {
     'api_secret' : apiSecret,
     'api_key' : apiKey
   };
+
+  @override
+  toString(){
+    return "KeyDetails: {apiSecret: $apiSecret, apiKey: $apiKey}";
+  }
 }
 
 class ProfileDetails {
@@ -62,6 +71,9 @@ class ProfileDetails {
   final String? email;
   final String? mobileNo;
   final dynamic gender;
+  final String? companyName;
+  final String? customerAgent;
+  final String? userImage;
 
   ProfileDetails({
     this.firstName,
@@ -69,6 +81,9 @@ class ProfileDetails {
     this.email,
     this.mobileNo,
     this.gender,
+    this.companyName,
+    this.customerAgent,
+    this.userImage
   });
 
   ProfileDetails.fromJson(Map<String, dynamic> json)
@@ -76,13 +91,25 @@ class ProfileDetails {
       lastName = json['last_name'] as String?,
       email = json['email'] as String?,
       mobileNo = json['mobile_no'] as String?,
-      gender = json['gender'];
+      gender = json['gender'],
+      companyName = json["company_name"] as String?,
+      customerAgent = json["customer_agent"] as String?,
+      userImage = json["user_image"] as String?
+  ;
 
   Map<String, dynamic> toJson() => {
     'first_name' : firstName,
     'last_name' : lastName,
     'email' : email,
     'mobile_no' : mobileNo,
-    'gender' : gender
+    'gender' : gender,
+    "company_name": companyName,
+    "user_image": userImage,
+    "customer_agent": customerAgent
   };
+
+  @override
+  toString() {
+    return "ProfileDetails: {firstName: $firstName, lastName: $lastName, email: $email, mobileNo : $mobileNo, gender: $gender, companyName: $companyName, customerAgent: $customerAgent, userImage : $userImage}";
+  }
 }

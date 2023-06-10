@@ -8,11 +8,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jocards/Network/api_response.dart';
 import 'package:jocards/Network/app_exceptions.dart';
+import 'package:jocards/Network/extra_resit_api.dart';
 import 'package:jocards/Network/resit_api.dart';
 import 'package:jocards/model/app_version_model.dart';
 import 'package:jocards/model/register_request_model.dart';
 import 'package:jocards/model/register_response_model.dart';
+import 'package:jocards/model/response_model.dart';
 import 'package:jocards/model/territories_model.dart';
+import 'package:jocards/model/update_token_model.dart';
 import 'package:jocards/utill/strings.dart';
 
 import '../main.dart';
@@ -46,6 +49,17 @@ class AppProvider with ChangeNotifier {
     if(userInfo!=null) {
       await sharedPreferences.setString(Strings.USER_INFO, userInfo);
     }
+  }
+  setOldPassword(String password) async{
+    await sharedPreferences.setString(Strings.OLD_PASSWORD, password);
+  }
+
+  setAgreeNotification(bool isAgreeNotification) async{
+    await sharedPreferences.setBool(Strings.IS_USER_AGREE_NOTI, isAgreeNotification);
+  }
+
+  setFirebaseToken(String firebaseToken) async{
+    await sharedPreferences.setString(Strings.FIREBASE_TOKEN, firebaseToken);
   }
 
   saveBluetoothDevice(String bluetoothDevice)async {
@@ -108,6 +122,27 @@ class AppProvider with ChangeNotifier {
       return false;
     }
     return sharedPreferences.getBool(Strings.IS_USER_SIGNED_IN)!;
+  }
+  
+  Future<String> getOldPassword() async {
+    if (sharedPreferences.getString(Strings.OLD_PASSWORD) == null) {
+      return "";
+    }
+    return sharedPreferences.getString(Strings.OLD_PASSWORD)!;
+  }
+
+  Future<bool> isUserAgreeNotification() async {
+    if (sharedPreferences.getBool(Strings.IS_USER_AGREE_NOTI) == null) {
+      return false;
+    }
+    return sharedPreferences.getBool(Strings.IS_USER_AGREE_NOTI)!;
+  }
+
+  Future<String> getFirebaseToken() async{
+    if(sharedPreferences.getString(Strings.FIREBASE_TOKEN) == null){
+      return "";
+    }
+    return sharedPreferences.getString(Strings.FIREBASE_TOKEN)!;
   }
 
   Future<bool> checkInternet() async {
@@ -299,6 +334,71 @@ class AppProvider with ChangeNotifier {
     return apiResponse;
   }
 
+  Future<ApiResponse<ResponseModel>> resetPassword(String email) async {
+    ExtraResitApi extraResitApi = ExtraResitApi();
+    late ApiResponse<ResponseModel> apiResponse;
+
+    if(await checkInternet()) {
+      isLoading = true;
+
+      try {
+
+        ResponseModel responseModel = await extraResitApi.resetPassword(email);
+        if(responseModel.statusCode == 200){
+          apiResponse = ApiResponse<ResponseModel>.completed(responseModel);
+        }
+        else{
+          apiResponse = ApiResponse<ResponseModel>.error(responseModel.message);
+        }
+
+      } catch (e, stackTrace) {
+        isLoading = false;
+        if (e is DioError) {
+          try {
+            throwCustomException(e);
+          } catch (forcedException) {
+            return apiResponse = ApiResponse.error(forcedException.toString());
+          }
+        }
+        return apiResponse = ApiResponse.error(e.toString());
+      }
+      isLoading = false;
+    }
+    else{
+      return apiResponse = ApiResponse.error("No Internet Connection");
+    }
+    return apiResponse;
+  }
+
+  Future<ApiResponse<UpdateTokenModel>> sendUpdateToken (String token, String userId, String userDeviceType, String userDeviceName) async{
+    restApi mRestApi = restApi(Dio());
+    late ApiResponse<UpdateTokenModel> apiResponse;
+
+    if(await checkInternet()) {
+      isLoading = true;
+
+      try {
+
+        UpdateTokenModel updateTokenModel = await mRestApi.updateToken(token, userId, userDeviceType, userDeviceName);
+        apiResponse = ApiResponse<UpdateTokenModel>.completed(updateTokenModel);
+      } catch (e, stackTrace) {
+        isLoading = false;
+        if (e is DioError) {
+          try {
+            throwCustomException(e);
+          } catch (forcedException) {
+            return apiResponse = ApiResponse.error(forcedException.toString());
+          }
+        }
+        return apiResponse = ApiResponse.error(e.toString());
+      }
+      isLoading = false;
+    }
+    else{
+      return apiResponse = ApiResponse.error("No Internet Connection");
+    }
+    return apiResponse;
+  }
 }
 
 dynamic throwCustomException(DioError? dioError) {

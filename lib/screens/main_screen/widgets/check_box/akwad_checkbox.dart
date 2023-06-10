@@ -10,7 +10,7 @@ class AkwadCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Checkbox(value: typeValue, onChanged: (value){ function;}, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),),
+        Checkbox(value: typeValue, onChanged: (value){function;}, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),),
         Text(typeName),
       ],
     );

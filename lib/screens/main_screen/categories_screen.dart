@@ -2,13 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jocards/generated/assets.dart';
+import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
+import 'package:jocards/screens/main_screen/notification_screen.dart';
+import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/subcategories_screen.dart';
 import 'package:jocards/utill/strings.dart';
 import 'package:jocards/utill/utitlities.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../../Network/api_response.dart';
 import '../../utill/color_resources.dart';
@@ -62,7 +68,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               context,
                               PageTransition(
                                 type: PageTransitionType.rightToLeft,
-                                           child: SubCategroiesScreen(childIndex,items[childIndex].itemGroupId!=null?items[childIndex].itemGroupId.toString():"",true),
+                                           child: SharedBottomNavigationBar(widget: SubCategroiesScreen(childIndex,items[childIndex].itemGroupId!=null?items[childIndex].itemGroupId.toString():"",true)),
 
                               ),
                             );
@@ -179,19 +185,69 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 top: widgetSize.getHeight(30, context),
                 right: widgetSize.getWidth(16, context),
                 left: widgetSize.getWidth(16, context)),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-                Spacer(),
-                Text(
-                 "جميع الفئات",
-                  style: TextStyle(
-                    fontSize: widgetSize.getHeight(18, context),
-                    color: const Color(0xffffffff),
-                  ),
-                  softWrap: false,
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null)  Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.leftToRight,
+                              child: const SharedBottomNavigationBar(widget: NotificationScreen(),)));
+                    },
+                        child:  Icon(Icons.notifications_active_outlined, color: Colors.white, size: widgetSize.getHeight(28, context),)),),
                 ),
-                Spacer(),
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null)  Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                   "جميع الفئات",
+                    style: TextStyle(
+                      fontSize: widgetSize.getHeight(18, context),
+                      color: const Color(0xffffffff),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                  ),
+                ),
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(children: [
+                          const Text("JD ", style: TextStyle(
+                            fontFamily: 'DIN Next LT W23',
+                            fontSize: 16,
+                            color:  Color(0xffffffff),
+                            fontWeight: FontWeight.w400,
+                          ), softWrap: false,),
+                          Text(
+                            context.watch<AppProvider>().utilitiesModel!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                            style: const TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 16,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ),
+                            softWrap: false,
+                          ),
+                          SizedBox(width: widgetSize.getWidth(5, context)),
+                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                        ],),
+                      ),),
+                  ),
+                )
            
 
               ],

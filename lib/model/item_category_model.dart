@@ -55,9 +55,9 @@ class Data {
   Data.fromJson(Map<String, dynamic> json)
     : websiteItemId = json['website_item_id'] as String?,
       itemCode = json['item_code'] as String?,
-      websiteImage = json['website_image'] as String?,
+      websiteImage = json['website_image'] as String? ?? "/files/foreground.png",
       productTitle = json['product_title'] as String?,
-      backgroundColor = json['background_color'] as String?,
+      backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
       currency = json['currency'] as String?,
       inStock = json['in_stock'] as int?,
       itemPrice = json['item_price'].toString(),

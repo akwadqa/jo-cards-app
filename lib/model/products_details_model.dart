@@ -41,6 +41,8 @@ class ProductsDetailsData {
   final String? discountedPrice;
   final int? inStock;
   final List<ProductOptions>? productOptions;
+  final String? minimumOrderQuantities;
+  final String? maximumOrderQuantities;
 
   ProductsDetailsData({
     this.websiteItemId,
@@ -62,6 +64,8 @@ class ProductsDetailsData {
     this.discountedPrice,
     this.inStock,
     this.productOptions,
+    this.minimumOrderQuantities,
+    this.maximumOrderQuantities
   });
 
   ProductsDetailsData.fromJson(Map<String, dynamic> json)
@@ -72,9 +76,9 @@ class ProductsDetailsData {
       stockUom = json['stock_uom'] as String?,
       mobileDefaultUom = json['mobile_default_uom'] as String?,
       itemDescription = json['item_description'] as String?,
-      backgroundColor = json['background_color'] as String?,
+      backgroundColor = json['background_color'] as String? ?? "#7c5aa6",
       published = json['published'] as int?,
-      websiteImage = json['website_image'] as String?,
+      websiteImage = json['website_image'] as String? ?? "/files/foreground.png",
       shortDescription = json['short_description'] as String?,
       webLongDescription = json['web_long_description'] as String?,
       itemPrice = json['item_price'].toString(),
@@ -83,6 +87,8 @@ class ProductsDetailsData {
       discountAmount = json['discount_amount'].toString(),
       discountedPrice = json['discounted_price'].toString(),
       inStock = json['in_stock'] as int?,
+      minimumOrderQuantities = json["minimum_order_quantities"] as String?,
+      maximumOrderQuantities = json["maximum_order_quantities"] as String?,
       productOptions = (json['product_options'] as List?)?.map((dynamic e) => ProductOptions.fromJson(e as Map<String,dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {
@@ -104,6 +110,7 @@ class ProductsDetailsData {
     'discount_amount' : discountAmount,
     'discounted_price' : discountedPrice,
     'in_stock' : inStock,
+    "minimum_order_quantities" : minimumOrderQuantities,
     'product_options' : productOptions?.map((e) => e.toJson()).toList()
   };
 }
@@ -119,6 +126,7 @@ class ProductOptions {
   final String? textInput;
   final String? numberInputValue;
   final String? viewOption;
+  final dynamic percentage;
   final List<RadioGroupOption>? radioGroupOption;
 
   ProductOptions({
@@ -132,6 +140,7 @@ class ProductOptions {
     this.textInput,
     this.numberInputValue,
     this.viewOption,
+    this.percentage,
     this.radioGroupOption,
   });
 
@@ -146,6 +155,7 @@ class ProductOptions {
       textInput = json['text_input'] as String?,
       numberInputValue = json['number_input_value'].toString(),
       viewOption = json['view_option'] as String?,
+      percentage = json["percentage"] as dynamic,
         radioGroupOption = (json['radio_group_option'] as List?)?.map((dynamic e) => RadioGroupOption.fromJson(e as Map<String,dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {
@@ -158,6 +168,7 @@ class ProductOptions {
     'text_input' : textInput,
     'number_input_value' : numberInputValue,
     'view_option' : viewOption,
+    "percentage" : percentage,
     'radio_group_option' : radioGroupOption?.map((e) => e.toJson()).toList()
 
   };
