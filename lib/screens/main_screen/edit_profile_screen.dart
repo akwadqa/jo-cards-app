@@ -16,7 +16,6 @@ import 'package:jocards/utill/validations.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/check_box/akwad_checkbox.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -318,12 +317,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: MaterialStateProperty.all(ColorResources.lightBlue),
                   foregroundColor: MaterialStateProperty.all(Colors.white),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.check),
                   SizedBox(width: 5),
-                  const Text('حفظ'),
+                  Text('حفظ'),
                 ],
               ),
             )

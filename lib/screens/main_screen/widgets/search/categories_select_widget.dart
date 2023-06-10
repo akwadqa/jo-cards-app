@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:jocards/Network/api_response.dart';
-import 'package:jocards/model/categories_model.dart';
 import 'package:jocards/provider/home_provider.dart';
-import 'package:jocards/utill/strings.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:provider/provider.dart';
 

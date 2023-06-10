@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jocards/utill/color_resources.dart';
 
@@ -17,12 +16,12 @@ class Loading extends StatelessWidget {
 
             Text(
               loadingText!,
-              style: TextStyle(color: Colors.amber, fontSize: 19.0),
+              style: const TextStyle(color: Colors.amber, fontSize: 19.0),
             ),
 
             Container(
               padding: const EdgeInsets.all(12.0),
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(ColorResources.studio),
               ),
             ),

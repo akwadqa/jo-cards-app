@@ -8,20 +8,16 @@ import 'package:jocards/model/categories_model.dart';
 import 'package:jocards/model/invoice_order_details.dart';
 import 'package:jocards/model/login_response_model.dart';
 import 'package:jocards/model/sales_invoice_response_model.dart';
-import 'package:jocards/screens/main_screen/categories_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
-import 'package:jocards/screens/main_screen/subcategories_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';import 'package:page_transition/page_transition.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../Network/api_response.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
 import '../../model/direct_order_response.dart';
-import '../../model/sales_order_details.dart';
-import '../../model/sales_order_response_model.dart';
 import '../../provider/app_provider.dart';
 import '../../provider/home_provider.dart';
 import '../../utill/color_resources.dart';
@@ -33,6 +29,8 @@ import '../widget/loading.dart';
 import '../widget/safe_on_tap.dart';
 
 class PurchaseOrderHistory extends StatefulWidget {
+  const PurchaseOrderHistory({super.key});
+
   @override
   _PurchaseOrderHistoryState createState() => _PurchaseOrderHistoryState();
 }
@@ -127,7 +125,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                   .error!
                                   .toString()),
                       itemBuilder: (context, item, index) => Padding(
-                            padding: EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 20),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: const Color(0xffffffff),
@@ -158,7 +156,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                   item.items![0].webSiteImage!,
                                               imageBuilder:
                                                   (context, imageProvider) =>
-                                                      Container(
+                                                      SizedBox(
                                                 height: 80,
                                                 width: 80,
                                                 child: AspectRatio(
@@ -166,7 +164,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       borderRadius:
-                                                          BorderRadius.all(
+                                                          const BorderRadius.all(
                                                               Radius.circular(
                                                                   10)),
                                                       shape: BoxShape.rectangle,
@@ -185,17 +183,17 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 ),
                                               ),
                                               placeholder: (context, url) =>
-                                                  Center(
+                                                  const Center(
                                                 child: CircularProgressIndicator(
                                                     valueColor:
-                                                        new AlwaysStoppedAnimation<
+                                                        AlwaysStoppedAnimation<
                                                                 Color>(
                                                             ColorResources
                                                                 .studio)),
                                               ),
                                               errorWidget:
                                                   (context, url, error) =>
-                                                      Container(
+                                                      const SizedBox(
                                                 height: 80,
                                                 width: 80,
                                                 child: Center(
@@ -268,12 +266,11 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                             .itemsDetail![0]
                                                             .netAmount,
                                                         stockDetails: []);
-                                                    response.itemsDetail![0]
-                                                        .serialNumber!
-                                                        .forEach((element) {
+                                                    for (var element in response.itemsDetail![0]
+                                                        .serialNumber!) {
                                                       orderItems.stockDetails!
                                                           .add(element);
-                                                    });
+                                                    }
 
                                                     directOrderResponse
                                                         .orderItems!
@@ -308,7 +305,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                 .salesInvoiceDetailsResponse!
                                                                 .status!) {
                                                               case Status.LOADING:
-                                                                return Container(
+                                                                return SizedBox(
                                                                   height: 300,
                                                                   width: MediaQuery.of(
                                                                           context)
@@ -457,11 +454,11 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                       child: Center(
                                                                                         child: Text(
                                                                                           items.itemsDetail!.first.serialNumber!.first.secretCode!,
-                                                                                          style: TextStyle(
+                                                                                          style: const TextStyle(
                                                                                             fontFamily: 'DIN Next LT W23',
                                                                                             fontSize: 23,
                                                                                             color:
-                                                                                            const Color(0xffec7e7e),
+                                                                                            Color(0xffec7e7e),
                                                                                             fontWeight: FontWeight.w500,
                                                                                           ),
                                                                                           textAlign: TextAlign.right,
@@ -476,7 +473,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                             await Clipboard.setData(
                                                                                                 ClipboardData(
                                                                                                     text: items.itemsDetail!.first.serialNumber!.first.secretCode!));
-                                                                                            var snackBar = SnackBar(
+                                                                                            var snackBar = const SnackBar(
                                                                                                 content:
                                                                                                 Text("تم النسخ"));
                                                                                             ScaffoldMessenger.of(
@@ -552,7 +549,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                                                             children: [
                                                                                               Text(
-                                                                                                e.productOptionFieldName! + " : ",
+                                                                                                "${e.productOptionFieldName!} : ",
                                                                                                 style: TextStyle(
                                                                                                   fontFamily: 'DIN Next LT W23',
                                                                                                   fontSize: widgetSize.getHeight(16, context),
@@ -584,10 +581,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                   item.grandTotal != "0.0") ...[
                                                                                 Text(
                                                                                   item.grandTotal!.toString(),
-                                                                                  style: TextStyle(
+                                                                                  style: const TextStyle(
                                                                                     fontFamily: 'DIN Next LT W23',
                                                                                     fontSize: 20,
-                                                                                    color: const Color(0xffec7e7e),
+                                                                                    color: Color(0xffec7e7e),
                                                                                     fontWeight: FontWeight.w700,
                                                                                   ),
                                                                                   softWrap: false,
@@ -622,12 +619,12 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                           SizedBox(
                                                                                             height: widgetSize.getHeight(10, context),
                                                                                           ),
-                                                                                          Text(
+                                                                                          const Text(
                                                                                             'مشاركة',
                                                                                             style: TextStyle(
                                                                                               fontFamily: 'DIN Next LT W23',
                                                                                               fontSize: 12,
-                                                                                              color: const Color(0xff6b6b6b),
+                                                                                              color: Color(0xff6b6b6b),
                                                                                               fontWeight: FontWeight.w500,
                                                                                             ),
                                                                                             softWrap: false,
@@ -648,7 +645,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                   child: Expanded(
                                                                                     child: SafeOnTap(
                                                                                       onSafeTap: () async {
-                                                                                        if (androidInfo.model!.contains("TPS")) {
+                                                                                        if (androidInfo.model.contains("TPS")) {
                                                                                           await printOnTelpo(directOrderResponse, context.read<AppProvider>().getEnableMerchantNamePrint() ? context.read<AppProvider>().utilitiesModel : null, context);
                                                                                         } else {
                                                                                           if (context.read<AppProvider>().getBluetoothDevice() == null) {
@@ -680,12 +677,12 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                             SizedBox(
                                                                                               height: widgetSize.getHeight(10, context),
                                                                                             ),
-                                                                                            Text(
+                                                                                            const Text(
                                                                                               'طباعة البطاقة',
                                                                                               style: TextStyle(
                                                                                                 fontFamily: 'DIN Next LT W23',
                                                                                                 fontSize: 12,
-                                                                                                color: const Color(0xff6b6b6b),
+                                                                                                color: Color(0xff6b6b6b),
                                                                                                 fontWeight: FontWeight.w500,
                                                                                               ),
                                                                                               softWrap: false,
@@ -713,20 +710,21 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                               Alignment.center,
                                                                           child: Visibility(
                                                                               visible: Provider.of<HomeProvider>(context, listen: true).isLoading,
-                                                                              child: Center(
+                                                                              child: const Center(
                                                                                 child: CircularProgressIndicator(
-                                                                                  valueColor: new AlwaysStoppedAnimation<Color>(ColorResources.studio),
+                                                                                  valueColor: AlwaysStoppedAnimation<Color>(ColorResources.studio),
                                                                                 ),
                                                                               )),
                                                                         ),
                                                                       ),
                                                                     ],
                                                                   );
-                                                                } else
+                                                                } else {
                                                                   return Container();
+                                                                }
 
                                                               case Status.ERROR:
-                                                                return Container(
+                                                                return SizedBox(
                                                                     height: 300,
                                                                     width: MediaQuery.of(
                                                                             context)
@@ -786,21 +784,21 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                         Expanded(
                                           child: Column(
                                             children: [
-                                              Text(
+                                              const Text(
                                                 'رقم الطلب',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color: const Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
                                               SelectableText(
                                                 item.salesInvoiceId!,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color: const Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 maxLines: 2,
@@ -809,21 +807,21 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 height: widgetSize.getHeight(
                                                     15, context),
                                               ),
-                                              Text(
+                                              const Text(
                                                 'حالة الطلب',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color: const Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
                                               Text(
                                                 item.invoiceStatus.toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color: const Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: false,
@@ -832,21 +830,21 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 height: widgetSize.getHeight(
                                                     15, context),
                                               ),
-                                              Text(
+                                              const Text(
                                                 'الكمية',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color: const Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
                                               Text(
                                                 item.items![0].qty!,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color: const Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: false,
@@ -864,12 +862,12 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
                                                   item.grandTotal!.toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontFamily:
                                                           'DIN Next LT W23',
                                                       fontSize: 22,
                                                       color:
-                                                          const Color(0xffec7e7e),
+                                                          Color(0xffec7e7e),
                                                       fontWeight:
                                                           FontWeight.w700),
                                                   softWrap: false,
@@ -880,11 +878,11 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                     left: 10),
                                                 child: Text(
                                                   item.currency!.toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontFamily: 'DIN Next LT W23',
                                                     fontSize: 18,
                                                     color:
-                                                        const Color(0xffec7e7e),
+                                                        Color(0xffec7e7e),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -911,7 +909,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                     ),
                                                     softWrap: false,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 3,
                                                   ),
                                                   Text(
@@ -949,7 +947,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),

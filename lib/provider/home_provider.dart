@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jocards/Network/api_response.dart';
-import 'package:jocards/Network/app_exceptions.dart';
 import 'package:jocards/Network/extra_resit_api.dart';
 import 'package:jocards/Network/resit_api.dart';
 import 'package:jocards/model/agent_payment_entry_response.dart';
@@ -24,18 +20,12 @@ import 'package:jocards/model/sales_invoice_response_model.dart';
 import 'package:jocards/model/update_password_model.dart';
 import 'package:jocards/model/update_profile_model.dart';
 import 'package:jocards/provider/app_provider.dart';
-import 'package:jocards/screens/main_screen/shipping_order_history.dart';
-import 'package:jocards/utill/strings.dart';
-import 'package:provider/provider.dart';
 
-import '../main.dart';
 import '../model/categories_model.dart';
 import '../model/direct_order_request_model.dart';
 import '../model/direct_wallet_request_log_model.dart';
 import '../model/item_category_model.dart';
 import '../model/products_details_model.dart';
-import '../model/sales_order_details.dart';
-import '../model/sales_order_response_model.dart';
 import '../model/shipping_order_response_model.dart';
 import '../model/transfer_shipping_response_model.dart';
 import '../model/upload_response_model.dart';
@@ -162,7 +152,7 @@ class HomeProvider extends AppProvider {
         }
         // homeModel.homeBlock!.insert(0, HomeBlock(id: "0", title: "Wallet", type: "Wallet", ));
         homsResponse = ApiResponse.completed(homeModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -189,7 +179,7 @@ class HomeProvider extends AppProvider {
             await mRestApi.getItemsOfCategory(catName);
 
         itemCategoryResponse = ApiResponse.completed(itemCategoryModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -217,7 +207,7 @@ class HomeProvider extends AppProvider {
             await mRestApi.getProductDetails(id);
 
         productDetailsResponse = ApiResponse.completed(productsDetailsModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -260,7 +250,7 @@ class HomeProvider extends AppProvider {
         else{
           directOrderResponse = ApiResponse.completed(directOrder);
         }
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -298,7 +288,7 @@ class HomeProvider extends AppProvider {
         else{
           apiResponse = ApiResponse.error(transferShippingResponseModel.message);
         }
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -331,7 +321,7 @@ class HomeProvider extends AppProvider {
         await mRestApi.uploadReceipt(
            cmd: "uploadfile",doctype: "Digital Wallet Request",docname:docname,fileData: fileData,fileName: fileName,fromForm: 1);
         apiResponse = ApiResponse.completed(uploadResponseModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -389,7 +379,7 @@ class HomeProvider extends AppProvider {
             await mRestApi.getAllCategories();
 
         categoriesModelResponse = ApiResponse.completed(categoriesModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -468,7 +458,7 @@ class HomeProvider extends AppProvider {
         else{
           salesInvoiceDetailsResponse = ApiResponse.completed(salesInvoiceDetails);
         }
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {

@@ -9,23 +9,23 @@ import '../model/row.dart';
 
 
 class FlutterTelpo {
-  MethodChannel _platform = MethodChannel('com.efikas.flutter_telpo/printer');
+  final MethodChannel _platform = const MethodChannel('com.efikas.flutter_telpo/printer');
 
 
   Future<bool> isConnected() async {
     return await _platform.invokeMethod('isConnected');
   }
   
-  Future<dynamic> print(List<dynamic> _rows) async{
-    List<Map<String, dynamic>> _printableRows = [];
+  Future<dynamic> print(List<dynamic> rows) async{
+    List<Map<String, dynamic>> printableRows = [];
 
-    _rows.forEach((dynamic _row){
-      if(_row.runtimeType == PrintRow || _row.runtimeType == PrintQRCode || _row.runtimeType == PrintImage || _row.runtimeType == WalkPaper){
-        _printableRows.add(_row.toJson());
+    for (var row in rows) {
+      if(row.runtimeType == PrintRow || row.runtimeType == PrintQRCode || row.runtimeType == PrintImage || row.runtimeType == WalkPaper){
+        printableRows.add(row.toJson());
       }
-    });
+    }
 
-   return await _platform.invokeMethod('printDocument', {"details": _printableRows});
+   return await _platform.invokeMethod('printDocument', {"details": printableRows});
   }
 
   Future<dynamic> printNewLine() async{

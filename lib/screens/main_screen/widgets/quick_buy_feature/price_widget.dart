@@ -51,14 +51,14 @@ class _PriceWidgetState extends State<PriceWidget> {
                         });
                       }
                     },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)))),
                     // onPressed: _quantity >= 100 ? null : () {
                     //   setState(() => _quantity++);
                     //   widget.getTotalPriceAndCount(widget.price * _quantity, _quantity);
                     // },
-                    child: const Icon(Icons.add),
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))))),
+                    child: const Icon(Icons.add)),
                 SizedBox(width: widgetSize.getWidth(10, context)),
                 Text((isPressed && widget.productsDetailsData.minimumOrderQuantities != null) ? _quantity.toString() : widget.productsDetailsData.minimumOrderQuantities!,
                     style: const TextStyle(
@@ -79,14 +79,14 @@ class _PriceWidgetState extends State<PriceWidget> {
                         });
                       }
                     },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)))),
                     // onPressed: _quantity <= 1 ? null : () {
                     //   setState(() => _quantity--);
                     //   widget.getTotalPriceAndCount(widget.price * _quantity, _quantity);
                     // },
-                    child: const Icon(Icons.remove),
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))))),
+                    child: const Icon(Icons.remove)),
               ],
             ),
           ],

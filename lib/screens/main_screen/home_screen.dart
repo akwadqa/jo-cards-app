@@ -1,29 +1,18 @@
-import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jocards/Network/api_response.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/model/home_model.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
-import 'package:jocards/res.dart';
 import 'package:jocards/screens/main_screen/notification_screen.dart';
-import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/product_details.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/subcategories_screen.dart';
-import 'package:jocards/screens/main_screen/wallet_screen.dart';
-import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/price_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/quick_buy_widget.dart';
-import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/titled_list.dart';
-import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/types_list.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:jocards/screens/widget/loading.dart';
 import 'package:jocards/screens/widget/error.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
@@ -34,22 +23,12 @@ import 'package:jocards/utill/widget_size.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart' as intl;
-import 'package:screenshot/screenshot.dart';
 
-import '../../main.dart';
-import '../../model/direct_order_request_model.dart';
-import '../../model/direct_order_response.dart';
-import '../../model/item_category_model.dart';
-import '../../model/products_details_model.dart';
-import '../../utill/validations.dart';
-import '../auth/sign_in_screen.dart';
-import '../widget/textformfield.dart';
 import 'item_per_categories.dart';
-import 'main_screen.dart';
-import 'widgets/quick_buy_feature/custom_button.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -215,9 +194,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) => AspectRatio(
+                            placeholder: (context, url) => const AspectRatio(
                               aspectRatio: 1.2,
-                              child: const Center(
+                              child: Center(
                                 child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         ColorResources.studio)),
@@ -225,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             errorWidget: (context, url, error) => const AspectRatio(
                               aspectRatio: 1.2,
-                              child: const Center(
+                              child: Center(
                                 child: Icon(Icons.error),
                               ),
                             ),
@@ -341,19 +320,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 imageUrl: Strings.BASR_URl +item.bannerImage!,
                                 imageBuilder: (context, imageProvider) => Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(const Radius.circular(5)),
+                                    borderRadius: const BorderRadius.all(Radius.circular(5)),
                                     shape: BoxShape.rectangle,
                                     image: DecorationImage(
                                         image: imageProvider, fit: BoxFit.fill),
                                   ),
                                 ),
                                 placeholder: (context, url) => const Center(
-                                  child: const CircularProgressIndicator(
+                                  child: CircularProgressIndicator(
                                       valueColor:
                                           AlwaysStoppedAnimation<Color>(ColorResources.studio)),
                                 ),
                                 errorWidget: (context, url, error) => const Center(
-                                  child: const Icon(Icons.error),
+                                  child: Icon(Icons.error),
                                 ),
                               ),
                           Image.asset(Assets.imgOverlay,height: widgetSize.getHeight(141, context),)
@@ -435,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 130,
           decoration: const BoxDecoration(
               color: ColorResources.studio,
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
                   bottomLeft: Radius.circular(18))),
           child: Padding(

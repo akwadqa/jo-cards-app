@@ -11,8 +11,6 @@ import 'package:jocards/Network/app_exceptions.dart';
 import 'package:jocards/Network/extra_resit_api.dart';
 import 'package:jocards/Network/resit_api.dart';
 import 'package:jocards/model/app_version_model.dart';
-import 'package:jocards/model/register_request_model.dart';
-import 'package:jocards/model/register_response_model.dart';
 import 'package:jocards/model/response_model.dart';
 import 'package:jocards/model/territories_model.dart';
 import 'package:jocards/model/update_token_model.dart';
@@ -165,7 +163,7 @@ class AppProvider with ChangeNotifier {
     restApi mRestApi = restApi(Dio());
     try {
       territoriesModel = await mRestApi.getTerritories();
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading = false;
       if (e is DioError) {
         try {
@@ -201,7 +199,7 @@ class AppProvider with ChangeNotifier {
     restApi mRestApi = restApi(Dio());
     try {
       utilitiesModel = await mRestApi.getUtilities();
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading = false;
       if (e is DioError) {
         try {
@@ -221,7 +219,7 @@ class AppProvider with ChangeNotifier {
     restApi mRestApi = restApi(Dio());
     try {
       appVersionModel = await mRestApi.getAppVersion();
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading = false;
       if (e is DioError) {
         try {
@@ -249,7 +247,7 @@ class AppProvider with ChangeNotifier {
     restApi mRestApi = restApi(Dio());
     try {
       agentModel = await mRestApi.getAgentCustomers();
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading = false;
       if (e is DioError) {
         try {
@@ -278,7 +276,7 @@ class AppProvider with ChangeNotifier {
 
         LoginResponseModel registerResponseModel = await mRestApi.signUp( registerRequestModel);
         apiResponse=ApiResponse.completed(registerResponseModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -315,7 +313,7 @@ class AppProvider with ChangeNotifier {
         else{
           apiResponse = ApiResponse<LoginResponseModel>.completed(loginResponseModel);
         }
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -351,7 +349,7 @@ class AppProvider with ChangeNotifier {
           apiResponse = ApiResponse<ResponseModel>.error(responseModel.message);
         }
 
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {
@@ -381,7 +379,7 @@ class AppProvider with ChangeNotifier {
 
         UpdateTokenModel updateTokenModel = await mRestApi.updateToken(token, userId, userDeviceType, userDeviceName);
         apiResponse = ApiResponse<UpdateTokenModel>.completed(updateTokenModel);
-      } catch (e, stackTrace) {
+      } catch (e) {
         isLoading = false;
         if (e is DioError) {
           try {

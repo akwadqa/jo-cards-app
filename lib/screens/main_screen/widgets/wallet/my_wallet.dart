@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/utill/widget_size.dart';
@@ -59,7 +58,7 @@ class MyWallet extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'DIN Next LT W23',
                         fontSize: 22,
-                        color: const Color(0xffffffff),
+                        color: Color(0xffffffff),
                         fontWeight: FontWeight.w100,
                       ),
                       softWrap: false,

@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,7 +24,7 @@ class ItemPerCategories extends StatefulWidget {
  String catName;
 
 
- ItemPerCategories(this.catName,this.parentName);
+ ItemPerCategories(this.catName,this.parentName, {super.key});
 
  @override
   _ItemPerCategoriesState createState() => _ItemPerCategoriesState();
@@ -48,7 +47,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
             vertical: widgetSize.getHeight(30, context)),
             child: ListView(
               children: [
-                if(widget.parentName!=null&&widget.catName!=null)...[
+                if(widget.catName!=null)...[
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -63,11 +62,11 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                         children: [
                           TextSpan(
                             text: widget.parentName,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: "/",
                             style: TextStyle(
 
@@ -75,13 +74,13 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                           ),
                           TextSpan(
                             text: widget.catName,
-                            style: TextStyle(
-                              color: const Color(0xff6b6b6b),
+                            style: const TextStyle(
+                              color: Color(0xff6b6b6b),
                             ),
                           ),
                         ],
                       ),
-                      textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false),
+                      textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
                       softWrap: false,
                     ),
                   ),
@@ -99,13 +98,13 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                             List<Data>? items = homeProvider.itemCategoryResponse?.data?.data;
                             if(items!=null) {
                               return GridView.builder(
-                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                  childAspectRatio: 0.59,
                                  crossAxisCount: 3,
                                  crossAxisSpacing: 4.0,
                                  mainAxisSpacing: 4.0),
                              shrinkWrap: true,
-                             physics: NeverScrollableScrollPhysics(),
+                             physics: const NeverScrollableScrollPhysics(),
                              itemCount:items.length,
                              itemBuilder: (context, childIndex)                              {
                                       return SafeOnTap(
@@ -156,7 +155,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                                           decoration:
                                                               BoxDecoration(
                                                             borderRadius:
-                                                                BorderRadius
+                                                                const BorderRadius
                                                                     .all(Radius
                                                                         .circular(
                                                                             10)),
@@ -175,11 +174,11 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                                       ),
                                                       placeholder:
                                                           (context, url) =>
-                                                              AspectRatio(
+                                                              const AspectRatio(
                                                         aspectRatio: 1.2,
                                                         child: Center(
                                                           child: CircularProgressIndicator(
-                                                              valueColor: new AlwaysStoppedAnimation<
+                                                              valueColor: AlwaysStoppedAnimation<
                                                                       Color>(
                                                                   ColorResources
                                                                       .studio)),
@@ -187,7 +186,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                                       ),
                                                       errorWidget: (context,
                                                               url, error) =>
-                                                          Center(
+                                                          const Center(
                                                         child:
                                                             Icon(Icons.error),
                                                       ),
@@ -216,7 +215,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                                                       11.0),
                                                         ),
                                                         child: Padding(
-                                                          padding: EdgeInsets
+                                                          padding: const EdgeInsets
                                                               .symmetric(
                                                                   vertical: 4,
                                                                   horizontal:
@@ -249,7 +248,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                               Align(
                                                 alignment: Alignment.center,
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal: 1),
                                                   child: Text(
                                                     items[childIndex]
@@ -274,7 +273,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                               Align(
                                                 alignment: Alignment.center,
                                                 child: Padding(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal: 1),
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -433,8 +432,9 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                         ),
                                       );
                                   });
-                            } else
+                            } else {
                               return Container();
+                            }
 
                           case Status.ERROR:
                             return Error(errorMsg: homeProvider.homsResponse!.message);
@@ -454,7 +454,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
@@ -469,7 +469,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
 
                 SafeOnTap(onSafeTap: () { Navigator.pop(context); },
                 child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
+                const Spacer(),
                 Text(
                   widget.catName,
                   style: TextStyle(
@@ -478,8 +478,8 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
-                SizedBox(width: 30,)
+                const Spacer(),
+                const SizedBox(width: 30,)
 
               ],
             ),
@@ -491,7 +491,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) async {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       context.read<HomeProvider>().getItemPerCat(widget.catName);
     });
   }

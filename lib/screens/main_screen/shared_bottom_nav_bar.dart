@@ -240,7 +240,7 @@ class _SharedBottomNavigationBarState extends State<SharedBottomNavigationBar> {
       context.read<SharedNavBarProvider>().changeControllerIndex(context.read<SharedNavBarProvider>().bottomIndex);
       return true;
     }
-    else if (context.read<SharedNavBarProvider>().bottomIndex != 0 && _navigatorKey.currentWidget!= HomeScreen()) {
+    else if (context.read<SharedNavBarProvider>().bottomIndex != 0 && _navigatorKey.currentWidget!= const HomeScreen()) {
         context.read<SharedNavBarProvider>().changeBottomIndex(0);
         context.read<SharedNavBarProvider>().controller.animateToPage(0, duration: const Duration(milliseconds: 100), curve: Curves.bounceInOut);
         context.read<SharedNavBarProvider>().changeControllerIndex(0);

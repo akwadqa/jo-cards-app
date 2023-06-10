@@ -102,8 +102,8 @@ class MyNotification {
     var nextRandomId = Random();
 
 
-    String _title = message.notification?.title??"";
-    String _body = message.notification?.body??"";
+    String title = message.notification?.title??"";
+    String body = message.notification?.body??"";
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
@@ -117,19 +117,19 @@ class MyNotification {
     const iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentAlert: true,presentBadge: true,presentSound: true);
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
-    await fln.show(nextRandomId.nextInt(1000), _title, _body, platformChannelSpecifics,
+    await fln.show(nextRandomId.nextInt(1000), title, body, platformChannelSpecifics,
         payload: "");
   }
 
   static Future<void> showBigTextNotification(
       Map<String, dynamic> message, FlutterLocalNotificationsPlugin fln) async {
-    String _title = message['title'];
-    String _body = message['body'];
-    String _orderID = message['order_id'];
+    String title = message['title'];
+    String body = message['body'];
+    String orderID = message['order_id'];
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-      _body,
+      body,
       htmlFormatBigText: true,
-      contentTitle: _title,
+      contentTitle: title,
       htmlFormatContentTitle: true,
     );
     AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -141,12 +141,12 @@ class MyNotification {
       importance: Importance.max,
       styleInformation: bigTextStyleInformation,
       priority: Priority.high,
-      sound: RawResourceAndroidNotificationSound('notification'),
+      sound: const RawResourceAndroidNotificationSound('notification'),
     );
     NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, _title, _body, platformChannelSpecifics,
-        payload: _orderID);
+    await fln.show(0, title, body, platformChannelSpecifics,
+        payload: orderID);
   }
 
 

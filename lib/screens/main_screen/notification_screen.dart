@@ -101,7 +101,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),
@@ -119,7 +119,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       Navigator.pop(context);
                     },
                     child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
+                const Spacer(),
                 Text(
                   "الإشعارات",
                   style: TextStyle(
@@ -128,7 +128,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),

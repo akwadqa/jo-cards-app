@@ -7,9 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/screens/main_screen/main_screen.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 
 import '../../Network/api_response.dart';
 import '../../generated/assets.dart';
@@ -23,6 +21,8 @@ import '../widget/safe_on_tap.dart';
 import '../widget/textformfield.dart';
 
 class ShippingScreen extends StatefulWidget {
+  const ShippingScreen({super.key});
+
   @override
   _ShippingScreenState createState() => _ShippingScreenState();
 }
@@ -236,12 +236,12 @@ class _ShippingScreenState extends State<ShippingScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            const Text(
                               'إعادة شحن المحفظة',
                               style: TextStyle(
                                 fontFamily: 'DIN Next LT W23',
                                 fontSize: 16,
-                                color: const Color(0xff2e2e2e),
+                                color: Color(0xff2e2e2e),
                                 fontWeight: FontWeight.w700,
                               ),
                               softWrap: false,
@@ -276,7 +276,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                             horizontal:
                                             widgetSize.getWidth(20, context)),
                                         child: ListView(
-                                          physics: NeverScrollableScrollPhysics(),
+                                          physics: const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           children: <Widget>[
                                             SizedBox(
@@ -291,7 +291,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                     },
                                                     child: SvgPicture.asset(Assets
                                                         .svgCancelDirectOrder)),
-                                                Spacer(),
+                                                const Spacer(),
                                               ],
                                             ),
                                             SizedBox(
@@ -391,7 +391,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                       20, context)),
                                               child: ListView(
                                                 physics:
-                                                NeverScrollableScrollPhysics(),
+                                                const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 children: <Widget>[
                                                   SizedBox(
@@ -408,7 +408,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                           child: SvgPicture.asset(
                                                               Assets
                                                                   .svgCancelDirectOrder)),
-                                                      Spacer(),
+                                                      const Spacer(),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -460,7 +460,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                                   toastLength: Toast
                                                                       .LENGTH_LONG);
                                                               // Navigator.pop(navigator.currentContext!);
-                                                              Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
+                                                              Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                                             }
                                                             else{
                                                               Fluttertoast.showToast(
@@ -495,7 +495,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                               widgetSize.getWidth(
                                                                   20, context),
                                                             ),
-                                                            Icon(
+                                                            const Icon(
                                                               Icons.image,
                                                               color: ColorResources
                                                                   .studio,
@@ -505,7 +505,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                       ),
                                                       SafeOnTap(
                                                         onSafeTap: () async {
-                                                          Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
+                                                          Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                                         },
                                                         child: Row(
                                                           mainAxisAlignment:
@@ -530,7 +530,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                               widgetSize.getWidth(
                                                                   20, context),
                                                             ),
-                                                            Icon(
+                                                            const Icon(
                                                               Icons.skip_previous,
                                                               color: ColorResources
                                                                   .studio,
@@ -579,9 +579,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                 borderRadius: BorderRadius.circular(15.0),
                                 border: Border.all(
                                     width: 1.0, color: state.isLoading ? Colors.grey : const Color(0xff2892d7)),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
-                                    color: const Color(0x401d4c9b),
+                                    color: Color(0x401d4c9b),
                                     offset: Offset(0, 5),
                                     blurRadius: 11,
                                   ),
@@ -648,9 +648,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
               child: Visibility(
                   visible: Provider.of<HomeProvider>(context, listen: true)
                       .isLoading,
-                  child: Center(
+                  child: const Center(
                     child: CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
+                      valueColor: AlwaysStoppedAnimation<Color>(
                           ColorResources.studio),
                     ),
                   )),
@@ -667,7 +667,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
@@ -803,22 +803,22 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 child: Wrap(
                   children: <Widget>[
                     ListTile(
-                      leading: Icon(Icons.photo_camera),
-                      title: Text("صورة كاميرا "),
+                      leading: const Icon(Icons.photo_camera),
+                      title: const Text("صورة كاميرا "),
                       onTap: () async {
                         var value = await getImagePicker(ImageSource.camera);
                         if (value != null) {
                           List<int> imageBytes =
                               File(value.path).readAsBytesSync();
                           imageB64 = base64Encode(imageBytes);
-                          imageName = "receipt."+value.path.split(".")[1];
+                          imageName = "receipt.${value.path.split(".")[1]}";
                           Navigator.pop(context, true);
                         }
                       },
                     ),
                     ListTile(
-                        leading: Icon(Icons.photo_library),
-                        title: Text("صورة من الاستديو"),
+                        leading: const Icon(Icons.photo_library),
+                        title: const Text("صورة من الاستديو"),
                         onTap: () async {
                           var value = await getImagePicker(ImageSource.gallery);
                           if (value != null) {

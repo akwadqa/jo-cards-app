@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/provider/home_provider.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
@@ -21,6 +20,8 @@ import '../widget/safe_on_tap.dart';
 import '../widget/textformfield.dart';
 
 class ExchangeScreen extends StatefulWidget {
+  const ExchangeScreen({super.key});
+
 
   @override
   _ExchangeScreenState createState() => _ExchangeScreenState();
@@ -57,12 +58,12 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                       key: _key,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                        Text(
+                        const Text(
                         'تحويل مبلغ لمستخدم آخر',
                         style: TextStyle(
                           fontFamily: 'DIN Next LT W23',
                           fontSize: 16,
-                          color: const Color(0xff2e2e2e),
+                          color: Color(0xff2e2e2e),
                           fontWeight: FontWeight.w700,
                         ),
                         softWrap: false,
@@ -90,7 +91,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                           child: Padding(
                             padding:  EdgeInsets.symmetric(horizontal: widgetSize.getWidth(20, context)),
                             child: ListView(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               children: <Widget>[
                                 SizedBox(
@@ -105,7 +106,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                       child: SvgPicture.asset(Assets.svgCancelDirectOrder)),
 
 
-                                  Spacer(),
+                                  const Spacer(),
                                 ],),
 
                                 SizedBox(
@@ -204,7 +205,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                      20, context)),
                              child: ListView(
                                physics:
-                               NeverScrollableScrollPhysics(),
+                               const NeverScrollableScrollPhysics(),
                                shrinkWrap: true,
                                children: <Widget>[
                                  SizedBox(
@@ -221,7 +222,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                          child: SvgPicture.asset(
                                              Assets
                                                  .svgCancelDirectOrder)),
-                                     Spacer(),
+                                     const Spacer(),
                                    ],
                                  ),
                                  SizedBox(
@@ -273,9 +274,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                         color: const Color(0xff2892d7),
                         borderRadius: BorderRadius.circular(15.0),
                         border: Border.all(width: 1.0, color: const Color(0xff2892d7)),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: const Color(0x401d4c9b),
+                            color: Color(0x401d4c9b),
                             offset: Offset(0, 5),
                             blurRadius: 11,
                           ),
@@ -336,9 +337,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
             child: Visibility(
                 visible: Provider.of<HomeProvider>(context, listen: true)
                     .isLoading,
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(
+                    valueColor: AlwaysStoppedAnimation<Color>(
                         ColorResources.studio),
                   ),
                 )),
@@ -368,7 +369,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
@@ -541,11 +542,11 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                 child:   Container(
                   decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                           topRight: Radius
                               .circular(
                               50),
-                          topLeft: const Radius
+                          topLeft: Radius
                               .circular(
                               50))),
                   child: Padding(
@@ -625,9 +626,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                               ),
                             );
                           },
-                          physics: ClampingScrollPhysics(),
+                          physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
-                          separatorBuilder: (BuildContext context, int index) => Divider(height: 1,color: Color(0xffC9C9C9),),
+                          separatorBuilder: (BuildContext context, int index) => const Divider(height: 1,color: Color(0xffC9C9C9),),
 
 
 
@@ -672,15 +673,15 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                 child: Wrap(
                   children: <Widget>[
                     ListTile(
-                      leading: Icon(Icons.photo_camera),
-                      title: Text("صورة كاميرا "),
+                      leading: const Icon(Icons.photo_camera),
+                      title: const Text("صورة كاميرا "),
                       onTap: () async {
                         var value = await getImagePicker(ImageSource.camera);
                         if (value != null) {
                           List<int> imageBytes =
                           File(value.path).readAsBytesSync();
                           imageB64 = base64Encode(imageBytes);
-                          imageName = "receipt."+value.path.split(".")[1];
+                          imageName = "receipt.${value.path.split(".")[1]}";
 
 
                           Navigator.pop(context, true);
@@ -688,15 +689,15 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                       },
                     ),
                     ListTile(
-                        leading: Icon(Icons.photo_library),
-                        title: Text("صورة من الاستديو"),
+                        leading: const Icon(Icons.photo_library),
+                        title: const Text("صورة من الاستديو"),
                         onTap: () async {
                           var value = await getImagePicker(ImageSource.gallery);
                           if (value != null) {
                             List<int> imageBytes =
                             File(value.path).readAsBytesSync();
                             imageB64 = base64Encode(imageBytes);
-                            imageName = "receipt."+value.path.split(".")[1];
+                            imageName = "receipt.${value.path.split(".")[1]}";
 
                             Navigator.pop(context, true);
                             //    sendImageOrVideoMessage(context,Provider.of<ChatProvider>(context,listen:false),"Image",File(value.path));

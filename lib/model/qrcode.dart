@@ -14,12 +14,12 @@ class PrintQRCode {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = "qrcode";
-    data['text'] = this.text;
-    data['width'] = this.width;
-    data['height'] = this.height;
-    data['position'] = this.position;
+    data['text'] = text;
+    data['width'] = width;
+    data['height'] = height;
+    data['position'] = position;
     return data;
   }
 }

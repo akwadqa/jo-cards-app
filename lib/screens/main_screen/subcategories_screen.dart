@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/provider/home_provider.dart';
@@ -21,7 +20,7 @@ class SubCategroiesScreen extends StatefulWidget {
   String title;
   bool fromCategoriesScreen;
 
-  SubCategroiesScreen(this.currentIndex, this.title, this.fromCategoriesScreen);
+  SubCategroiesScreen(this.currentIndex, this.title, this.fromCategoriesScreen, {super.key});
 
   @override
   _SubCategroiesScreenState createState() => _SubCategroiesScreenState();
@@ -51,13 +50,13 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                               vertical: widgetSize.getHeight(30, context)),
                           child: GridView.builder(
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                                     childAspectRatio: 1,
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10),
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: subCategories!.length,
                             itemBuilder: (context, childIndex) => SafeOnTap(
                               onSafeTap: () {
@@ -89,7 +88,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius: const BorderRadius.all(
                                                   Radius.circular(10)),
                                               shape: BoxShape.rectangle,
                                               color: hexToColor(
@@ -106,7 +105,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                               imageBuilder: (context, imageProvider) =>
                                                   Container(
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(
+                                                  borderRadius: const BorderRadius.all(
                                                       Radius.circular(10)),
                                                   shape: BoxShape.rectangle,
 
@@ -116,18 +115,18 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                 ),
                                               ),
                                               placeholder: (context, url) =>
-                                                  AspectRatio(
+                                                  const AspectRatio(
                                                 aspectRatio: 1,
                                                 child: Center(
                                                   child: CircularProgressIndicator(
                                                       valueColor:
-                                                          new AlwaysStoppedAnimation<
+                                                          AlwaysStoppedAnimation<
                                                                   Color>(
                                                               ColorResources.studio)),
                                                 ),
                                               ),
                                               errorWidget: (context, url, error) =>
-                                                  Center(
+                                                  const Center(
                                                 child: Icon(Icons.error),
                                               ),
                                             ),
@@ -139,7 +138,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding:
-                                            EdgeInsets.symmetric(horizontal: 1),
+                                            const EdgeInsets.symmetric(horizontal: 1),
                                         child: Text(
                                           subCategories![childIndex]
                                                       .websiteTitle !=
@@ -211,7 +210,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                         Container(
                                                       decoration: BoxDecoration(
                                                         borderRadius:
-                                                            BorderRadius.all(
+                                                            const BorderRadius.all(
                                                                 Radius.circular(
                                                                     5)),
                                                         shape: BoxShape.rectangle,
@@ -221,7 +220,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                       ),
                                                     ),
                                                     placeholder: (context, url) =>
-                                                        Center(
+                                                        const Center(
                                                       child: CircularProgressIndicator(
                                                           valueColor:
                                                               AlwaysStoppedAnimation<
@@ -231,7 +230,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                     ),
                                                     errorWidget:
                                                         (context, url, error) =>
-                                                            Center(
+                                                            const Center(
                                                       child: Icon(Icons.error),
                                                     ),
                                                   ),
@@ -257,14 +256,14 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                           Flexible(
                                             child: GridView.builder(
                                               gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                                       childAspectRatio: 0.74,
                                                       crossAxisCount: 3,
                                                       crossAxisSpacing: 4.0,
                                                       mainAxisSpacing: 4.0),
                                               shrinkWrap: true,
                                               physics:
-                                                  NeverScrollableScrollPhysics(),
+                                                  const NeverScrollableScrollPhysics(),
                                               itemCount:
                                                   item.subCategories!.length,
                                               itemBuilder:
@@ -320,7 +319,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                               aspectRatio: 1,
                                                               child: Container( decoration:
                                                               BoxDecoration(
-                                                                  borderRadius: BorderRadius
+                                                                  borderRadius: const BorderRadius
                                                                       .all(Radius
                                                                       .circular(
                                                                       10)),
@@ -335,7 +334,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                                   child: Container(
                                                                     decoration:
                                                                         BoxDecoration(
-                                                                      borderRadius: BorderRadius
+                                                                      borderRadius: const BorderRadius
                                                                           .all(Radius
                                                                               .circular(
                                                                                   10)),
@@ -354,11 +353,11 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                             ),
                                                             placeholder:
                                                                 (context, url) =>
-                                                                    AspectRatio(
+                                                                    const AspectRatio(
                                                               aspectRatio: 1.2,
                                                               child: Center(
                                                                 child: CircularProgressIndicator(
-                                                                    valueColor: new AlwaysStoppedAnimation<
+                                                                    valueColor: AlwaysStoppedAnimation<
                                                                             Color>(
                                                                         ColorResources
                                                                             .studio)),
@@ -366,7 +365,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                             ),
                                                             errorWidget: (context,
                                                                     url, error) =>
-                                                                Center(
+                                                                const Center(
                                                               child:
                                                                   Icon(Icons.error),
                                                             ),
@@ -382,7 +381,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Padding(
-                                                          padding: EdgeInsets
+                                                          padding: const EdgeInsets
                                                               .symmetric(
                                                                   horizontal: 1),
                                                           child: Text(
@@ -443,7 +442,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
@@ -461,7 +460,7 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                       Navigator.pop(context);
                     },
                     child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
+                const Spacer(),
                 Text(
                   widget.title,
                   style: TextStyle(
@@ -470,8 +469,8 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
-                SizedBox(
+                const Spacer(),
+                const SizedBox(
                   width: 30,
                 )
               ],

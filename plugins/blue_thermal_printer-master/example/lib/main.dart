@@ -6,6 +6,7 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+
 void main() => runApp(new MyApp());
 
 class MyApp extends StatefulWidget {
@@ -17,10 +18,10 @@ class _MyAppState extends State<MyApp> {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
   List<BluetoothDevice> _devices = [];
-  BluetoothDevice _device;
+  BluetoothDevice? _device;
   bool _connected = false;
-  String pathImage;
-  TestPrint testPrint;
+  late String pathImage;
+  late TestPrint testPrint;
 
   @override
   void initState() {
@@ -43,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initPlatformState() async {
-    bool isConnected = await bluetooth.isConnected;
+    bool? isConnected = await bluetooth.isConnected;
     List<BluetoothDevice> devices = [];
     try {
       devices = await bluetooth.getBondedDevices();
@@ -112,7 +113,7 @@ class _MyAppState extends State<MyApp> {
       _devices = devices;
     });
 
-    if (isConnected) {
+    if (isConnected == true) {
       setState(() {
         _connected = true;
       });
@@ -164,7 +165,7 @@ class _MyAppState extends State<MyApp> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.brown),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
                       onPressed: () {
                         initPlatformState();
                       },
@@ -178,7 +179,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: _connected ? Colors.red : Colors.green),
+                          backgroundColor: _connected ? Colors.red : Colors.green),
                       onPressed: _connected ? _disconnect : _connect,
                       child: Text(
                         _connected ? 'Disconnect' : 'Connect',
@@ -191,7 +192,7 @@ class _MyAppState extends State<MyApp> {
                   padding:
                       const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.brown),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
                     onPressed: () {
                       testPrint.sample(pathImage);
                     },
@@ -216,7 +217,7 @@ class _MyAppState extends State<MyApp> {
     } else {
       _devices.forEach((device) {
         items.add(DropdownMenuItem(
-          child: Text(device.name),
+          child: Text(device.name ?? ''),
           value: device,
         ));
       });
@@ -229,8 +230,8 @@ class _MyAppState extends State<MyApp> {
       show('No device selected.');
     } else {
       bluetooth.isConnected.then((isConnected) {
-        if (!isConnected) {
-          bluetooth.connect(_device).catchError((error) {
+        if (isConnected == true) {
+          bluetooth.connect(_device!).catchError((error) {
             setState(() => _connected = false);
           });
           setState(() => _connected = true);
@@ -253,7 +254,7 @@ class _MyAppState extends State<MyApp> {
 
   Future show(
     String message, {
-    Duration duration: const Duration(seconds: 3),
+    Duration duration = const Duration(seconds: 3),
   }) async {
     await new Future.delayed(new Duration(milliseconds: 100));
     ScaffoldMessenger.of(context).showSnackBar(

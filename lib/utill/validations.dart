@@ -9,9 +9,10 @@ class Validations {
 
   String? validateName(String value) {
     if (value.isEmpty) return '$prefix الاسم مطلوب. ';
-    final RegExp nameExp = new RegExp(r'[^0-9]');
-    if (!nameExp.hasMatch(value))
+    final RegExp nameExp = RegExp(r'[^0-9]');
+    if (!nameExp.hasMatch(value)) {
       return '$prefix الرجاء إدخال أحرف فقط. ';
+    }
     if (value.isEmpty) return '$prefix الحقل مطلوب';
     return null;
   }
@@ -40,13 +41,15 @@ class Validations {
 
   String? validatePassword(String ?value) {
     if(value!=null)
-    if (value.isEmpty||value.length<4) return 'كلمة سر خاطئة';
+    if (value.isEmpty||value.length<4) {
+      return 'كلمة سر خاطئة';
+    }
     return null;
   }
 
   String? validateLink(String value) {
     if (value.isEmpty) return '$prefix الرابط مطلوب. ';
-    final RegExp nameExp = new RegExp(
+    final RegExp nameExp = RegExp(
         r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)');
     if (!nameExp.hasMatch(value)) return '$prefix الرجاء إدخال رابط صالح. ';
     if (value.isEmpty) return '$prefix الحقل مطلوب. ';
@@ -56,7 +59,7 @@ class Validations {
   String ?validNumber(String ?value) {
     if(value!=null){
     if (value.isEmpty) return 'رقم الهاتف مطلوب';
-    final RegExp nameExp = new RegExp(r'^[0-9]*$|[\u0660-\u0669]');
+    final RegExp nameExp = RegExp(r'^[0-9]*$|[\u0660-\u0669]');
     if (!nameExp.hasMatch(value)) return '$prefix الرجاء إدخال رقم هاتف صالح. ';}
     return null;
   }
@@ -64,7 +67,7 @@ class Validations {
   String ?validateMobile(String ?value) {
     String patttern = r'(^(?:[0]9)?[0-9]{10,18}$)|(^(?:[0]9)?[\u0660-\u0669]{10,18}$)';
     RegExp regExp =  RegExp(patttern);
-    if (value!.length == 0) {
+    if (value!.isEmpty) {
       return 'الرجاء إدخال رقم الهاتف';
     } else if (!regExp.hasMatch(value)) {
       return 'الرجاء إدخال رفم هاتف صالح';

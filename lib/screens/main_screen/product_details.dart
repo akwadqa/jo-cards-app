@@ -118,11 +118,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                     ),
                                   ),
                                 ),
-                                placeholder: (context, url) => AspectRatio(
+                                placeholder: (context, url) => const AspectRatio(
                                   aspectRatio: 2.46,
                                   child: Center(
                                     child: CircularProgressIndicator(
-                                        valueColor: new AlwaysStoppedAnimation<Color>(
+                                        valueColor: AlwaysStoppedAnimation<Color>(
                                             ColorResources.studio)),
                                   ),
                                 ),
@@ -1089,12 +1089,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         await confirmDirectOrder(
             context, directOrderRequest, item, directOrderList);
 
-    if (resultOfConfirmDirectOrder != null &&
-        resultOfConfirmDirectOrder.status == Status.COMPLETED) {
+    if (resultOfConfirmDirectOrder.status == Status.COMPLETED) {
       if (resultOfConfirmDirectOrder.data != null &&
           resultOfConfirmDirectOrder.data!.error == null) {
         if (context.read<AppProvider>().getEnablePrintAuto()) {
-          if (!androidInfo.model!.contains("TPS")) {
+          if (!androidInfo.model.contains("TPS")) {
             await printOnBluetoothPrinter(
                 resultOfConfirmDirectOrder.data!,
                 context.read<AppProvider>().getEnableMerchantNamePrint()
@@ -1464,7 +1463,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                         await Clipboard.setData(
                                                             ClipboardData(
                                                                 text: data
-                                                                    .secretCode));
+                                                                    .secretCode ?? ''));
                                                         var snackBar = const SnackBar(
                                                             content:
                                                                 Text("تم النسخ"));
@@ -1681,7 +1680,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                       child: SafeOnTap(
                                         onSafeTap: () {
                                           Navigator.pop(context, true);
-                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -1759,7 +1758,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             context,
             PageTransition(
               type: PageTransitionType.fade,
-              child: SharedBottomNavigationBar(widget: MainScreen()),
+              child: const SharedBottomNavigationBar(widget: MainScreen()),
             ),
           );
         }

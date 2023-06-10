@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:jocards/model/app_version_model.dart';
-import 'package:jocards/notification/my_notification.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/update_screen.dart';
@@ -23,6 +22,9 @@ import 'auth/sign_in_screen.dart';
 import 'main_screen/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
   State<StatefulWidget> createState() => _SplashScreen();
 }
 
@@ -30,7 +32,7 @@ class _SplashScreen extends State<SplashScreen> {
   void _initState() async {
     if (await Provider.of<AppProvider>(context, listen: false)
         .checkInternet()) {
-      SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
         context.read<AppProvider>().getTerritories();
         // fetch data
 
@@ -42,10 +44,10 @@ class _SplashScreen extends State<SplashScreen> {
             barrierDismissible: false,
             context: context,
             builder: (context) => CupertinoAlertDialog(
-              title: new Text("حدث خطأ تقني"),
+              title: const Text("حدث خطأ تقني"),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  child: Text(
+                  child: const Text(
                     "موافق",
                     style: TextStyle(color: Colors.black),
                   ),
@@ -68,10 +70,10 @@ class _SplashScreen extends State<SplashScreen> {
       barrierDismissible: false,
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: Text("لايوجد اتصال بالانترنت"),
+        title: const Text("لايوجد اتصال بالانترنت"),
         actions: <Widget>[
           CupertinoDialogAction(
-            child: Text(
+            child: const Text(
               "موافق",
               style: TextStyle(color: Colors.black),
             ),
@@ -112,8 +114,8 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   startTime() async {
-    var _duration = new Duration(seconds: 1);
-    return new Timer(_duration, navigationPage);
+    var duration = const Duration(seconds: 1);
+    return Timer(duration, navigationPage);
   }
 
   bool _isNeedToUpdate = true;
@@ -123,7 +125,7 @@ class _SplashScreen extends State<SplashScreen> {
     await context.read<AppProvider>().getAppVersion();
     if (Platform.isAndroid) {
       if (context.read<AppProvider>().getBluetoothDevice() != null &&
-          !androidInfo.model!.contains("TPS")) {
+          !androidInfo.model.contains("TPS")) {
         connect(context.read<AppProvider>().getBluetoothDevice());
       }
     }
@@ -191,7 +193,7 @@ class _SplashScreen extends State<SplashScreen> {
         context,
         PageTransition(
           type: PageTransitionType.leftToRight,
-          child: SharedBottomNavigationBar(widget: MainScreen()),
+          child: const SharedBottomNavigationBar(widget: MainScreen()),
         ),
       );
     } else {

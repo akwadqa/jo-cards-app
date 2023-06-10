@@ -6,7 +6,6 @@ import 'package:jocards/screens/main_screen/product_details.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:jocards/utill/color_resources.dart';
-import 'package:jocards/utill/utitlities.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -93,7 +92,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'DIN Next LT W23',
                                 fontSize: 16,
-                                color: const Color(0xffffffff),
+                                color: Color(0xffffffff),
                               ),
                               softWrap: false,
                             ),

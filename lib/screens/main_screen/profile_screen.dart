@@ -6,12 +6,10 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jocards/model/response_model.dart';
 import 'package:jocards/model/update_profile_model.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/batch_history_screen.dart';
 import 'package:jocards/screens/main_screen/edit_profile_screen.dart';
-import 'package:jocards/screens/main_screen/notification_details_screen.dart';
 import 'package:jocards/screens/main_screen/notification_screen.dart';
 import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/privacy_policy_screen.dart';
@@ -33,6 +31,8 @@ import '../auth/sign_in_screen.dart';
 import '../widget/safe_on_tap.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -224,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         shape: BoxShape.circle,
                                         color: ColorResources.studio
                                     ),
-                                    child: Icon(Icons.settings, color: Colors.white,),
+                                    child: const Icon(Icons.settings, color: Colors.white,),
                                   ),
                                 ),
                               )
@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: TextStyle(
 
                           fontSize: widgetSize.getHeight(16, context),
-                          color:Color(0xffa2a2a2),
+                          color:const Color(0xffa2a2a2),
 
                         ),
 
@@ -280,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(
 
                         fontSize: widgetSize.getHeight(16, context),
-                        color:Color(0xffa2a2a2),
+                        color:const Color(0xffa2a2a2),
                       ),
 
                     ),
@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: SharedBottomNavigationBar(widget: const ShippingOrderHistory(shippingType: ShippingType.wallet)),
+                                  child: const SharedBottomNavigationBar(widget: ShippingOrderHistory(shippingType: ShippingType.wallet)),
                                 ),
                               );
                             },
@@ -347,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: SharedBottomNavigationBar(widget : PurchaseOrderHistory()),
+                                  child: const SharedBottomNavigationBar(widget : PurchaseOrderHistory()),
                                 ),
                               );
                             },
@@ -396,7 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: SharedBottomNavigationBar(widget: const ShippingOrderHistory(shippingType: ShippingType.customers,)),
+                                  child: const SharedBottomNavigationBar(widget: ShippingOrderHistory(shippingType: ShippingType.customers,)),
                                 ),
                               );
                             },
@@ -437,7 +437,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child:  SharedBottomNavigationBar(widget: BatchHistoryScreen()),
+                                  child:  const SharedBottomNavigationBar(widget: BatchHistoryScreen()),
                                 ),
                               );
                             },
@@ -485,7 +485,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     PageTransition(
                       type: PageTransitionType.fade,
-                      child: SharedBottomNavigationBar(widget: EditProfileScreen()),
+                      child: const SharedBottomNavigationBar(widget: EditProfileScreen()),
                     ),
                   );
                 },
@@ -589,8 +589,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               ),
 
-                              Spacer(),
-                              RotatedBox(
+                              const Spacer(),
+                              const RotatedBox(
                                   quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
                             ],),
                             SizedBox(height: widgetSize.getHeight(10, context),),
@@ -640,8 +640,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               ],
                             ),
-                            Spacer(),
-                            RotatedBox(
+                            const Spacer(),
+                            const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
 
                           ],),
@@ -686,8 +686,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               ],
                             ),
-                            Spacer(),
-                            RotatedBox(
+                            const Spacer(),
+                            const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
 
                           ],),
@@ -729,8 +729,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
 
                           ),
-                          Spacer(),
-                          RotatedBox(
+                          const Spacer(),
+                          const RotatedBox(
                               quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
                         ],),
                         SizedBox(height: widgetSize.getHeight(10, context),),
@@ -750,7 +750,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           PageTransition(
                               type: PageTransitionType.leftToRight,
-                              child: SharedBottomNavigationBar(widget: NotificationScreen(),)));
+                              child: const SharedBottomNavigationBar(widget: NotificationScreen(),)));
 
                     },
                     child: Padding(
@@ -758,7 +758,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           Row(children: [
-                            Icon(Icons.notifications_active_outlined),
+                            const Icon(Icons.notifications_active_outlined),
                             SizedBox(width: widgetSize.getWidth(10, context),),
                             Text(
                               "الإشعارات",
@@ -770,8 +770,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
 
                             ),
-                            Spacer(),
-                            RotatedBox(
+                            const Spacer(),
+                            const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
                           ],),
                           SizedBox(height: widgetSize.getHeight(10, context),),
@@ -801,7 +801,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             ),
 
-                            Spacer(),
+                            const Spacer(),
                             const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18,))
                           ],),
@@ -831,8 +831,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             ),
 
-                            Spacer(),
-                            RotatedBox(
+                            const Spacer(),
+                            const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18,))
                           ],),
                           SizedBox(height: widgetSize.getHeight(10, context),),
@@ -869,8 +869,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             ),
 
-                            Spacer(),
-                            RotatedBox(
+                            const Spacer(),
+                            const RotatedBox(
                                 quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18,))
                           ],),
                           SizedBox(height: widgetSize.getHeight(10, context),),
@@ -888,7 +888,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Align(alignment: Alignment.center,
                     child: Text(
-                      "  الإصدار "+ packageInfo.version,
+                      "  الإصدار ${packageInfo.version}",
                       style: TextStyle(
 
                         fontSize: widgetSize.getHeight(14, context),
@@ -933,7 +933,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: widgetSize.getHeight(200, context),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: ColorResources.studio,
           borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(20),

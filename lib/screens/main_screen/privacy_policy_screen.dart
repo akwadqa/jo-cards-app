@@ -11,7 +11,7 @@ class PrivacyPolicyScreen extends StatefulWidget {
 String content;
 
 
-PrivacyPolicyScreen(this.content);
+PrivacyPolicyScreen(this.content, {super.key});
 
 @override
   _PrivacyPolicyScreenState createState() => _PrivacyPolicyScreenState();
@@ -38,7 +38,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),
@@ -56,7 +56,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                       Navigator.pop(context);
                     },
                     child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
+                const Spacer(),
                 Text(
                   "سياسة الخصوصية",
                   style: TextStyle(
@@ -65,7 +65,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),

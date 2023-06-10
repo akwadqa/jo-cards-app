@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/main.dart';
 import 'package:jocards/model/login_response_model.dart';
-import 'package:jocards/model/response_model.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:jocards/screens/auth/sign_up_screen.dart';
@@ -34,7 +33,7 @@ class SignInScreen extends StatefulWidget {
 
 
 
-  SignInScreen({this.email, this.password,this.fromSetting});
+  SignInScreen({super.key, this.email, this.password,this.fromSetting});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -148,9 +147,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                color: ColorResources.summerSky,
                                borderRadius: BorderRadius.circular(15.0),
                                border: Border.all(width: 1.0, color: const Color(0xff2892d7)),
-                               boxShadow: [
+                               boxShadow: const [
                                  BoxShadow(
-                                   color: const Color(0x401d4c9b),
+                                   color: Color(0x401d4c9b),
                                    offset: Offset(0, 5),
                                    blurRadius: 11,
                                  ),
@@ -180,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                context,
                                PageTransition(
                                  type: PageTransitionType.topToBottom,
-                                 child: SignUpScreen(),
+                                 child: const SignUpScreen(),
                                ), );
                            },
                            child: Container(
@@ -217,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
                              context,
                              PageTransition(
                                type: PageTransitionType.rightToLeftWithFade,
-                               child: SharedBottomNavigationBar(widget: MainScreen()),
+                               child: const SharedBottomNavigationBar(widget: MainScreen()),
                              ), );
                          },
                            child: Center(
@@ -252,9 +251,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Visibility(
                       visible: Provider.of<AppProvider>(context, listen: true)
                           .isLoading,
-                      child: Center(
+                      child: const Center(
                         child: CircularProgressIndicator(
-                          valueColor: new AlwaysStoppedAnimation<Color>(
+                          valueColor: AlwaysStoppedAnimation<Color>(
                               ColorResources.studio),
                         ),
                       )),
@@ -271,7 +270,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if(res.status==Status.COMPLETED){
 
-        var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
+        var token = "${res.data!.keyDetails!.apiKey!}:${res.data!.keyDetails!.apiSecret!}";
         await context.read<AppProvider>().setSignInUser(true, json.encode(res.data!) ,token);
         await context.read<AppProvider>().setOldPassword(password);
         await context.read<AppProvider>().getUtilities();
@@ -293,7 +292,7 @@ class _SignInScreenState extends State<SignInScreen> {
             context,
             PageTransition(
               type: PageTransitionType.fade,
-              child: SharedBottomNavigationBar(widget: MainScreen()),
+              child: const SharedBottomNavigationBar(widget: MainScreen()),
             ), (route)=> false);
 
 

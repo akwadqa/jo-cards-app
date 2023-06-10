@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:provider/provider.dart';
 
 import '../../Network/api_response.dart';
@@ -215,7 +214,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                           Error(errorMsg:Provider.of<HomeProvider>(context,listen: false).
                           shippingOrdersPagingController!.error!.toString()),
                       itemBuilder: (context, item, index) => Padding(
-                            padding: EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 20),
                             child: Stack(children: <Widget>[
                               Container(
                                 decoration: BoxDecoration(
@@ -250,7 +249,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.digitalWalletRequestId!,
                                                   style: TextStyle(
@@ -282,7 +281,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.requestedAmount!
                                                       .toString(),
@@ -315,7 +314,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.status!.toString(),
                                                   style: TextStyle(
@@ -347,7 +346,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.unpaidAmount!,
                                                   style: TextStyle(
@@ -379,7 +378,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.owner!.toString(),
                                                   style: TextStyle(
@@ -412,7 +411,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   ),
                                                   softWrap: false,
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Text(
                                                   item.customer!,
                                                   style: TextStyle(
@@ -435,7 +434,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                       padding: EdgeInsets.only(
                                           top: widgetSize.getHeight(5, context)),
                                       child: Container(
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                             color: ColorResources.whisper,
                                             borderRadius: BorderRadius.only(
                                                 bottomRight: Radius.circular(10),
@@ -450,7 +449,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 20,
                                                   ),
                                                   Text(
@@ -463,7 +462,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                     ),
                                                     softWrap: false,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 10,
                                                   ),
                                                   Text(
@@ -500,7 +499,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                                 child: Text('تأكيد الإجراء')),
                                                             content: const Text('هل أنت متأكد من الإجراء. لا يمكن تغيير الاجراء بعد التأكيد.'),
                                                             actions: [
-                                                              ElevatedButton(onPressed: () => Navigator.of(context).pop(), child: const Text('إلغاء'), style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black), backgroundColor: MaterialStateProperty.all(ColorResources.gray89), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10)))),
+                                                              ElevatedButton(onPressed: () => Navigator.of(context).pop(), style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black), backgroundColor: MaterialStateProperty.all(ColorResources.gray89), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))), child: const Text('إلغاء')),
                                                               Consumer<HomeProvider>(
                                                                   builder: (context, data, _) {
                                                                     if(data.isLoading){
@@ -528,7 +527,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                                             timeInSecForIosWeb: 4,
                                                                             toastLength: Toast.LENGTH_LONG);
                                                                       }
-                                                                    }, child: const Text('تأكيد'), style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorResources.rose), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))));
+                                                                    }, style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorResources.rose), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))), child: const Text('تأكيد'));
                                                                   }
                                                               ),
                                                             ],
@@ -567,17 +566,17 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: item.workflowState == 'Pending' ?
-                                          Color(0xffECAE7E)
+                                          const Color(0xffECAE7E)
                                           : item.workflowState == 'Approved'
-                                              ? Color(0xff4ABFA7)
+                                              ? const Color(0xff4ABFA7)
                                               : item.workflowState == 'Rejected'
                                                   ? ColorResources.red
                                                   : Colors.white,
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(10),
                                           bottomRight: Radius.circular(10))),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 25, vertical: 2),
                                     child: Text(
                                       item.workflowState == 'Pending'
@@ -606,13 +605,13 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
   }
 
   void _showAgentPaymentEntryDialog(ShippingOrdeData item){
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     String? amount;
     showDialog(
         context: context,
         builder: (context){
           return Form(
-            key: _formKey,
+            key: formKey,
             child: AlertDialog(
               title: Row(
                 children: [
@@ -687,8 +686,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                       }
                       return ElevatedButton.icon(
                         onPressed: () async {
-                          if(_formKey.currentState!.validate()){
-                            _formKey.currentState!.save();
+                          if(formKey.currentState!.validate()){
+                            formKey.currentState!.save();
                             var res = await context.read<HomeProvider>().agentPaymentEntry(item.digitalWalletRequestId!, amount!);
                             if(res.status == Status.COMPLETED){
                               context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
@@ -728,7 +727,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),

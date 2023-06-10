@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jocards/utill/color_resources.dart';
 
-import '../../../../model/home_model.dart';
 import '../../../../model/item_category_model.dart';
 import '../../../../utill/widget_size.dart';
 

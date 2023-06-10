@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:jocards/Network/api_response.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/model/payment_model.dart';
-import 'package:jocards/model/shipping_order_response_model.dart';
 import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:jocards/screens/widget/loading.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:jocards/utill/color_resources.dart';
@@ -19,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/svg.dart';
 import '../widget/error.dart';
 class BatchHistoryScreen extends StatefulWidget {
-  BatchHistoryScreen({Key? key}) : super(key: key);
+  const BatchHistoryScreen({Key? key}) : super(key: key);
 
   @override
   State<BatchHistoryScreen> createState() => _BatchHistoryScreenState();
@@ -183,7 +179,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                               ),
                                               softWrap: false,
                                             ),
-                                            Spacer(),
+                                            const Spacer(),
                                             Text(
                                               item.voucherNo!
                                                   .toString(),
@@ -216,11 +212,9 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                               ),
                                               softWrap: false,
                                             ),
-                                            Spacer(),
+                                            const Spacer(),
                                             Text(
-                                              item.typeOfTransiction == "debit" ? item.debit!
-                                                  .toString() + " دينار":item.credit!
-                                                  .toString() + " دينار",
+                                              item.typeOfTransiction == "debit" ? "${item.debit!} دينار":"${item.credit!} دينار",
                                               style: TextStyle(
                                                 fontFamily: 'DIN Next LT W23',
                                                 fontSize: widgetSize
@@ -250,7 +244,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                               ),
                                               softWrap: false,
                                             ),
-                                            Spacer(),
+                                            const Spacer(),
                                             Text(
                                               item.partyName!.toString(),
                                               style: TextStyle(
@@ -288,7 +282,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 20,
                                               ),
                                               Text(
@@ -316,9 +310,9 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                   color: item.typeOfTransiction == 'credit' ?
-                                  Color(0xFFEC7E7E)
+                                  const Color(0xFFEC7E7E)
                                       : item.typeOfTransiction == 'debit'
-                                      ? Color(0xFF4ABFA7)
+                                      ? const Color(0xFF4ABFA7)
                                       : Colors.white,
                                   borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(10),
@@ -357,7 +351,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),

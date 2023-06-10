@@ -1,38 +1,30 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:jocards/model/invoice_order_details.dart';
 import 'package:jocards/provider/app_provider.dart';
-import 'package:jocards/screens/main_screen/print_screen.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/shipping_screen.dart';
 import 'package:jocards/screens/main_screen/widgets/search/search_component.dart';
-import 'package:jocards/screens/main_screen/widgets/wallet/my_wallet.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../Network/api_response.dart';
 import '../../generated/assets.dart';
-import '../../main.dart';
 import '../../model/direct_order_response.dart';
 import '../../model/direct_wallet_request_log_model.dart';
-import '../../model/sales_order_details.dart';
 import '../../provider/home_provider.dart';
 import '../../utill/color_resources.dart';
-import '../../utill/utitlities.dart';
 import '../../utill/widget_size.dart';
 import '../widget/loading.dart';
 import '../widget/error.dart';
 import 'exchange_screen.dart';
 
 class WalletScreen extends StatefulWidget {
+  const WalletScreen({super.key});
+
 
   @override
   _WalletScreenState createState() => _WalletScreenState();
@@ -95,17 +87,17 @@ class _WalletScreenState extends State<WalletScreen> {
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Padding(
-                                    padding:  EdgeInsets.symmetric(horizontal: 2),
+                                    padding:  const EdgeInsets.symmetric(horizontal: 2),
                                     child: Text(
                                       context.watch<AppProvider>().utilitiesModel!=null?
                                       context.watch<AppProvider>().utilitiesModel!.data!=null?
                                       context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
                                       context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":""
                                       ,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'DIN Next LT W23',
                                         fontSize: 44,
-                                        color: const Color(0xffffffff),
+                                        color: Color(0xffffffff),
                                         fontWeight: FontWeight.w500,
                                       ),
                                       softWrap: false,
@@ -114,12 +106,12 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ),
                               )
                             ],),
-                            Spacer(),
+                            const Spacer(),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Container(
                                 decoration: BoxDecoration(                    color: Colors.black.withOpacity(0.2),
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10) )),
+                                    borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10) )),
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Row(children: [
@@ -133,7 +125,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ),
                                       softWrap: false,
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Consumer<HomeProvider>(
                                         builder: (context, homeProvider, child) {
                                           return Text('${homeProvider.directWalletRequestLogModelVar != null ?homeProvider.directWalletRequestLogModelVar!.totalData == null ? "" :homeProvider.directWalletRequestLogModelVar!.totalData!.totalUnPaid : 0.0} دينار ', style: TextStyle(
@@ -166,7 +158,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       ],
                     )),
                 SizedBox(height: widgetSize.getHeight(10, context),),
-                Container(
+                SizedBox(
                   height: widgetSize.getHeight(40, context),
                   width: MediaQuery.of(context).size.width,
                   child: Row(children: [
@@ -176,7 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           context,
                           PageTransition(
                             type: PageTransitionType.fade,
-                            child: SharedBottomNavigationBar(widget: ShippingScreen()),
+                            child: const SharedBottomNavigationBar(widget: ShippingScreen()),
                           ),
                         );
                       },
@@ -193,13 +185,13 @@ class _WalletScreenState extends State<WalletScreen> {
 
                             SvgPicture.asset(Assets.svgSh7n),
                             SizedBox(width: widgetSize.getWidth(15, context),),
-                            Center(
+                            const Center(
                               child: Text(
                                 'شحن',
                                 style: TextStyle(
                                   fontFamily: 'DIN Next LT W23',
                                   fontSize: 16,
-                                  color: const Color(0xffffffff),
+                                  color: Color(0xffffffff),
                                 ),
                                 softWrap: false,
                               ),
@@ -217,7 +209,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             context,
                             PageTransition(
                               type: PageTransitionType.fade,
-                              child: SharedBottomNavigationBar(widget: ExchangeScreen()),
+                              child: const SharedBottomNavigationBar(widget: ExchangeScreen()),
                             ),
                           );
                         },
@@ -231,13 +223,13 @@ class _WalletScreenState extends State<WalletScreen> {
 
                                 SvgPicture.asset(Assets.svgExchange),
                                 SizedBox(width: widgetSize.getWidth(15, context),),
-                                Center(
+                                const Center(
                                   child: Text(
                                     'تحويل مبلغ',
                                     style: TextStyle(
                                       fontFamily: 'DIN Next LT W23',
                                       fontSize: 16,
-                                      color: const Color(0xffffffff),
+                                      color: Color(0xffffffff),
                                     ),
                                     softWrap: false,
                                   ),
@@ -326,21 +318,21 @@ class _WalletScreenState extends State<WalletScreen> {
         SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
         SliverToBoxAdapter(
           child: Container(
-            decoration: BoxDecoration(color: Colors.white,
+            decoration: const BoxDecoration(color: Colors.white,
             borderRadius: BorderRadius.only(topRight: Radius.circular(22),topLeft: Radius.circular(22),)),
             child: Column(mainAxisSize: MainAxisSize.max,
               children: [
                 SizedBox(height: widgetSize.getHeight(30, context),),
                 Padding(
                   padding:  EdgeInsets.only(right: widgetSize.getWidth(25, context)),
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
                       'العمليات على المحفظة',
                       style: TextStyle(
                         fontFamily: 'DIN Next LT W23',
                         fontSize: 16,
-                        color: const Color(0xff2e2e2e),
+                        color: Color(0xff2e2e2e),
                         fontWeight: FontWeight.w700,
                       ),
                       softWrap: false,
@@ -373,9 +365,9 @@ class _WalletScreenState extends State<WalletScreen> {
                     color: const Color(0xff1d4c9b),
                     borderRadius: BorderRadius.circular(15.0),
                     border: Border.all(width: 1.0, color: const Color(0xff1d4c9b)),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: const Color(0x401d4c9b),
+                        color: Color(0x401d4c9b),
                         offset: Offset(0, 5),
                         blurRadius: 11,
                       ),
@@ -385,12 +377,12 @@ class _WalletScreenState extends State<WalletScreen> {
                   child: Row(mainAxisAlignment: MainAxisAlignment.center,children: [
                     SvgPicture.asset(Assets.svgShowMore),
                     SizedBox(width: widgetSize.getWidth(10, context),),
-                    Text(
+                    const Text(
                       'تحميل المزيد',
                       style: TextStyle(
                         fontFamily: 'DIN Next LT W23',
                         fontSize: 14,
-                        color: const Color(0xffffffff),
+                        color: Color(0xffffffff),
                         fontWeight: FontWeight.w500,
                       ),
                       softWrap: false,
@@ -1021,7 +1013,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     ),
                                     softWrap: false,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text(
                                     item.refId.toString(),
                                     style: TextStyle(
@@ -1046,14 +1038,14 @@ class _WalletScreenState extends State<WalletScreen> {
                                     ),
                                     softWrap: false,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
 
                                   Text(
                                     "${item.units} دينار",
                                     style: TextStyle(
                                       fontFamily: 'DIN Next LT W23',
                                       fontSize: widgetSize.getHeight(15, context),
-                                      color: item.logType=="Credit" && double.parse(item.units!) >= 0 ? Color(0xff4abfa7):Color(0xffEC7E7E),
+                                      color: item.logType=="Credit" && double.parse(item.units!) >= 0 ? const Color(0xff4abfa7):const Color(0xffEC7E7E),
                                       fontWeight: FontWeight.w500,
 
                                     ),
@@ -1072,7 +1064,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     ),
                                     softWrap: false,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text(
                                     "${item.availableWalletUnits} دينار",
                                     style: TextStyle(
@@ -1095,7 +1087,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     ),
                                     softWrap: false,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text(
                                     item.owner.toString(),
                                     style: TextStyle(
@@ -1112,14 +1104,14 @@ class _WalletScreenState extends State<WalletScreen> {
                               ],),
                             ),
                             Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xffe5e5e5),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffe5e5e5),
                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft:Radius.circular(10) ),
 
                               ),
                               child: Row(mainAxisAlignment: MainAxisAlignment.center,children: [
                                 Padding(
-                                  padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 2),
+                                  padding:  const EdgeInsets.symmetric(vertical: 4,horizontal: 2),
                                   child: Text(
                                     item.time!=null?item.time!.split(".")[0].toString():"",
                                     style: TextStyle(
@@ -1131,7 +1123,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 2),
+                                  padding:  const EdgeInsets.symmetric(vertical: 4,horizontal: 2),
                                   child: Text(
                                    item.date!=null?item.date!:"",
                                     style: TextStyle(
@@ -1150,8 +1142,8 @@ class _WalletScreenState extends State<WalletScreen> {
                             left: 0,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: item.logType=="Credit" && double.parse(item.units!) >= 0 ? Color(0xff4abfa7):Color(0xffEC7E7E),
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomRight: Radius.circular(10),
+                                color: item.logType=="Credit" && double.parse(item.units!) >= 0 ? const Color(0xff4abfa7):const Color(0xffEC7E7E),
+                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),bottomRight: Radius.circular(10),
                                 ),
 
                               ),
@@ -1159,10 +1151,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                 padding:  EdgeInsets.symmetric(horizontal: widgetSize.getWidth(25, context),vertical: widgetSize.getHeight(4, context)),
                                 child: Text(
                                   item.logType=="Credit" && double.parse(item.units!) >= 0 ? 'إيداع':'خصم',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: 'DIN Next LT W23',
                                     fontSize: 14,
-                                    color: const Color(0xffffffff),
+                                    color: Color(0xffffffff),
                                   ),
                                   softWrap: false,
                                 ),
@@ -1185,11 +1177,11 @@ class _WalletScreenState extends State<WalletScreen> {
 
   PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
-        preferredSize: Size.fromHeight(130),
+        preferredSize: const Size.fromHeight(130),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),

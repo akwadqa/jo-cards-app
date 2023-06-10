@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
-import 'package:jocards/utill/color_resources.dart';
-import 'package:jocards/utill/widget_size.dart';
-import 'package:provider/src/provider.dart';
-import 'dart:math' as math;
 class SignInHeaderWidget extends StatelessWidget
 {
 
  bool ?visibleArrow;
 
 
- SignInHeaderWidget({this.visibleArrow});
+ SignInHeaderWidget({super.key, this.visibleArrow});
 
  @override
   Widget build(BuildContext context) {
-    return Container(height: MediaQuery.of(context).size.width*0.65,
+    return SizedBox(height: MediaQuery.of(context).size.width*0.65,
       width:MediaQuery.of(context).size.width ,
 
       child: Stack(  children: [
@@ -37,7 +33,7 @@ class SignInHeaderWidget extends StatelessWidget
               padding: const EdgeInsets.all(8.0),
               child: SafeOnTap(
                 onSafeTap: () { Navigator.pop(context); },
-                child: Icon(Icons.arrow_back_ios_new,color: Colors.white,),
+                child: const Icon(Icons.arrow_back_ios_new,color: Colors.white,),
               ),
             ),
           ),

@@ -12,7 +12,6 @@ import 'package:jocards/main.dart';
 import 'package:jocards/model/login_response_model.dart';
 import 'package:jocards/model/register_request_model.dart';
 import 'package:jocards/provider/app_provider.dart';
-import 'package:jocards/screens/main_screen/home_screen.dart';
 import 'package:jocards/screens/main_screen/main_screen.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
@@ -28,6 +27,8 @@ import 'package:provider/src/provider.dart';
 
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
 
 
 
@@ -74,12 +75,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Stack(
             children: [
               SingleChildScrollView(
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 child: Container(
 
                   child: Column(
                     children: [
-                      SignUpHeaderWidget(),
+                      const SignUpHeaderWidget(),
                       SizedBox(
                         height: widgetSize.getHeight(10, context),
                       ),
@@ -186,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
  /*                                         var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
                                           context.read<AppProvider>().setSignInUser(true,  json.encode(res.data!), token);*/
                                           try{
-                                          var token = res.data!.keyDetails!.apiKey!+":"+res.data!.keyDetails!.apiSecret!;
+                                          var token = "${res.data!.keyDetails!.apiKey!}:${res.data!.keyDetails!.apiSecret!}";
                                             await context.read<AppProvider>().setSignInUser(true, json.encode(res.data!) ,token);
                                             await context.read<AppProvider>().setOldPassword(password);
                                             await context.read<AppProvider>().getUtilities();
@@ -250,9 +251,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     color: ColorResources.summerSky,
                                     borderRadius: BorderRadius.circular(15.0),
                                     border: Border.all(width: 1.0, color: const Color(0xff2892d7)),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
-                                        color: const Color(0x401d4c9b),
+                                        color: Color(0x401d4c9b),
                                         offset: Offset(0, 5),
                                         blurRadius: 11,
                                       ),
@@ -294,9 +295,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Visibility(
                       visible: Provider.of<AppProvider>(context, listen: true)
                           .isLoading,
-                      child: Center(
+                      child: const Center(
                         child: CircularProgressIndicator(
-                          valueColor: new AlwaysStoppedAnimation<Color>(
+                          valueColor: AlwaysStoppedAnimation<Color>(
                               ColorResources.studio),
                         ),
                       )),
@@ -483,11 +484,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child:   Container(
                 decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                         topRight: Radius
                             .circular(
                             50),
-                        topLeft: const Radius
+                        topLeft: Radius
                             .circular(
                             50))),
                 child: Padding(
@@ -567,9 +568,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           );
                         },
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
-                        separatorBuilder: (BuildContext context, int index) => Divider(height: 1,color: Color(0xffC9C9C9),),
+                        separatorBuilder: (BuildContext context, int index) => const Divider(height: 1,color: Color(0xffC9C9C9),),
 
 
 
@@ -643,7 +644,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           context,
                           PageTransition(
                             type: PageTransitionType.fade,
-                            child: SharedBottomNavigationBar(widget: MainScreen()),
+                            child: const SharedBottomNavigationBar(widget: MainScreen()),
                           ), (route)=> false);
                         Navigator.pop(context);
                       },

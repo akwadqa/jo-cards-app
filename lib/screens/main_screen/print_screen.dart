@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
@@ -10,16 +9,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/provider/app_provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../../generated/assets.dart';
 import '../../main.dart';
 import '../../model/direct_order_response.dart';
-import '../../model/row.dart';
 import '../../utill/color_resources.dart';
-import '../../utill/flutter_telpo.dart';
 import '../../utill/widget_size.dart';
 import '../widget/safe_on_tap.dart';
 
@@ -27,7 +23,7 @@ class PrintScreen extends StatefulWidget {
   DirectOrderResponse directOrderResponse;
 
 
-  PrintScreen(this.directOrderResponse);
+  PrintScreen(this.directOrderResponse, {super.key});
 
   @override
   _PrintScreenState createState() => _PrintScreenState();
@@ -50,8 +46,8 @@ class _PrintScreenState extends State<PrintScreen> {
     autoPrint = context.read<AppProvider>().getEnablePrintAuto();
     print(autoPrint.toString());
     printMerchantName = context.read<AppProvider>().getEnableMerchantNamePrint();
-    SchedulerBinding.instance!.addPostFrameCallback((_) async {
-      if(!androidInfo.model!.contains("TPS")) {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if(!androidInfo.model.contains("TPS")) {
         _device = context.read<AppProvider>().getBluetoothDevice();
         initPlatformState();
       }
@@ -163,7 +159,7 @@ class _PrintScreenState extends State<PrintScreen> {
           child: ListView(
             children: <Widget>[
               Visibility(
-                visible: !androidInfo.model!.contains("TPS"),
+                visible: !androidInfo.model.contains("TPS"),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -216,7 +212,7 @@ dropdownColor: ColorResources.summerSky,
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
+                const Spacer(),
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: Switch(
@@ -248,7 +244,7 @@ autoPrint=!autoPrint;
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
+                const Spacer(),
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: Switch(
@@ -273,25 +269,25 @@ autoPrint=!autoPrint;
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.brown),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
                         onPressed: () {
                           initPlatformState();
                         },
-                        child: Text(
+                        child: const Text(
                           'Refresh',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: _connected ? Colors.red : Colors.green),
+                            backgroundColor: _connected ? Colors.red : Colors.green),
                         onPressed: _connected ? _disconnect : _connect,
                         child: Text(
                           _connected ? 'Disconnect' : 'Connect',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
@@ -302,9 +298,9 @@ autoPrint=!autoPrint;
                     padding:
                     const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.brown),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
                       onPressed: () async{
-                        var imageTextRawUint8List = await screenshotController.capture(pixelRatio: 1.5,delay: Duration(seconds: 1)) ?? Uint8List(0);
+                        var imageTextRawUint8List = await screenshotController.capture(pixelRatio: 1.5,delay: const Duration(seconds: 1)) ?? Uint8List(0);
                         bluetooth.printImageBytes(imageTextRawUint8List);
                         bluetooth. paperCut();
                         //  await printOnBluetoothPrinter();
@@ -338,7 +334,7 @@ autoPrint=!autoPrint;
                         // _getBatteryLevel();
 
                       },
-                      child: Text('PRINT TEST',
+                      child: const Text('PRINT TEST',
                           style: TextStyle(color: Colors.white)),
                     ),
                   ),
@@ -347,7 +343,7 @@ autoPrint=!autoPrint;
                     child:    Container(
                       color: Colors.white,
 
-                      child:     Column( crossAxisAlignment: CrossAxisAlignment.center,
+                      child:     const Column( crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 20,),
                           Text(
@@ -449,7 +445,7 @@ autoPrint=!autoPrint;
                       toastLength: Toast.LENGTH_LONG);
                 }
                 else {
-                  if (!androidInfo.model!.contains("TPS")) {
+                  if (!androidInfo.model.contains("TPS")) {
                     await context.read<AppProvider>().saveBluetoothDevice(
                         jsonEncode(_device!.toMap()));
                     _disconnect();
@@ -519,16 +515,16 @@ autoPrint=!autoPrint;
   List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
     List<DropdownMenuItem<BluetoothDevice>> items = [];
     if (_devices.isEmpty) {
-      items.add(DropdownMenuItem(
+      items.add(const DropdownMenuItem(
         child: Center(child: Text('اختر الطابعة',style: TextStyle(color: Colors.white))),
       ));
     } else {
-      _devices.forEach((device) {
+      for (var device in _devices) {
         items.add(DropdownMenuItem(
-          child: Center(child: Container(child: Text(device.name!,style: TextStyle(color: Colors.white),)),),
           value: device,
+          child: Center(child: Container(child: Text(device.name!,style: const TextStyle(color: Colors.white),)),),
         ));
-      });
+      }
     }
     return items;
   }
@@ -562,14 +558,14 @@ autoPrint=!autoPrint;
 
   Future show(
       String message, {
-        Duration duration: const Duration(seconds: 3),
+        Duration duration = const Duration(seconds: 3),
       }) async {
-    await new Future.delayed(new Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     ScaffoldMessenger.of(context).showSnackBar(
-      new SnackBar(
-        content: new Text(
+      SnackBar(
+        content: Text(
           message,
-          style: new TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
@@ -586,7 +582,7 @@ autoPrint=!autoPrint;
     Canvas canvas = Canvas(
         recorder,
         Rect.fromCenter(
-          center: Offset(0, 0),
+          center: const Offset(0, 0),
           width: 550,
           height: 400, // cheated value, will will clip it later...
         ));
@@ -620,7 +616,7 @@ autoPrint=!autoPrint;
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 100,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(15),
@@ -636,7 +632,7 @@ autoPrint=!autoPrint;
                 SafeOnTap(onSafeTap: () { Navigator.pop(context);
              },
                     child: SvgPicture.asset(Assets.svgBack)),
-                Spacer(),
+                const Spacer(),
                 Text(
                   "إعدادات الطابعة",
                   style: TextStyle(
@@ -645,7 +641,7 @@ autoPrint=!autoPrint;
                   ),
                   softWrap: false,
                 ),
-                Spacer(),
+                const Spacer(),
 
               ],
             ),

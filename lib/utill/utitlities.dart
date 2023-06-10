@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ Future<void> shareOrder(DirectOrderResponse res, BuildContext context) async {
     String mobileNumber = await context
         .read<AppProvider>()
         .getEnableMerchantNamePrint()
-        ? "هاتف: \n" + context.read<AppProvider>().utilitiesModel!.data!.companyWhatsappNumber! + "\n" + _separator(SeparatorType.dash) + "\n" : '' ;
+        ? "هاتف: \n${context.read<AppProvider>().utilitiesModel!.data!.companyWhatsappNumber!}\n${_separator(SeparatorType.dash)}\n" : '' ;
 
     String company = await context
         .read<AppProvider>()
@@ -40,12 +39,11 @@ Future<void> shareOrder(DirectOrderResponse res, BuildContext context) async {
     for(StockDetails stock in res.orderItems![0].stockDetails!){
         shareString = shareString +"الرقم السري: \n"+ '*' + _addDashes(stock.secretCode!)+ '*' +"\n";
         shareString = shareString +"الرقم التسلسلي: \n"+'\b${stock.serialNo!}'+"\n";
-        shareString = shareString +"رقم المرجع: \n"+stock.refNo!+"\n" + _separator(SeparatorType.dash) +"\n";
+        shareString = "$shareStringرقم المرجع: \n${stock.refNo!}\n${_separator(SeparatorType.dash)}\n";
     }
-    shareString= shareString+res.date!+"\n"
-        +res.postingTime!.split(".")[0]+"\n";
-    shareString = shareString + "رقم الطلب: "+ res. invoiceId!+"\n"+ _separator(SeparatorType.dash) +"\n";
-    shareString = shareString + context.read<AppProvider>().utilitiesModel!.data!.companyName!+"\n";
+    shareString= "$shareString${res.date!}\n${res.postingTime!.split(".")[0]}\n";
+    shareString = "$shareStringرقم الطلب: ${res. invoiceId!}\n${_separator(SeparatorType.dash)}\n";
+    shareString = "$shareString${context.read<AppProvider>().utilitiesModel!.data!.companyName!}\n";
     shareString = shareString + context.read<AppProvider>().utilitiesModel!.data!.mobileNo!;
     await  Share.share(shareString);
 }
@@ -166,8 +164,8 @@ extension TextStyleX on TextStyle {
 }
 
 
- Future <bool?> connect(BluetoothDevice? _device) async {
-    if (_device == null) {
+ Future <bool?> connect(BluetoothDevice? device) async {
+    if (device == null) {
         return false;
     } else {
 
@@ -177,7 +175,7 @@ extension TextStyleX on TextStyle {
 
 
             try {
-                var res = await bluetooth.connect(_device);
+                var res = await bluetooth.connect(device);
                 return true;
             }
             catch(e){
@@ -186,6 +184,7 @@ extension TextStyleX on TextStyle {
         }
 
     }
+    return null;
 }
 
 Future<void> printOnBluetoothPrinter(DirectOrderResponse directOrderResponse,UtilitiesModel? utilitiesModel, BuildContext context) async {

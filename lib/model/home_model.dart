@@ -47,7 +47,7 @@ class HomeBlock extends ChangeNotifier {
       : id = json['id'] as String?,
         type = json['type'] as String?,
         title = json['title'] as String?,
-        expanded = json['expanded']!=null?json['expanded']:true ,
+        expanded = json['expanded'] ?? true ,
         background = json['background'] as String? ?? "#7c5aa6",
         view = json['view'],
         data = (json['data'] as List?)?.map((dynamic e) => HomeBlockData.fromJson(e as Map<String,dynamic>)).toList();

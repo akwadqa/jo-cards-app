@@ -56,11 +56,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : BorderRadius.circular(0),
           border: Border.all(color: ColorResources.sliver)),
       child: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 4),
+        padding:  const EdgeInsets.symmetric(horizontal: 4),
         child: TextFormField(
           enabled: widget.enabled!=null?false:true,
           maxLines: widget.maxLines,
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
           controller: widget.textEditingController,
           keyboardType: widget.keyboardType,
           cursorColor: ColorResources.sliver,
@@ -78,34 +78,34 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
           },
 
-          decoration: InputDecoration(contentPadding: widget.enablePrefix!=null?EdgeInsets.symmetric(vertical: 8): EdgeInsets.symmetric(horizontal: 4) ,
+          decoration: InputDecoration(contentPadding: widget.enablePrefix!=null?const EdgeInsets.symmetric(vertical: 8): const EdgeInsets.symmetric(horizontal: 4) ,
             hintText: widget.hint,
             errorMaxLines: 1,
-            prefixIcon: widget.enablePrefix!=null? Padding(padding: EdgeInsets.symmetric(vertical:16,horizontal: 8), child: Directionality(textDirection: TextDirection.ltr,child: Text('+974',style: TextStyle(color: ColorResources.light_grey),))):null,
-            hintStyle: widget.hintStyle ?? TextStyle(color: ColorResources.sliver),
+            prefixIcon: widget.enablePrefix!=null? const Padding(padding: EdgeInsets.symmetric(vertical:16,horizontal: 8), child: Directionality(textDirection: TextDirection.ltr,child: Text('+974',style: TextStyle(color: ColorResources.light_grey),))):null,
+            hintStyle: widget.hintStyle ?? const TextStyle(color: ColorResources.sliver),
 
 
-              errorStyle: TextStyle(
+              errorStyle: const TextStyle(
           fontSize:12, color:  ColorResources.studio),
 
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(
                 color:  Colors.transparent),
           ),
-          focusedErrorBorder: UnderlineInputBorder(
+          focusedErrorBorder: const UnderlineInputBorder(
             borderSide:
             BorderSide( color:Colors.transparent),
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(
                 color:  Colors.transparent),
           ),
-          border: UnderlineInputBorder(
+          border: const UnderlineInputBorder(
             borderSide: BorderSide(
                 color:  Colors.transparent),
 
           ),
-            errorBorder: UnderlineInputBorder(
+            errorBorder: const UnderlineInputBorder(
               borderSide: BorderSide(
                   color:  Colors.transparent),
 

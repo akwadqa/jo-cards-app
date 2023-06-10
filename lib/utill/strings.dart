@@ -5,8 +5,8 @@ class Strings {
   static const String USER_INFO = 'user_info';
   static const String OLD_PASSWORD = 'old_password';
   // static const String BASR_URl = 'https://app.jocards.com';
-  // static const String BASR_URl = 'https://jocards.akwad.qa';
-  static const String BASR_URl = 'https://www.jocards.com';
+  static const String BASR_URl = 'https://jocards.akwad.qa';
+  // static const String BASR_URl = 'https://www.jocards.com';
   static const String Token = 'access_token';
   static const String LanguageCode = 'language_code';
   static const String CountryCode = 'countryCode';
@@ -14,6 +14,12 @@ class Strings {
   static const String EnableMerchantNamePrint = 'EnableMerchantNamePrint';
   static const String BluetoothDevice = 'BluetoothDevice';
 
-  static const List<String> periods = ['اليوم', 'الأسبوع الحالي', 'الشهر الحالي', 'الأمس', 'الأسبوع السابق', 'الشهر السابق'];
-
+  static const List<String> periods = [
+    'اليوم',
+    'الأسبوع الحالي',
+    'الشهر الحالي',
+    'الأمس',
+    'الأسبوع السابق',
+    'الشهر السابق'
+  ];
 }

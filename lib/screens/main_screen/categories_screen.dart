@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +13,6 @@ import 'package:jocards/utill/utitlities.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 
 import '../../Network/api_response.dart';
 import '../../utill/color_resources.dart';
@@ -23,6 +21,8 @@ import '../widget/error.dart';
 import '../widget/safe_on_tap.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({super.key});
+
 
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
@@ -54,7 +54,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       padding:  EdgeInsets.symmetric(horizontal: widgetSize.getWidth(16, context),
                       vertical: widgetSize.getHeight(30, context)),
                       child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: 1,
                             crossAxisCount: 2,
                             crossAxisSpacing: 10,
@@ -87,7 +87,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           Positioned.fill(
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                borderRadius: const BorderRadius.all(Radius.circular(10)),
                                                 shape: BoxShape.rectangle,
                                                 color: hexToColor(
                                                     items[childIndex].backgroundColor!),
@@ -103,22 +103,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                               :"",
                                               imageBuilder: (context, imageProvider) => Container(
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                                                   shape: BoxShape.rectangle,
 
                                                   image: DecorationImage(
                                                       image: imageProvider, fit: BoxFit.contain),
                                                 ),
                                               ),
-                                              placeholder: (context, url) => AspectRatio(
+                                              placeholder: (context, url) => const AspectRatio(
                                                 aspectRatio: 1,
                                                 child: Center(
                                                   child: CircularProgressIndicator(
                                                       valueColor:
-                                                      new AlwaysStoppedAnimation<Color>(ColorResources.studio)),
+                                                      AlwaysStoppedAnimation<Color>(ColorResources.studio)),
                                                 ),
                                               ),
-                                              errorWidget: (context, url, error) => Center(
+                                              errorWidget: (context, url, error) => const Center(
                                                 child: Icon(Icons.error),
                                               ),
                                             ),
@@ -132,7 +132,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Padding(
-                                    padding:  EdgeInsets.symmetric(horizontal: 1,vertical: 2),
+                                    padding:  const EdgeInsets.symmetric(horizontal: 1,vertical: 2),
                                     child: Text(
                                       items[childIndex].websiteTitle!=null? items[childIndex].websiteTitle!:"",
                                       textAlign: TextAlign.center,
@@ -175,7 +175,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 130,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: ColorResources.studio,
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(18),
@@ -260,7 +260,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) async {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       context.read<HomeProvider>().getAllCategories();
     });
   }

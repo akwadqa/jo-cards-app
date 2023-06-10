@@ -22,19 +22,19 @@ class UpdateScreen extends StatelessWidget {
             SvgPicture.asset(Assets.svgLogoSvg, height: 300, color: ColorResources.studio),
             Text('وقت التحديث!', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: ColorResources.studio)),
             const SizedBox(height: 20),
-            Text('نسخة جديدة: ${Platform.isAndroid ? appVersionModel.androidApiVersion : appVersionModel.iosApiVersion}', style: Theme.of(context).textTheme.headline6),
+            Text('نسخة جديدة: ${Platform.isAndroid ? appVersionModel.androidApiVersion : appVersionModel.iosApiVersion}', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 20.0),
-              child: Text(appVersionModel.appUpdateMessage!, style: Theme.of(context).textTheme.bodyText1),
+              child: Text(appVersionModel.appUpdateMessage!, style: Theme.of(context).textTheme.bodyLarge),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: StoreRedirect.redirect, child: const Text('تحديث'),
+            ElevatedButton(onPressed: StoreRedirect.redirect,
             style: ButtonStyle(
                 shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0)))),
-                textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold)),
+                textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
                 minimumSize: MaterialStateProperty.all(const Size(230.0, 50))
-            ),),
+            ), child: const Text('تحديث'),),
             if(appVersionModel.mandatoryToUpdate == 0) TextButton(onPressed: Navigator.of(context).pop, child: const Text('ليس الآن'))
           ],
         ),

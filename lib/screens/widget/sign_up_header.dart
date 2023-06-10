@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jocards/generated/assets.dart';
 import 'package:jocards/screens/widget/safe_on_tap.dart';
-import 'package:jocards/utill/color_resources.dart';
 import 'package:jocards/utill/widget_size.dart';
-import 'package:provider/src/provider.dart';
-import 'dart:math' as math;
 class SignUpHeaderWidget extends StatelessWidget
 {
+  const SignUpHeaderWidget({super.key});
+
 
 
 
  @override
   Widget build(BuildContext context) {
-    return Container(height: MediaQuery.of(context).size.width*0.448,
+    return SizedBox(height: MediaQuery.of(context).size.width*0.448,
       width:MediaQuery.of(context).size.width ,
 
       child: Stack(  children: [

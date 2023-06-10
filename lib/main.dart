@@ -15,12 +15,9 @@ import 'package:jocards/theme/light_theme.dart';
 import 'package:jocards/utill/app_local.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Network/resit_api.dart';
 import 'notification/my_notification.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:dio/dio.dart';
 
 late SharedPreferences sharedPreferences;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -39,7 +36,7 @@ void main() async {
   deviceInfo = DeviceInfoPlugin();
   if(Platform.isAndroid){
     androidInfo = await deviceInfo.androidInfo;
-    if(!androidInfo.model!.contains("TPS")) {
+    if(!androidInfo.model.contains("TPS")) {
       bluetooth = BlueThermalPrinter.instance;
     }
 
@@ -99,7 +96,7 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       theme: lightTheme(),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 

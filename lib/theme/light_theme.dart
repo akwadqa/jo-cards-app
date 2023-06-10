@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jocards/utill/color_resources.dart';
 
@@ -11,9 +10,9 @@ visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.light,
    appBarTheme: const AppBarTheme(backgroundColor: ColorResources.mainColor,foregroundColor: Colors.white),
 
-    focusColor: Color(0xFFADC4C8),
-    hintColor: Color(0xFF52575C),
-  pageTransitionsTheme: PageTransitionsTheme(
+    focusColor: const Color(0xFFADC4C8),
+    hintColor: const Color(0xFF52575C),
+  pageTransitionsTheme: const PageTransitionsTheme(
   builders: {
   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
   TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

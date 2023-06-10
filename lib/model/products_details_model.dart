@@ -183,7 +183,7 @@ class RadioGroupOption {
 
   RadioGroupOption.fromJson(Map<String, dynamic> json)
       : name1 = json['name1'] as String?,
-        selected = json['selected']!=null ?json['selected']:false;
+        selected = json['selected'] ?? false;
 
   Map<String, dynamic> toJson() => {
     'name1' : name1,

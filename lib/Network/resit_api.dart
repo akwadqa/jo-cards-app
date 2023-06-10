@@ -1,12 +1,9 @@
 
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jocards/model/app_message_model.dart';
 import 'package:jocards/model/direct_order_response.dart';
 import 'package:jocards/model/home_model.dart';
@@ -33,7 +30,6 @@ import '../model/categories_model.dart';
 import '../model/direct_wallet_request_log_model.dart';
 import '../model/products_details_model.dart';
 import '../model/sales_order_details.dart';
-import '../model/sales_order_response_model.dart';
 import '../model/shipping_order_response_model.dart';
 import '../model/transfer_shipping_response_model.dart';
 import '../model/upload_response_model.dart';
@@ -47,8 +43,8 @@ part 'resit_api.g.dart';
 
 
 // @RestApi(baseUrl: "https://app.jocards.com/api/")
-// @RestApi(baseUrl: "https://jocards.akwad.qa/api/")
-@RestApi(baseUrl: "https://www.jocards.com/api/")
+@RestApi(baseUrl: "https://jocards.akwad.qa/api/")
+// @RestApi(baseUrl: "https://www.jocards.com/api/")
 abstract class restApi {
   factory restApi(Dio dio, {BuildContext ?context, String ?baseUrl}) {
     dio.interceptors
@@ -58,7 +54,7 @@ abstract class restApi {
       var customHeaders = {
         'content-type': 'application/json',
 
-        'Authorization': 'token ${sharedPreferences.getString(Strings.Token)}',
+        if(sharedPreferences.getString(Strings.Token) != null) 'Authorization': 'token ${sharedPreferences.getString(Strings.Token)}',
 
       };
 

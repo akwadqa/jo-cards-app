@@ -12,11 +12,11 @@ class PrintRow {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = "text";
-    data['text'] = this.text;
-    data['fontSize'] = this.fontSize;
-    data['position'] = this.position;
+    data['text'] = text;
+    data['fontSize'] = fontSize;
+    data['position'] = position;
     return data;
   }
 }
@@ -37,12 +37,12 @@ class PrintImage {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = "image";
-    data['pathUrl'] = this.pathUrl;
-    data['width'] = this.width;
-    data['height'] = this.height;
-    data['position'] = this.position;
+    data['pathUrl'] = pathUrl;
+    data['width'] = width;
+    data['height'] = height;
+    data['position'] = position;
     return data;
   }
 }
@@ -57,9 +57,9 @@ class WalkPaper {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = "walkPaper";
-    data['step'] = this.step;
+    data['step'] = step;
     return data;
   }
 }
