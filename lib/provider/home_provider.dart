@@ -568,6 +568,7 @@ class HomeProvider extends AppProvider {
            pageKey = pageKey + 1;
            paymentLogPagingController!
                .appendPage(paymentModel.paymentData!.glEntries!, pageKey);
+           notifyListeners();
         }
 
         // _paymentModel ??= paymentModel.paymentData;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/price_widget.dart';
 import 'package:jocards/screens/main_screen/widgets/quick_buy_feature/sub_categories_list.dart';
@@ -866,7 +867,9 @@ class QuickBuyWidget extends StatelessWidget {
                                   Expanded(
                                     child: SafeOnTap(
                                       onSafeTap: () {
+                                        context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                         Navigator.pop(context, true);
+                                        // context.read<SharedNavBarProvider>().controller.attach(context.read<SharedNavBarProvider>().controller.position);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(

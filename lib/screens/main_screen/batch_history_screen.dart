@@ -246,7 +246,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                             ),
                                             const Spacer(),
                                             Text(
-                                              item.partyName!.toString(),
+                                              item.againstParty !=null ? item.againstParty!.toString() : item.partyName!.toString(),
                                               style: TextStyle(
                                                 fontFamily: 'DIN Next LT W23',
                                                 fontSize: widgetSize

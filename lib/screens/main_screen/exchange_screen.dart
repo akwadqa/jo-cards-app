@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/provider/home_provider.dart';
+import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
@@ -216,8 +217,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                    children: [
                                      SafeOnTap(
                                          onSafeTap: () {
-                                           Navigator.pop(
-                                               context,true);
+                                           context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
+                                           Navigator.pop(context, true);
+                                           // context.read<SharedNavBarProvider>().controller.attach(context.read<SharedNavBarProvider>().controller.position);
                                          },
                                          child: SvgPicture.asset(
                                              Assets
