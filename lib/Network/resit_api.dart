@@ -43,8 +43,8 @@ part 'resit_api.g.dart';
 
 
 // @RestApi(baseUrl: "https://app.jocards.com/api/")
-@RestApi(baseUrl: "https://jocards.akwad.qa/api/")
-// @RestApi(baseUrl: "https://www.jocards.com/api/")
+// @RestApi(baseUrl: "https://jocards.akwad.qa/api/")
+@RestApi(baseUrl: "https://www.jocards.com/api/")
 abstract class restApi {
   factory restApi(Dio dio, {BuildContext ?context, String ?baseUrl}) {
     dio.interceptors

@@ -13,7 +13,7 @@ class _restApi implements restApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://jocards.akwad.qa/api/';
+    baseUrl ??= 'https://www.jocards.com/api/';
   }
 
   final Dio _dio;
