@@ -50,6 +50,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   final GlobalKey<FormState> _key = GlobalKey();
   bool moreThanAvailableWalletBalance = false;
   double percent = 0.0;
+   // 1
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -1027,7 +1028,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           )),
     );
   }
-
   checkValidationAndDirectRequest(ProductsDetailsData item) async {
     if (_key.currentState != null) {
       _key.currentState!.save();
@@ -1088,6 +1088,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     ApiResponse<DirectOrderResponse> resultOfConfirmDirectOrder =
         await confirmDirectOrder(
             context, directOrderRequest, item, directOrderList);
+print("resultOfConfirmDirectOrder.status");
+print(resultOfConfirmDirectOrder.status);
+print(resultOfConfirmDirectOrder.data!.invoiceId);
 
     if (resultOfConfirmDirectOrder.status == Status.COMPLETED) {
       if (resultOfConfirmDirectOrder.data != null &&
@@ -2065,9 +2068,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                 return SafeOnTap(
                                   onSafeTap: () async {
                                     if(!state.isLoading){
-                                      var res = await context
-                                          .read<HomeProvider>()
+                                      var res = await state
                                           .directOrder(directOrderList);
+                                      print("after assign value to res");
+                                      print("res.stats.toString()");
+                                      print(res.message);
                                       if (res.status == Status.COMPLETED) {
                                         Navigator.pop(context, res);
                                         context.read<AppProvider>().getUtilities();

@@ -229,6 +229,9 @@ class HomeProvider extends AppProvider {
   getDirectOrder( List<DirectOrderRequest> directOrderRequest) async{
       return await directOrder(directOrderRequest);
   }
+  int countOfRequest = 0;
+  ApiResponse<DirectOrderResponse> directOrderResponse2 = ApiResponse.loading("loading");
+
   Future<ApiResponse<DirectOrderResponse>> directOrder(
       List<DirectOrderRequest> directOrderRequest) async {
     restApi mRestApi = restApi(Dio());
@@ -240,17 +243,25 @@ class HomeProvider extends AppProvider {
             await mRestApi.directOrder(json.encode(directOrderRequest));
 
         if(directOrder.error == 1){
+          countOfRequest = 0;
           isLoading = false;
           if(directOrder.statusCode == 404){Fluttertoast.showToast(msg: "لايمكن تجاوز الحد الأعلى للمخزون");}
           directOrderResponse = ApiResponse.error(directOrder.message);
+          directOrderResponse2 = directOrderResponse;
+          notifyListeners();
         }
-        if(directOrder.error == 2 ){
+        else if(directOrder.error == 2 && countOfRequest<=2){
           isLoading = true;
           Fluttertoast.showToast(msg: "ضغط على الشبكة الرجاء الانتظار");
-          await getDirectOrder(directOrderRequest);
+          countOfRequest ++;
+          directOrderResponse = ApiResponse.completed(directOrder);
+          return await getDirectOrder(directOrderRequest);
         }
         else{
+          countOfRequest = 0;
           directOrderResponse = ApiResponse.completed(directOrder);
+          directOrderResponse2 = directOrderResponse;
+          notifyListeners();
         }
       } catch (e) {
         isLoading = false;
@@ -271,6 +282,7 @@ class HomeProvider extends AppProvider {
     } else {
       return directOrderResponse = ApiResponse.error("No Internet Connection");
     }
+    notifyListeners();
     return directOrderResponse;
   }
 

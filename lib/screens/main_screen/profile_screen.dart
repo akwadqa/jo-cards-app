@@ -601,7 +601,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
+                if(userModel!=null) SafeOnTap(
+                  onSafeTap: ()async {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.leftToRight,
+                            child: const SharedBottomNavigationBar(widget: NotificationScreen(),)));
 
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
+                    child: Column(
+                      children: [
+                        Row(children: [
+                          const Icon(Icons.notifications_active_outlined),
+                          SizedBox(width: widgetSize.getWidth(10, context),),
+                          Text(
+                            "الإشعارات",
+                            style: TextStyle(
+
+                              fontSize: widgetSize.getHeight(16, context),
+                              color: const  Color(0xff6b6b6b),
+                              fontWeight: FontWeight.w500,
+                            ),
+
+                          ),
+                          const Spacer(),
+                          const RotatedBox(
+                              quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
+                        ],),
+                        SizedBox(height: widgetSize.getHeight(10, context),),
+                        Container(height: 1,
+                          color: ColorResources.light_grey.withOpacity(0.5),)
+
+                      ],
+                    ),
+                  ),
+                ),
                 if(userModel!=null&& context.read<AppProvider>().utilitiesModel!=null&&
                     context.read<AppProvider>().utilitiesModel!.data!=null&&context.read<AppProvider>().utilitiesModel!.data!
                     .companyWhatsappNumber!=null)...[
@@ -744,44 +781,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 ],
 
                 if(userModel!=null)...[
-                  SafeOnTap(
-                    onSafeTap: ()async {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.leftToRight,
-                              child: const SharedBottomNavigationBar(widget: NotificationScreen(),)));
-
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),
-                      child: Column(
-                        children: [
-                          Row(children: [
-                            const Icon(Icons.notifications_active_outlined),
-                            SizedBox(width: widgetSize.getWidth(10, context),),
-                            Text(
-                              "الإشعارات",
-                              style: TextStyle(
-
-                                fontSize: widgetSize.getHeight(16, context),
-                                color: const  Color(0xff6b6b6b),
-                                fontWeight: FontWeight.w500,
-                              ),
-
-                            ),
-                            const Spacer(),
-                            const RotatedBox(
-                                quarterTurns: 0,child: Icon(Icons.arrow_back_ios_new,color:  Color(0xff6b6b6b),size: 18))
-                          ],),
-                          SizedBox(height: widgetSize.getHeight(10, context),),
-                          Container(height: 1,
-                            color: ColorResources.light_grey.withOpacity(0.5),)
-
-                        ],
-                      ),
-                    ),
-                  ),
                   SafeOnTap(onSafeTap: () => _showDeleteConfirmationDialog(context),
                     child: Padding(
                       padding: EdgeInsets.only(top:widgetSize.getHeight(20, context)),

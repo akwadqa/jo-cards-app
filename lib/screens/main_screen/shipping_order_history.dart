@@ -123,7 +123,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      const Text("المبلغ المدفوع", softWrap: true,textAlign: TextAlign.center,),
+                                      const Text("المدفوع", softWrap: true,textAlign: TextAlign.center,),
                                       Text('${homeProvider.shippingOrderResponseModelVar == null ? "":homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid} دينار ', softWrap: true,),
                                     ],
                                   ),
@@ -147,7 +147,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      const Text("المبلغ الغير مدفوع", softWrap: true, textAlign: TextAlign.center,),
+                                      const Text("الغير مدفوع", softWrap: true, textAlign: TextAlign.center,),
                                       Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
                                     ],
                                   ),
@@ -171,7 +171,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    const Text("المبلغ المتبقي", softWrap: true, textAlign: TextAlign.center,),
+                                    const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
                                     Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)<0 ?0.0:(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)} دينار ', softWrap: true,),
 
                                   ],

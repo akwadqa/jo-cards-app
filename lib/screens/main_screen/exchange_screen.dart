@@ -134,6 +134,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
 
                                   SafeOnTap(
                                     onSafeTap: (){
+                                      // context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                       Navigator.of(context).pop(true);
                                     },
                                     child: Text(
@@ -190,7 +191,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                           ),));
                     if(dialogResult!=null&&dialogResult){
                     if (!context.read<HomeProvider>().isLoading) {
-                   var res =  await context.read<HomeProvider>().requestTransferShipping(transferAmount,customerName: mobileController.text);
+                   var res =  await context.read<HomeProvider>().requestTransferShipping(transferAmount,customerName: getCustomerNameFromNumber(mobileController.text));
                    if(res.status==Status.COMPLETED){
                      var result = await showDialog(
                          barrierDismissible: false,
@@ -217,9 +218,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                    children: [
                                      SafeOnTap(
                                          onSafeTap: () {
-                                           context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
+                                           // context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                            Navigator.pop(context, true);
-                                           // context.read<SharedNavBarProvider>().controller.attach(context.read<SharedNavBarProvider>().controller.position);
+                                          // context.read<SharedNavBarProvider>().controller.attach(context.read<SharedNavBarProvider>().controller.position);
                                          },
                                          child: SvgPicture.asset(
                                              Assets
@@ -355,7 +356,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
   @override
   void initState() {
     super.initState();
-    suggestions = context.read<AppProvider>().agentModel!.data!
+    if(context.read<AppProvider>().agentModel != null) suggestions = context.read<AppProvider>().agentModel!.data!
         .map(
           (e) => SearchFieldListItem<Data>(
         e.customerName!,
@@ -484,6 +485,15 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
     );
   }
 
+  String getCustomerNameFromNumber(String value){
+    final List<String> numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    List<Data> data = [];
+    if (numbers.contains(value[0])) { data = context.read<AppProvider>().agentModel!.data!.where((element) => value == element.mobileNo).toList();}
+else{ data = context.read<AppProvider>().agentModel!.data!.where((element) => value == element.customerName).toList();}
+
+    return data[0].customerName!;
+
+  }
   getSearchResult(String? value) {
     if(value != null){
       List<Data> dataNumbers = context.read<AppProvider>().agentModel!.data!.where((element) => element.mobileNo!.contains(value)).toList();
