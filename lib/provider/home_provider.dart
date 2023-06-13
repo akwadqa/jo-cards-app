@@ -241,9 +241,11 @@ class HomeProvider extends AppProvider {
 
         if(directOrder.error == 1){
           isLoading = false;
+          if(directOrder.statusCode == 404){Fluttertoast.showToast(msg: "لايمكن تجاوز الحد الأعلى للمخزون");}
           directOrderResponse = ApiResponse.error(directOrder.message);
         }
         if(directOrder.error == 2 ){
+          isLoading = true;
           Fluttertoast.showToast(msg: "ضغط على الشبكة الرجاء الانتظار");
           await getDirectOrder(directOrderRequest);
         }
@@ -255,6 +257,9 @@ class HomeProvider extends AppProvider {
         if (e is DioError) {
           try {
             throwCustomException(e);
+            if(e.response!.statusCode == 500 && jsonDecode(e.response!.data)["exc_type"] == "ValidationError"){
+              Fluttertoast.showToast(msg: "الكمية غير متوفرة");
+            }
           } catch (forcedException) {
             return directOrderResponse =
                 ApiResponse.error(forcedException.toString());

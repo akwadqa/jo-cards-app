@@ -61,13 +61,13 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                       children: [
                         Consumer<HomeProvider>(
                             builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "صندوق المندوب", homeProvider.paymentModel!.agentPayable != null ? "${homeProvider.paymentModel!.agentPayable}  دينار" : ""));
+                            return Expanded(child: buildBox(context, "الصندوق", homeProvider.paymentModel!.agentPayable != null ? "${homeProvider.paymentModel!.agentPayable}  دينار" : ""));
                           }
                         ),
                         SizedBox(width: widgetSize.getWidth(20, context)),
                         Consumer <HomeProvider>(
                             builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "دفعات المندوب", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment)}  دينار" : ""));
+                            return Expanded(child: buildBox(context, "الدفعات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment)}  دينار" : ""));
                           }
                         ),
                       ],
