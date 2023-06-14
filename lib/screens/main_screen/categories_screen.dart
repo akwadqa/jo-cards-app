@@ -222,7 +222,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     child: SafeOnTap( onSafeTap: ()async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
-                        child: Row(children: [
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
                             fontSize: 16,

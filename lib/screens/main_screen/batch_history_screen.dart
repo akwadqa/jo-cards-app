@@ -67,7 +67,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                         SizedBox(width: widgetSize.getWidth(20, context)),
                         Consumer <HomeProvider>(
                             builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "الدفعات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment)}  دينار" : ""));
+                            return Expanded(child: buildBox(context, "الدفعات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentCustomerPayment)}  دينار" : ""));
                           }
                         ),
                       ],
@@ -391,7 +391,9 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                     child: SafeOnTap( onSafeTap: ()async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
-                        child: Row(children: [
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
                             fontSize: 16,

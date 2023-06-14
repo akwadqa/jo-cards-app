@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:jocards/screens/main_screen/categories_screen.dart';
 import 'package:jocards/screens/main_screen/profile_screen.dart';
@@ -34,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
           /* 3 */
           body: PageView(
             controller: sharedNavBarProvider.controller,
+            physics: context.read<AppProvider>().getUserInfo()!= null ? PageScrollPhysics() :const NeverScrollableScrollPhysics(),
             children: children,
             onPageChanged: (int index){
               sharedNavBarProvider.changeBottomIndex(index);

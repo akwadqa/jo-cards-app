@@ -172,7 +172,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
-                                    Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)<0 ?0.0:(homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid - homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid)} دينار ', softWrap: true,),
+                                    Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
 
                                   ],
                                 ),
@@ -769,7 +769,9 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                     child: SafeOnTap( onSafeTap: ()async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
-                        child: Row(children: [
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
                             fontSize: 16,

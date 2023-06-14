@@ -632,6 +632,7 @@ class HomeProvider extends AppProvider {
           dwrLogPagingController!
               .appendPage(directWalletRequestLogModel.data!, pageKey);
         }
+        notifyListeners();
       }
     } catch (error) {
       print("the error in dwrl is ${error.toString()}");

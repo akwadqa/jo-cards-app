@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:jocards/screens/main_screen/main_screen.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -402,6 +403,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                     children: [
                                                       SafeOnTap(
                                                           onSafeTap: () {
+                                                            // context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                                             Navigator.pop(
                                                                 context,true);
                                                           },
@@ -440,6 +442,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                         onSafeTap: () async {
                                                           var result = await showImagePicker(context);
                                                           if (result != null && result) {
+                                                            context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                                             Navigator.pop(context);
                                                             var uploadReceiptRes = await context
                                                                 .read<HomeProvider>()
@@ -505,6 +508,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                                                       ),
                                                       SafeOnTap(
                                                         onSafeTap: () async {
+                                                          context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
                                                           Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
                                                         },
                                                         child: Row(
@@ -708,7 +712,9 @@ class _ShippingScreenState extends State<ShippingScreen> {
                     child: SafeOnTap( onSafeTap: ()async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
-                        child: Row(children: [
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
                             fontSize: 16,

@@ -128,7 +128,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                     const Spacer(),
                                     Consumer<HomeProvider>(
                                         builder: (context, homeProvider, child) {
-                                          return Text('${homeProvider.directWalletRequestLogModelVar != null ?homeProvider.directWalletRequestLogModelVar!.totalData == null ? "" :homeProvider.directWalletRequestLogModelVar!.totalData!.totalUnPaid : 0.0} دينار ', style: TextStyle(
+                                          return Text('${(homeProvider.directWalletRequestLogModelVar != null && homeProvider.directWalletRequestLogModelVar!.data !=null && homeProvider.directWalletRequestLogModelVar!.data!.isNotEmpty) ?homeProvider.directWalletRequestLogModelVar!.totalData == null ? "" :homeProvider.directWalletRequestLogModelVar!.totalData!.totalUnPaid : 0.0} دينار ', style: TextStyle(
                                             fontFamily: 'DIN Next LT W23',
                                             fontSize: widgetSize.getHeight(15, context),
                                             color: const Color(0xffffffff),

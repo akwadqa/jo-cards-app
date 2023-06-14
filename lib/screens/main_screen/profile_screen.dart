@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jocards/model/direct_wallet_request_log_model.dart';
 import 'package:jocards/model/update_profile_model.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/batch_history_screen.dart';
@@ -911,7 +912,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _signOut() async {
     await Provider.of<AppProvider>(context,listen:false).setSignOutUser();
-
+    context.read<HomeProvider>().directWalletRequestLogModelVar = DirectWalletRequestLogModel();
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
         SignInScreen(fromSetting: false,)), (Route<dynamic> route) => false);
   }
