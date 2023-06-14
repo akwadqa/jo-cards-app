@@ -21,9 +21,9 @@ class _restApi implements restApi {
   String? baseUrl;
 
   @override
-  Future<HomeModel> getHome() async {
+  Future<HomeModel> getHome(platform) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'platform': platform};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio
@@ -67,9 +67,15 @@ class _restApi implements restApi {
   }
 
   @override
-  Future<ItemCategoryModel> getItemsOfCategory(category) async {
+  Future<ItemCategoryModel> getItemsOfCategory(
+    category,
+    platform,
+  ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'category': category};
+    final queryParameters = <String, dynamic>{
+      r'category': category,
+      r'platform': platform,
+    };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio
