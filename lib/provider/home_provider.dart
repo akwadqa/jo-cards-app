@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,8 @@ class HomeProvider extends AppProvider {
 
   ApiResponse<AgentPaymentEntryResponse>? _agentPaymentEntryResponse;
 
-  ApiResponse<AgentPaymentEntryResponse>? get agentPaymentEntryResponse => _agentPaymentEntryResponse;
+  ApiResponse<AgentPaymentEntryResponse>? get agentPaymentEntryResponse =>
+      _agentPaymentEntryResponse;
 
   set agentPaymentEntryResponse(ApiResponse<AgentPaymentEntryResponse>? value) {
     _agentPaymentEntryResponse = value;
@@ -110,7 +112,8 @@ class HomeProvider extends AppProvider {
 
   ApiResponse<UpdateProfileModel>? _apiUpdateProfileResponse;
 
-  ApiResponse<UpdateProfileModel>? get apiUpdateProfileResponse => _apiUpdateProfileResponse;
+  ApiResponse<UpdateProfileModel>? get apiUpdateProfileResponse =>
+      _apiUpdateProfileResponse;
 
   set apiUpdateProfileResponse(ApiResponse<UpdateProfileModel>? value) {
     _apiUpdateProfileResponse = value;
@@ -119,7 +122,8 @@ class HomeProvider extends AppProvider {
 
   ApiResponse<UpdatePasswordModel>? _updatePasswordModel;
 
-  ApiResponse<UpdatePasswordModel>? get updatePasswordModel => _updatePasswordModel;
+  ApiResponse<UpdatePasswordModel>? get updatePasswordModel =>
+      _updatePasswordModel;
 
   set updatePasswordModel(ApiResponse<UpdatePasswordModel>? value) {
     _updatePasswordModel = value;
@@ -140,7 +144,8 @@ class HomeProvider extends AppProvider {
     if (await checkInternet()) {
       homsResponse = ApiResponse.loading("");
       try {
-        HomeModel homeModel = await mRestApi.getHome();
+        HomeModel homeModel =
+            await mRestApi.getHome(Platform.isIOS ? "ios" : "android");
         if (homeModel.homeBlock != null && homeModel.homeBlock!.isNotEmpty) {
           for (HomeBlock homeBlock in homeModel.homeBlock!) {
             if (homeBlock.type == "Categories") {
@@ -175,8 +180,8 @@ class HomeProvider extends AppProvider {
     if (await checkInternet()) {
       itemCategoryResponse = ApiResponse.loading("");
       try {
-        ItemCategoryModel itemCategoryModel =
-            await mRestApi.getItemsOfCategory(catName);
+        ItemCategoryModel itemCategoryModel = await mRestApi.getItemsOfCategory(
+            catName, Platform.isIOS ? "ios" : "android");
 
         itemCategoryResponse = ApiResponse.completed(itemCategoryModel);
       } catch (e) {
@@ -226,11 +231,14 @@ class HomeProvider extends AppProvider {
     }
     return productDetailsResponse!;
   }
-  getDirectOrder( List<DirectOrderRequest> directOrderRequest) async{
-      return await directOrder(directOrderRequest);
+
+  getDirectOrder(List<DirectOrderRequest> directOrderRequest) async {
+    return await directOrder(directOrderRequest);
   }
+
   int countOfRequest = 0;
-  ApiResponse<DirectOrderResponse> directOrderResponse2 = ApiResponse.loading("loading");
+  ApiResponse<DirectOrderResponse> directOrderResponse2 =
+      ApiResponse.loading("loading");
 
   Future<ApiResponse<DirectOrderResponse>> directOrder(
       List<DirectOrderRequest> directOrderRequest) async {
@@ -242,22 +250,22 @@ class HomeProvider extends AppProvider {
         DirectOrderResponse directOrder =
             await mRestApi.directOrder(json.encode(directOrderRequest));
 
-        if(directOrder.error == 1){
+        if (directOrder.error == 1) {
           countOfRequest = 0;
           isLoading = false;
-          if(directOrder.statusCode == 404){Fluttertoast.showToast(msg: "لايمكن تجاوز الحد الأعلى للمخزون");}
+          if (directOrder.statusCode == 404) {
+            Fluttertoast.showToast(msg: "لايمكن تجاوز الحد الأعلى للمخزون");
+          }
           directOrderResponse = ApiResponse.error(directOrder.message);
           directOrderResponse2 = directOrderResponse;
           notifyListeners();
-        }
-        else if(directOrder.error == 2 && countOfRequest<=2){
+        } else if (directOrder.error == 2 && countOfRequest <= 2) {
           isLoading = true;
           Fluttertoast.showToast(msg: "ضغط على الشبكة الرجاء الانتظار");
-          countOfRequest ++;
+          countOfRequest++;
           directOrderResponse = ApiResponse.completed(directOrder);
           return await getDirectOrder(directOrderRequest);
-        }
-        else{
+        } else {
           countOfRequest = 0;
           directOrderResponse = ApiResponse.completed(directOrder);
           directOrderResponse2 = directOrderResponse;
@@ -268,7 +276,8 @@ class HomeProvider extends AppProvider {
         if (e is DioError) {
           try {
             throwCustomException(e);
-            if(e.response!.statusCode == 500 && jsonDecode(e.response!.data)["exc_type"] == "ValidationError"){
+            if (e.response!.statusCode == 500 &&
+                jsonDecode(e.response!.data)["exc_type"] == "ValidationError") {
               Fluttertoast.showToast(msg: "الكمية غير متوفرة");
             }
           } catch (forcedException) {
@@ -299,11 +308,11 @@ class HomeProvider extends AppProvider {
         TransferShippingResponseModel transferShippingResponseModel =
             await mRestApi.requestTransferShipping(
                 units: units, customerName: customerName);
-        if(transferShippingResponseModel.statusCode != 403){
+        if (transferShippingResponseModel.statusCode != 403) {
           apiResponse = ApiResponse.completed(transferShippingResponseModel);
-        }
-        else{
-          apiResponse = ApiResponse.error(transferShippingResponseModel.message);
+        } else {
+          apiResponse =
+              ApiResponse.error(transferShippingResponseModel.message);
         }
       } catch (e) {
         isLoading = false;
@@ -323,9 +332,8 @@ class HomeProvider extends AppProvider {
     return apiResponse;
   }
 
-
   Future<ApiResponse<UploadResponseModel>> uploadReceipt(
-      String fileName,String docname,
+      String fileName, String docname,
       {String? fileData}) async {
     restApi mRestApi = restApi(Dio());
     late ApiResponse<UploadResponseModel> apiResponse;
@@ -334,9 +342,13 @@ class HomeProvider extends AppProvider {
       isLoading = true;
 
       try {
-        UploadResponseModel uploadResponseModel =
-        await mRestApi.uploadReceipt(
-           cmd: "uploadfile",doctype: "Digital Wallet Request",docname:docname,fileData: fileData,fileName: fileName,fromForm: 1);
+        UploadResponseModel uploadResponseModel = await mRestApi.uploadReceipt(
+            cmd: "uploadfile",
+            doctype: "Digital Wallet Request",
+            docname: docname,
+            fileData: fileData,
+            fileName: fileName,
+            fromForm: 1);
         apiResponse = ApiResponse.completed(uploadResponseModel);
       } catch (e) {
         isLoading = false;
@@ -355,7 +367,6 @@ class HomeProvider extends AppProvider {
     }
     return apiResponse;
   }
-
 
   ApiResponse<CategoriesModel>? _CategoriesModelrResponse;
 
@@ -377,23 +388,22 @@ class HomeProvider extends AppProvider {
   //   notifyListeners();
   // }
 
-  ApiResponse<SalesInvoiceDetails> ? _SalesInvoiceDetailsResponse;
+  ApiResponse<SalesInvoiceDetails>? _SalesInvoiceDetailsResponse;
 
-  ApiResponse<SalesInvoiceDetails> ? get salesInvoiceDetailsResponse =>
+  ApiResponse<SalesInvoiceDetails>? get salesInvoiceDetailsResponse =>
       _SalesInvoiceDetailsResponse;
 
-  set salesInvoiceDetailsResponse(ApiResponse<SalesInvoiceDetails> ? value) {
+  set salesInvoiceDetailsResponse(ApiResponse<SalesInvoiceDetails>? value) {
     _SalesInvoiceDetailsResponse = value;
     notifyListeners();
   }
 
-   Future<ApiResponse<CategoriesModel>> getAllCategories() async {
+  Future<ApiResponse<CategoriesModel>> getAllCategories() async {
     restApi mRestApi = restApi(Dio());
     if (await checkInternet()) {
       categoriesModelResponse = ApiResponse.loading("");
       try {
-        CategoriesModel categoriesModel =
-            await mRestApi.getAllCategories();
+        CategoriesModel categoriesModel = await mRestApi.getAllCategories();
 
         categoriesModelResponse = ApiResponse.completed(categoriesModel);
       } catch (e) {
@@ -410,14 +420,15 @@ class HomeProvider extends AppProvider {
       }
       isLoading = false;
     } else {
-      return categoriesModelResponse = ApiResponse.error("No Internet Connection");
+      return categoriesModelResponse =
+          ApiResponse.error("No Internet Connection");
     }
     return categoriesModelResponse!;
   }
 
-  List<String>  _items = [];
+  List<String> _items = [];
   List<String> get items => _items;
-  set setItems(List<String> value){
+  set setItems(List<String> value) {
     _items = value;
     notifyListeners();
   }
@@ -458,7 +469,8 @@ class HomeProvider extends AppProvider {
   //   return salesOrderDetailsResponse!;
   // }
 
-  Future<ApiResponse<SalesInvoiceDetails>> getPurchaseInvoiceDetails(String id) async {
+  Future<ApiResponse<SalesInvoiceDetails>> getPurchaseInvoiceDetails(
+      String id) async {
     restApi mRestApi = restApi(Dio());
     if (await checkInternet()) {
       isLoading = false;
@@ -466,14 +478,15 @@ class HomeProvider extends AppProvider {
       salesInvoiceDetailsResponse = ApiResponse.loading("");
       try {
         SalesInvoiceDetails salesInvoiceDetails =
-        await mRestApi.getSalesInvoiceDetails(id);
+            await mRestApi.getSalesInvoiceDetails(id);
 
-        if(salesInvoiceDetails.error == 1){
+        if (salesInvoiceDetails.error == 1) {
           isLoading = false;
-          salesInvoiceDetailsResponse = ApiResponse.error(salesInvoiceDetails.message);
-        }
-        else{
-          salesInvoiceDetailsResponse = ApiResponse.completed(salesInvoiceDetails);
+          salesInvoiceDetailsResponse =
+              ApiResponse.error(salesInvoiceDetails.message);
+        } else {
+          salesInvoiceDetailsResponse =
+              ApiResponse.completed(salesInvoiceDetails);
         }
       } catch (e) {
         isLoading = false;
@@ -489,7 +502,8 @@ class HomeProvider extends AppProvider {
       }
       isLoading = false;
     } else {
-      return salesInvoiceDetailsResponse = ApiResponse.error("No Internet Connection");
+      return salesInvoiceDetailsResponse =
+          ApiResponse.error("No Internet Connection");
     }
     return salesInvoiceDetailsResponse!;
   }
@@ -501,27 +515,30 @@ class HomeProvider extends AppProvider {
   PagingController<int, DirectWalletRequestLogData>? dwrLogPagingController;
   PagingController<int, GLEntries>? paymentLogPagingController;
   ShippingOrderResponseModel? _shippingOrderResponseModel;
-  ShippingOrderResponseModel? get shippingOrderResponseModelVar => _shippingOrderResponseModel;
-  set shippingOrderResponseModelVar(ShippingOrderResponseModel? value){
+  ShippingOrderResponseModel? get shippingOrderResponseModelVar =>
+      _shippingOrderResponseModel;
+  set shippingOrderResponseModelVar(ShippingOrderResponseModel? value) {
     _shippingOrderResponseModel = value;
     notifyListeners();
   }
 
   DirectWalletRequestLogModel? _directWalletRequestLogModel;
-  DirectWalletRequestLogModel? get directWalletRequestLogModelVar => _directWalletRequestLogModel;
-  set directWalletRequestLogModelVar (DirectWalletRequestLogModel? value){
+  DirectWalletRequestLogModel? get directWalletRequestLogModelVar =>
+      _directWalletRequestLogModel;
+  set directWalletRequestLogModelVar(DirectWalletRequestLogModel? value) {
     _directWalletRequestLogModel = value;
     notifyListeners();
   }
 
   PaymentData? _paymentModel;
   PaymentData? get paymentModel => _paymentModel;
-  set paymentModel (PaymentData? value){
+  set paymentModel(PaymentData? value) {
     _paymentModel = value;
     notifyListeners();
   }
 
-  Future<void> fetchShippingOrders(int pageKey, BuildContext context, String filters) async {
+  Future<void> fetchShippingOrders(
+      int pageKey, BuildContext context, String filters) async {
     try {
       restApi mRestApi = restApi(Dio());
       ShippingOrderResponseModel shippingOrderResponseModel =
@@ -530,13 +547,11 @@ class HomeProvider extends AppProvider {
         final isLastPage = shippingOrderResponseModel.data!.isEmpty;
         final List<ShippingOrdeData> list = shippingOrderResponseModel.data!;
         if (isLastPage) {
-          shippingOrdersPagingController!
-              .appendLastPage(list);
+          shippingOrdersPagingController!.appendLastPage(list);
         } else {
           _shippingOrderResponseModel = shippingOrderResponseModel;
           pageKey = pageKey + 1;
-          shippingOrdersPagingController!
-              .appendPage(list, pageKey);
+          shippingOrdersPagingController!.appendPage(list, pageKey);
         }
       }
       notifyListeners();
@@ -545,13 +560,11 @@ class HomeProvider extends AppProvider {
     }
   }
 
-
-
   Future<void> fetchSalesInvoices(int pageKey, String filters) async {
     try {
       restApi mRestApi = restApi(Dio());
       SalesInvoiceResponseModel salesInvoiceResponseModel =
-      await mRestApi.getSalesOrders(pageKey, filters);
+          await mRestApi.getSalesOrders(pageKey, filters);
 
       if (salesInvoiceResponseModel.data != null) {
         final isLastPage = salesInvoiceResponseModel.data!.isEmpty;
@@ -573,7 +586,8 @@ class HomeProvider extends AppProvider {
   Future<void> fetchPaymentRequest(int pageKey, String filters) async {
     try {
       restApi mRestApi = restApi(Dio());
-      PaymentModel paymentModel = await mRestApi.getPaymentModel(filters, pageKey);
+      PaymentModel paymentModel =
+          await mRestApi.getPaymentModel(filters, pageKey);
 
       if (paymentModel.paymentData != null) {
         final isLastPage = paymentModel.paymentData!.glEntries!.isEmpty;
@@ -582,10 +596,10 @@ class HomeProvider extends AppProvider {
               .appendLastPage(paymentModel.paymentData!.glEntries!);
         } else {
           _paymentModel = paymentModel.paymentData;
-           pageKey = pageKey + 1;
-           paymentLogPagingController!
-               .appendPage(paymentModel.paymentData!.glEntries!, pageKey);
-           notifyListeners();
+          pageKey = pageKey + 1;
+          paymentLogPagingController!
+              .appendPage(paymentModel.paymentData!.glEntries!, pageKey);
+          notifyListeners();
         }
 
         // _paymentModel ??= paymentModel.paymentData;
@@ -606,7 +620,8 @@ class HomeProvider extends AppProvider {
           appMessageDataPagingController!.appendLastPage(appMessageModel.data!);
         } else {
           pageKey = pageKey + 1;
-          appMessageDataPagingController!.appendPage(appMessageModel.data!, pageKey);
+          appMessageDataPagingController!
+              .appendPage(appMessageModel.data!, pageKey);
         }
       }
     } catch (error) {
@@ -614,12 +629,11 @@ class HomeProvider extends AppProvider {
     }
   }
 
-
   Future<void> fetchDWRLog(int pageKey, String filters) async {
     try {
       restApi mRestApi = restApi(Dio());
       DirectWalletRequestLogModel directWalletRequestLogModel =
-      await mRestApi.getDWRLog(pageKey, filters);
+          await mRestApi.getDWRLog(pageKey, filters);
 
       if (directWalletRequestLogModel.data != null) {
         final isLastPage = directWalletRequestLogModel.data!.isEmpty;
@@ -664,17 +678,19 @@ class HomeProvider extends AppProvider {
   //   }
   // }
 
-  Future<ApiResponse<AgentPaymentEntryResponse>> agentPaymentEntry(String dwr, String paidAmount) async {
+  Future<ApiResponse<AgentPaymentEntryResponse>> agentPaymentEntry(
+      String dwr, String paidAmount) async {
     restApi mRestApi = restApi(Dio());
     if (await checkInternet()) {
       isLoading = true;
       agentPaymentEntryResponse = ApiResponse.loading("");
       try {
         AgentPaymentEntryResponse response =
-        await mRestApi.agentPaymentEntry(dwr, paidAmount);
-        if(response.error == 1){
+            await mRestApi.agentPaymentEntry(dwr, paidAmount);
+        if (response.error == 1) {
           isLoading = false;
-          return agentPaymentEntryResponse = ApiResponse.error(response.message);
+          return agentPaymentEntryResponse =
+              ApiResponse.error(response.message);
         }
         agentPaymentEntryResponse = ApiResponse.completed(response);
       } catch (e) {
@@ -691,19 +707,20 @@ class HomeProvider extends AppProvider {
       }
       isLoading = false;
     } else {
-      return agentPaymentEntryResponse = ApiResponse.error("No Internet Connection");
+      return agentPaymentEntryResponse =
+          ApiResponse.error("No Internet Connection");
     }
     return agentPaymentEntryResponse!;
   }
 
-  Future<ApiResponse<ResponseModel>> dwrApproval(String dwr, String status) async {
+  Future<ApiResponse<ResponseModel>> dwrApproval(
+      String dwr, String status) async {
     restApi mRestApi = restApi(Dio());
     if (await checkInternet()) {
       isLoading = true;
       apiResponse = ApiResponse.loading("");
       try {
-        ResponseModel response =
-        await mRestApi.dwrApproval(dwr, status);
+        ResponseModel response = await mRestApi.dwrApproval(dwr, status);
         apiResponse = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
@@ -711,8 +728,7 @@ class HomeProvider extends AppProvider {
           try {
             throwCustomException(e);
           } catch (forcedException) {
-            return apiResponse =
-                ApiResponse.error(forcedException.toString());
+            return apiResponse = ApiResponse.error(forcedException.toString());
           }
         }
         return apiResponse = ApiResponse.error(e.toString());
@@ -724,14 +740,14 @@ class HomeProvider extends AppProvider {
     return apiResponse!;
   }
 
-  Future<ApiResponse<UpdateProfileModel>> updateProfile(XFile? image, String data) async{
+  Future<ApiResponse<UpdateProfileModel>> updateProfile(
+      XFile? image, String data) async {
     ExtraResitApi mRestApi = ExtraResitApi();
     if (await checkInternet()) {
       isLoading = true;
       apiUpdateProfileResponse = ApiResponse.loading("");
       try {
-        UpdateProfileModel response =
-        await mRestApi.updateProfile(image, data);
+        UpdateProfileModel response = await mRestApi.updateProfile(image, data);
         apiUpdateProfileResponse = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
@@ -747,19 +763,21 @@ class HomeProvider extends AppProvider {
       }
       isLoading = false;
     } else {
-      return apiUpdateProfileResponse = ApiResponse.error("No Internet Connection");
+      return apiUpdateProfileResponse =
+          ApiResponse.error("No Internet Connection");
     }
     return apiUpdateProfileResponse!;
   }
 
-  Future<ApiResponse<UpdatePasswordModel>> updatePassword(String oldPassword, String newPassword) async{
+  Future<ApiResponse<UpdatePasswordModel>> updatePassword(
+      String oldPassword, String newPassword) async {
     restApi mRestApi = restApi(Dio());
     if (await checkInternet()) {
       isLoading = true;
       updatePasswordModel = ApiResponse.loading("");
       try {
         UpdatePasswordModel response =
-        await mRestApi.updatePassword(oldPassword, newPassword);
+            await mRestApi.updatePassword(oldPassword, newPassword);
         updatePasswordModel = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
