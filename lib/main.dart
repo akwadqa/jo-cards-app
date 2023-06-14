@@ -23,30 +23,31 @@ late SharedPreferences sharedPreferences;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 late PackageInfo packageInfo;
-late BlueThermalPrinter bluetooth ;
-late DeviceInfoPlugin deviceInfo ;
+late BlueThermalPrinter bluetooth;
+late DeviceInfoPlugin deviceInfo;
 late AndroidDeviceInfo androidInfo;
+late IosDeviceInfo iosInfo;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- sharedPreferences = await SharedPreferences.getInstance();
+  sharedPreferences = await SharedPreferences.getInstance();
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
   deviceInfo = DeviceInfoPlugin();
-  if(Platform.isAndroid){
+  if (Platform.isAndroid) {
     androidInfo = await deviceInfo.androidInfo;
-    if(!androidInfo.model.contains("TPS")) {
+    if (!androidInfo.model.contains("TPS")) {
       bluetooth = BlueThermalPrinter.instance;
     }
-
+  } else {
+    iosInfo = await deviceInfo.iosInfo;
   }
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
   if (kDebugMode) {
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(false);
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   packageInfo = await PackageInfo.fromPlatform();
@@ -60,7 +61,7 @@ void main() async {
     ChangeNotifierProvider(
       create: (_) => SharedNavBarProvider(),
     ),
-  ], child:  const MyApp()));
+  ], child: const MyApp()));
 }
 
 final GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
@@ -76,9 +77,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder:  (BuildContext context, Widget ?child) {
+      builder: (BuildContext context, Widget? child) {
         return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0, ), //set desired text scale factor here
+          data: MediaQuery.of(context).copyWith(
+            textScaleFactor: 1.0,
+          ), //set desired text scale factor here
           child: child!,
         );
       },
@@ -106,10 +109,11 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
