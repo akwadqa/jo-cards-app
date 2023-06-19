@@ -55,7 +55,7 @@ class Data {
       company = json['company'] as String?,
       companyWhatsappNumber = json['company_whatsapp_number'] as String?,
       privacyPolicy = json['privacy_policy'] as String?,
-      walletBalance = json['wallet_balance'].toString(),
+      walletBalance = json['wallet_balance'].toStringAsFixed(4).toString(),
       payableAmount = json['payable_amount'].toString(),
       username = json['username'] as String?,
       fullName = json['full_name'] as String?,

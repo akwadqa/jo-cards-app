@@ -114,7 +114,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                 child: Container(
                                   padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
                                   height: widgetSize.getHeight(100, context),
-                                  width: MediaQuery.of(context).size.width/3.5,
+                                  width: MediaQuery.of(context).size.width/2.5,
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
@@ -124,7 +124,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       const Text("المدفوع", softWrap: true,textAlign: TextAlign.center,),
-                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "":homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid} دينار ', softWrap: true,),
+                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "":homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid.toStringAsFixed(5)} دينار ', softWrap: true,),
                                     ],
                                   ),
                                 ),
@@ -138,7 +138,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                 child: Container(
                                   padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
                                   height: widgetSize.getHeight(100, context),
-                                  width: MediaQuery.of(context).size.width/3.5,
+                                  width: MediaQuery.of(context).size.width/2.5,
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
@@ -148,38 +148,38 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       const Text("الغير مدفوع", softWrap: true, textAlign: TextAlign.center,),
-                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
+                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid.toStringAsFixed(5)} دينار ', softWrap: true,),
                                     ],
                                   ),
                                 ),
                               );
                             }
                         ),
-                        Consumer<HomeProvider>(
-                          builder: (context, homeProvider, child) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
-                              child: Container(
-                                padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
-                                height: widgetSize.getHeight(100, context),
-                                width: MediaQuery.of(context).size.width/3.5,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
-                                    Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
-
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                        )
+                        // Consumer<HomeProvider>(
+                        //   builder: (context, homeProvider, child) {
+                        //     return Padding(
+                        //       padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
+                        //       child: Container(
+                        //         padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
+                        //         height: widgetSize.getHeight(100, context),
+                        //         width: MediaQuery.of(context).size.width/3.5,
+                        //         decoration: BoxDecoration(
+                        //             color: Colors.white,
+                        //             borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
+                        //         ),
+                        //         child: Column(
+                        //           crossAxisAlignment: CrossAxisAlignment.center,
+                        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //           children: [
+                        //             const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
+                        //             Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
+                        //
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     );
+                        //   }
+                        // )
                       ]
                   ),
                 ),
@@ -774,7 +774,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                           children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
-                            fontSize: 16,
+                            fontSize: 15,
                             color:  Color(0xffffffff),
                             fontWeight: FontWeight.w400,
                           ), softWrap: true,),
@@ -785,7 +785,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                             context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
                             style: const TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: 16,
+                              fontSize: 15,
                               color:  Color(0xffffffff),
                               fontWeight: FontWeight.w400,
                             ),

@@ -225,7 +225,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                               height: widgetSize.getHeight(
                                                   25, context),
                                             ),
-                                            if(userModel!.customerType == "Agent") SafeOnTap(
+                                            SafeOnTap(
                                               onSafeTap: () async {
                                                 context
                                                     .read<HomeProvider>()
@@ -993,7 +993,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                           children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
-                            fontSize: 16,
+                            fontSize: 15,
                             color:  Color(0xffffffff),
                             fontWeight: FontWeight.w400,
                           ), softWrap: false,),
@@ -1004,7 +1004,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                             context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
                             style: const TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: 16,
+                              fontSize: 15,
                               color:  Color(0xffffffff),
                               fontWeight: FontWeight.w400,
                             ),

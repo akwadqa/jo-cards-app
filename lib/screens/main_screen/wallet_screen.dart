@@ -104,7 +104,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
+                              SizedBox(width: widgetSize.getWidth(15, context)),
                             ],),
                             const Spacer(),
                             Align(
@@ -1030,7 +1031,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ],
                                 Row(children: [
                                   Text(
-                                    'قيمة الخصم',
+                                    'المبلغ',
                                     style: TextStyle(
                                       fontFamily: 'DIN Next LT W23',
                                       fontSize: widgetSize.getHeight(15, context),

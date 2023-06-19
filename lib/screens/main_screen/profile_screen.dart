@@ -616,7 +616,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       children: [
                         Row(children: [
-                          const Icon(Icons.notifications_active_outlined),
+                          SvgPicture.asset(Assets.alarmAsSvg),
                           SizedBox(width: widgetSize.getWidth(10, context),),
                           Text(
                             "الإشعارات",

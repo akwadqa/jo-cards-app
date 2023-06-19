@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TransferCheckBox extends StatefulWidget {
-  const TransferCheckBox({Key? key, required this.onChanged, required this.isTransfer}) : super(key: key);
+  const TransferCheckBox({Key? key, required this.onChanged, required this.isTransfer, required this.reedOnly}) : super(key: key);
   final void Function(bool value) onChanged;
   final bool isTransfer;
-
+  final bool reedOnly;
   @override
   State<TransferCheckBox> createState() => _TransferCheckBoxState();
 }
@@ -22,13 +22,15 @@ class _TransferCheckBoxState extends State<TransferCheckBox> {
   @override
   Widget build(BuildContext context) {
     return Checkbox(value: _isTransfer, onChanged: (value) {
-      if(value != null) {
-        setState(() {
-          _isTransfer = value;
-        });
-        widget.onChanged(_isTransfer);
-      }
-    },
+      if(!widget.reedOnly) {
+          if (value != null) {
+            setState(() {
+              _isTransfer = value;
+            });
+            widget.onChanged(_isTransfer);
+          }
+        }
+      },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
     );
   }

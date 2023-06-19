@@ -253,6 +253,8 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                                                   child: Text(
                                                     items[childIndex]
                                                         .productTitle!,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 2,
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontSize:

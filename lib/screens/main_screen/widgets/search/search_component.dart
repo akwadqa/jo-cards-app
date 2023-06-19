@@ -80,7 +80,7 @@ class SearchComponent extends StatelessWidget {
                                  if((searchType == SearchType.walletRequests || searchType == SearchType.customersRequests) && userModel.customerType == "Agent")
                                   Expanded(flex : 3, child: Row(
                                     children: [
-                                      TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer: searchType == SearchType.customersRequests ? true :false),
+                                      TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer: searchType == SearchType.customersRequests ? true :false, reedOnly: true,),
                                       const Text("تحويل"),
                                     ],
                                   ),),
@@ -160,7 +160,7 @@ class SearchComponent extends StatelessWidget {
                         TitledList(
                             title: 'حالة الدفع',
                             child: _ChipsRow(
-                              titles: const ['مدفوع', 'غير مدفوع', 'ملغي'],
+                              titles: const ['مدفوع', 'غير مدفوع', 'مدفوع جزئياً', 'ملغي'],
                               onItemSelected: (String? item) => paymentStatus = item,
                             )
                         ),
@@ -184,7 +184,7 @@ class SearchComponent extends StatelessWidget {
                                   onItemSelected: (String? item) => transactionType = item,
                                 ),
                                 SizedBox(width: widgetSize.getWidth(20, context)),
-                                if(userModel.customerType == "Agent")...[TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer : false),
+                                if(userModel.customerType == "Agent")...[TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer : false, reedOnly: false,),
                                 const Text('تحويل', style: TextStyle(fontWeight: FontWeight.w500)),]
                                ],
                             )
@@ -342,6 +342,8 @@ class SearchComponent extends StatelessWidget {
         return "Unpaid";
       case 'ملغي':
         return 'Draft';
+      case 'مدفوع جزئياً':
+        return "Partially Paid";
       default:
         return '';
     }

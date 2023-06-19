@@ -59,16 +59,16 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                       key: _key,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                        const Text(
-                        'تحويل مبلغ لمستخدم آخر',
-                        style: TextStyle(
-                          fontFamily: 'DIN Next LT W23',
-                          fontSize: 16,
-                          color: Color(0xff2e2e2e),
-                          fontWeight: FontWeight.w700,
-                        ),
-                        softWrap: false,
-                      ),
+                      //   const Text(
+                      //   'تحويل مبلغ لمستخدم آخر',
+                      //   style: TextStyle(
+                      //     fontFamily: 'DIN Next LT W23',
+                      //     fontSize: 16,
+                      //     color: Color(0xff2e2e2e),
+                      //     fontWeight: FontWeight.w700,
+                      //   ),
+                      //   softWrap: false,
+                      // ),
                           SizedBox(height: widgetSize.getHeight(15, context)),
                           SafeOnTap(onSafeTap: ()async {
                           await  showAgentCustomersName(context);
@@ -414,7 +414,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                           children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
-                            fontSize: 16,
+                            fontSize: 15,
                             color:  Color(0xffffffff),
                             fontWeight: FontWeight.w400,
                           ), softWrap: false,),
@@ -425,7 +425,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                             context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
                             style: const TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: 16,
+                              fontSize: 15,
                               color:  Color(0xffffffff),
                               fontWeight: FontWeight.w400,
                             ),

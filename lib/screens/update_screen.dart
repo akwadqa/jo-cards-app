@@ -19,7 +19,7 @@ class UpdateScreen extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(Assets.svgLogoSvg, height: 300, color: ColorResources.studio),
+            Center(child: SvgPicture.asset(Assets.svgLogoSvg, height: 300, color: ColorResources.studio)),
             Text('وقت التحديث!', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: ColorResources.studio)),
             const SizedBox(height: 20),
             Text('نسخة جديدة: ${Platform.isAndroid ? appVersionModel.androidApiVersion : appVersionModel.iosApiVersion}', style: Theme.of(context).textTheme.titleLarge),

@@ -61,13 +61,13 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                       children: [
                         Consumer<HomeProvider>(
                             builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "الصندوق", homeProvider.paymentModel!.agentPayable != null ? "${homeProvider.paymentModel!.agentPayable}  دينار" : ""));
+                            return Expanded(child: buildBox(context, "الصندوق", homeProvider.paymentModel!.agentPayable != null ? "${homeProvider.paymentModel!.agentPayable!.toStringAsFixed(5)}  دينار" : ""));
                           }
                         ),
                         SizedBox(width: widgetSize.getWidth(20, context)),
                         Consumer <HomeProvider>(
                             builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "الدفعات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentCustomerPayment)}  دينار" : ""));
+                            return Expanded(child: buildBox(context, "التسويات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment).toStringAsFixed(5)}  دينار" : ""));
                           }
                         ),
                       ],
@@ -396,7 +396,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                           children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
-                            fontSize: 16,
+                            fontSize: 15,
                             color:  Color(0xffffffff),
                             fontWeight: FontWeight.w400,
                           ), softWrap: false,),
@@ -407,7 +407,7 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                             context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
                             style: const TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: 16,
+                              fontSize: 15,
                               color:  Color(0xffffffff),
                               fontWeight: FontWeight.w400,
                             ),

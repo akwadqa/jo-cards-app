@@ -717,7 +717,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                           children: [
                           const Text("JD ", style: TextStyle(
                             fontFamily: 'DIN Next LT W23',
-                            fontSize: 16,
+                            fontSize: 15,
                             color:  Color(0xffffffff),
                             fontWeight: FontWeight.w400,
                           ), softWrap: false,),
@@ -728,7 +728,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
                             context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
                             style: const TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: 16,
+                              fontSize: 15,
                               color:  Color(0xffffffff),
                               fontWeight: FontWeight.w400,
                             ),

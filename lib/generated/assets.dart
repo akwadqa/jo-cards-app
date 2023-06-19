@@ -65,5 +65,6 @@ class Assets {
   static const String folder = 'assets/img/Folder.png';
   static const String notification = 'assets/img/notification.png';
   static const String alarm = 'assets/img/alarm.png';
+  static const String alarmAsSvg = 'assets/svg/alarm.svg';
 
 }
