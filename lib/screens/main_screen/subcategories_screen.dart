@@ -262,8 +262,8 @@ class _SubCategroiesScreenState extends State<SubCategroiesScreen> {
                                                       crossAxisSpacing: 4.0,
                                                       mainAxisSpacing: 4.0),
                                               shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
+                                              // physics:
+                                              //     const NeverScrollableScrollPhysics(),
                                               itemCount:
                                                   item.subCategories!.length,
                                               itemBuilder:
