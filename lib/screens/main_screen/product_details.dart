@@ -75,6 +75,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     }
                   }
                 }
+              context.read<AppProvider>().getUtilities();
             },
             child: Consumer<HomeProvider>(builder: (context, homeProvider, child) {
               if (homeProvider.productDetailsResponse != null) {
@@ -1812,10 +1813,42 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                   ),
                   softWrap: false,
                 ),
-                const Spacer(),
-                const SizedBox(
-                  width: 30,
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text("JD ", style: TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 15,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ), softWrap: false,),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color:  Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                          ],),
+                      ),),
+                  ),
                 )
+
               ],
             ),
           ),

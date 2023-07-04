@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jocards/generated/assets.dart';
+import 'package:jocards/provider/app_provider.dart';
 import 'package:jocards/provider/home_provider.dart';
 import 'package:jocards/screens/main_screen/product_details.dart';
 import 'package:jocards/screens/main_screen/shared_bottom_nav_bar.dart';
@@ -41,6 +42,7 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
         body: RefreshIndicator(
           onRefresh: () async {
             context.read<HomeProvider>().getItemPerCat(widget.catName);
+            context.read<AppProvider>().getUtilities();
           },
           child: Padding(
             padding:  EdgeInsets.symmetric(horizontal: widgetSize.getWidth(16, context),
@@ -480,8 +482,41 @@ class _ItemPerCategoriesState extends State<ItemPerCategories> {
                   ),
                   softWrap: false,
                 ),
-                const Spacer(),
-                const SizedBox(width: 30,)
+                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap( onSafeTap: ()async {},
+                      child: SizedBox(
+                        width: widgetSize.getWidth(100, context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text("JD ", style: TextStyle(
+                              fontFamily: 'DIN Next LT W23',
+                              fontSize: 15,
+                              color:  Color(0xffffffff),
+                              fontWeight: FontWeight.w400,
+                            ), softWrap: false,),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
+                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color:  Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
+                          ],),
+                      ),),
+                  ),
+                )
 
               ],
             ),
