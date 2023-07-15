@@ -60,6 +60,14 @@ class DirectOrderResponse {
     'invoice_id' : invoiceId,
     'order_items' : orderItems?.map((e) => e.toJson()).toList()
   };
+
+  @override
+  toString(){
+    return """DirectOrderResponse (message: $message, error: $error, statusCode: $statusCode, date: $date, postingTime:$postingTime,
+              status: $status, salesOrderStatus: $salesOrderStatus, extraCharges: $extraCharges, grandTotal: $grandTotal,
+              owner: $owner, currency: $currency, invoiceId: $invoiceId, orderItems: $orderItems, excType: $excType, serverMessages: $serverMessages"
+  )""";
+  }
 }
 
 class OrderItems {
@@ -99,6 +107,13 @@ class OrderItems {
     'total_amount' : totalAmount,
     'stock_details' : stockDetails?.map((e) => e.toJson()).toList()
   };
+
+  @override
+  toString(){
+    return """OrderItems(websiteItemNameL $websiteItemName, websiteItemCode: $websiteItemCode, quantity: $quantity, 
+            itemImage: $itemImage,  backgroundColor: $backgroundColor, totalAmount: $totalAmount, 
+            stockDetails: $stockDetails""";
+  }
 }
 
 class StockDetails {
@@ -122,4 +137,8 @@ class StockDetails {
     'serial_no' : serialNo,
     'ref_no' : refNo
   };
+  @override
+  toString(){
+    return """StockDetails (secretCode:$secretCode, serialNo: $serialNo , refNo: $refNo)""";
+  }
 }

@@ -139,7 +139,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               maxLines: 1,
               borderRaduis: 10,
               keyboardType: TextInputType.name,
-
+              enabled: false,
               hint: "الاسم الأول",
               validate: Validations().filedRequired,
             ),
@@ -150,7 +150,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               maxLines: 1,
               borderRaduis: 10,
               keyboardType: TextInputType.name,
-
+              enabled: false,
               hint: "الاسم الأخير",
               validate: Validations().filedRequired,
             ),
@@ -172,7 +172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               maxLines: 1,
               borderRaduis: 10,
               keyboardType: TextInputType.phone,
-
+              enabled: false,
               hint: "الهاتف",
               validate: Validations().filedRequired,
             ),
@@ -183,7 +183,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               maxLines: 1,
               borderRaduis: 10,
               keyboardType: TextInputType.name,
-
+                enabled: false,
               hint: "اسم المندوب",
               validate: Validations().filedRequired,
             ),

@@ -389,103 +389,113 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                 ),
                                                                                 softWrap: false,
                                                                               ),
-                                                                              if(items.itemsDetail?.first.serialNumber != null && items.itemsDetail!.first.serialNumber!.isNotEmpty) ...[
-                                                                                SizedBox(
-                                                                                  height: widgetSize.getHeight(10, context),
-                                                                                ),
-                                                                                Text(
-                                                                                  "الرقم التسلسلي:",
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(16, context),
-                                                                                    color: const Color(0xff2e2e2e),
-                                                                                  ),
-                                                                                  softWrap: false,
-                                                                                ),
-                                                                                Text(
-                                                                                  items.itemsDetail!.first.serialNumber!.first.serialNo!,
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(20, context),
-                                                                                    color: const Color(0xffec7e7e),
-                                                                                  ),
-                                                                                  softWrap: false,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  height: widgetSize.getHeight(10, context),
-                                                                                ),
-                                                                                Text(
-                                                                                  "رقم المرجع:",
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(16, context),
-                                                                                    color: const Color(0xff2e2e2e),
-                                                                                  ),
-                                                                                  softWrap: false,
-                                                                                ),
-                                                                                Text(
-                                                                                  items.itemsDetail!.first.serialNumber!.first.refNo!,
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(20, context),
-                                                                                    color: const Color(0xffec7e7e),
-                                                                                  ),
-                                                                                  softWrap: false,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  height: widgetSize.getHeight(10, context),
-                                                                                ),
-                                                                                Text(
-                                                                                  "الرقم السري:",
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(16, context),
-                                                                                    color: const Color(0xff2e2e2e),
-                                                                                  ),
-                                                                                  softWrap: false,
-                                                                                ),
-                                                                                Row(
-                                                                                  mainAxisAlignment:
-                                                                                  MainAxisAlignment.center,
-                                                                                  children: [
-                                                                                    const Spacer(),
-                                                                                    Expanded(
-                                                                                      flex: 6,
-                                                                                      child: Center(
-                                                                                        child: Text(
-                                                                                          items.itemsDetail!.first.serialNumber!.first.secretCode!,
-                                                                                          style: const TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: 23,
-                                                                                            color:
-                                                                                            Color(0xffec7e7e),
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                          ),
-                                                                                          textAlign: TextAlign.right,
-                                                                                          softWrap: true,
-                                                                                          maxLines: 2,
+                                                                              if(items.itemsDetail?.first.serialNumber != null && items.itemsDetail!.first.serialNumber!.isNotEmpty) ListView(
+                                                                                  physics: const NeverScrollableScrollPhysics(),
+                                                                                  shrinkWrap: true,
+                                                                                  children: items.itemsDetail![0].serialNumber!.map<Widget>((data)=> Align(
+                                                                                    alignment: Alignment.center,
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        SizedBox(
+                                                                                          height: widgetSize.getHeight(10, context),
                                                                                         ),
-                                                                                      ),
+                                                                                        Text(
+                                                                                          "الرقم التسلسلي:",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'DIN Next LT W23',
+                                                                                            fontSize: widgetSize.getHeight(16, context),
+                                                                                            color: const Color(0xff2e2e2e),
+                                                                                          ),
+                                                                                          softWrap: false,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          data.serialNo!,
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'DIN Next LT W23',
+                                                                                            fontSize: widgetSize.getHeight(20, context),
+                                                                                            color: const Color(0xffec7e7e),
+                                                                                          ),
+                                                                                          softWrap: false,
+                                                                                        ),
+                                                                                        SizedBox(
+                                                                                          height: widgetSize.getHeight(10, context),
+                                                                                        ),
+                                                                                        Text(
+                                                                                          "رقم المرجع:",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'DIN Next LT W23',
+                                                                                            fontSize: widgetSize.getHeight(16, context),
+                                                                                            color: const Color(0xff2e2e2e),
+                                                                                          ),
+                                                                                          softWrap: false,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          data.refNo!,
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'DIN Next LT W23',
+                                                                                            fontSize: widgetSize.getHeight(20, context),
+                                                                                            color: const Color(0xffec7e7e),
+                                                                                          ),
+                                                                                          softWrap: false,
+                                                                                        ),
+                                                                                        SizedBox(
+                                                                                          height: widgetSize.getHeight(10, context),
+                                                                                        ),
+                                                                                        Text(
+                                                                                          "الرقم السري:",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'DIN Next LT W23',
+                                                                                            fontSize: widgetSize.getHeight(16, context),
+                                                                                            color: const Color(0xff2e2e2e),
+                                                                                          ),
+                                                                                          softWrap: false,
+                                                                                        ),
+                                                                                        Row(
+                                                                                          mainAxisAlignment:
+                                                                                          MainAxisAlignment.center,
+                                                                                          children: [
+                                                                                            const Spacer(),
+                                                                                            Expanded(
+                                                                                              flex: 6,
+                                                                                              child: Center(
+                                                                                                child: Text(
+                                                                                                  data.secretCode!,
+                                                                                                  style: const TextStyle(
+                                                                                                    fontFamily: 'DIN Next LT W23',
+                                                                                                    fontSize: 23,
+                                                                                                    color:
+                                                                                                    Color(0xffec7e7e),
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                  ),
+                                                                                                  textAlign: TextAlign.right,
+                                                                                                  softWrap: true,
+                                                                                                  maxLines: 2,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                            Expanded(
+                                                                                              child: SafeOnTap(
+                                                                                                  onSafeTap: () async {
+                                                                                                    await Clipboard.setData(
+                                                                                                        ClipboardData(
+                                                                                                            text: data.secretCode!));
+                                                                                                    var snackBar = const SnackBar(
+                                                                                                        content:
+                                                                                                        Text("تم النسخ"));
+                                                                                                    ScaffoldMessenger.of(
+                                                                                                        context)
+                                                                                                        .showSnackBar(snackBar);
+                                                                                                  },
+                                                                                                  child: SvgPicture.asset(
+                                                                                                      Assets.svgCopy)),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                        Divider(),
+                                                                                      ],
                                                                                     ),
-                                                                                    Expanded(
-                                                                                      child: SafeOnTap(
-                                                                                          onSafeTap: () async {
-                                                                                            await Clipboard.setData(
-                                                                                                ClipboardData(
-                                                                                                    text: items.itemsDetail!.first.serialNumber!.first.secretCode!));
-                                                                                            var snackBar = const SnackBar(
-                                                                                                content:
-                                                                                                Text("تم النسخ"));
-                                                                                            ScaffoldMessenger.of(
-                                                                                                context)
-                                                                                                .showSnackBar(snackBar);
-                                                                                          },
-                                                                                          child: SvgPicture.asset(
-                                                                                              Assets.svgCopy)),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ],
+                                                                                  )).toList()),
+
                                                                               SizedBox(
                                                                                 height: widgetSize.getHeight(10, context),
                                                                               ),

@@ -340,10 +340,10 @@ class SearchComponent extends StatelessWidget {
         return 'Paid';
       case "غير مدفوع":
         return "Unpaid";
-      case 'ملغي':
-        return 'Draft';
       case 'مدفوع جزئياً':
         return "Partially Paid";
+      case 'ملغي':
+        return 'Draft';
       default:
         return '';
     }
@@ -355,6 +355,8 @@ class SearchComponent extends StatelessWidget {
         return 'Paid';
       case 'غير مدفوع':
         return 'Unpaid';
+      case 'مدفوع جزئياً':
+        return "Partially Paid";
       default:
         return 'Draft';
     }
