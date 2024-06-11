@@ -44,57 +44,62 @@ class AppProvider with ChangeNotifier {
   setSignInUser(bool isSignIn, String? userInfo, String token) async {
     await sharedPreferences.setBool(Strings.IS_USER_SIGNED_IN, isSignIn);
     await sharedPreferences.setString(Strings.Token, token);
-    if(userInfo!=null) {
+    if (userInfo != null) {
       await sharedPreferences.setString(Strings.USER_INFO, userInfo);
     }
   }
-  setOldPassword(String password) async{
+
+  setOldPassword(String password) async {
     await sharedPreferences.setString(Strings.OLD_PASSWORD, password);
   }
 
-  setAgreeNotification(bool isAgreeNotification) async{
-    await sharedPreferences.setBool(Strings.IS_USER_AGREE_NOTI, isAgreeNotification);
+  setAgreeNotification(bool isAgreeNotification) async {
+    await sharedPreferences.setBool(
+        Strings.IS_USER_AGREE_NOTI, isAgreeNotification);
   }
 
-  setFirebaseToken(String firebaseToken) async{
+  setFirebaseToken(String firebaseToken) async {
     await sharedPreferences.setString(Strings.FIREBASE_TOKEN, firebaseToken);
   }
 
-  saveBluetoothDevice(String bluetoothDevice)async {
+  saveBluetoothDevice(String bluetoothDevice) async {
     await sharedPreferences.setString(Strings.BluetoothDevice, bluetoothDevice);
   }
 
-  BluetoothDevice? getBluetoothDevice()  {
-    String ?bluetoothDevice =   sharedPreferences.getString(Strings.BluetoothDevice );
+  BluetoothDevice? getBluetoothDevice() {
+    String? bluetoothDevice =
+        sharedPreferences.getString(Strings.BluetoothDevice);
 
-    if(bluetoothDevice!=null){
-      BluetoothDevice bluetoothDeviceModel= BluetoothDevice.fromMap(json.decode(bluetoothDevice)) ;
+    if (bluetoothDevice != null) {
+      BluetoothDevice bluetoothDeviceModel =
+          BluetoothDevice.fromMap(json.decode(bluetoothDevice));
 
       return bluetoothDeviceModel;
-    }
-    else{
+    } else {
       return null;
-    }}
+    }
+  }
 
-  enableDisablePrintAfterDirectOrder(bool enable)async{
+  enableDisablePrintAfterDirectOrder(bool enable) async {
     await sharedPreferences.setBool(Strings.EnablePrintAuto, enable);
   }
 
-  getEnablePrintAuto(){
-    if(sharedPreferences.getBool(Strings.EnablePrintAuto )==null) {
+  getEnablePrintAuto() {
+    if (sharedPreferences.getBool(Strings.EnablePrintAuto) == null) {
       return false;
     }
-    return sharedPreferences.getBool(Strings.EnablePrintAuto );
+    return sharedPreferences.getBool(Strings.EnablePrintAuto);
   }
 
-  enableMerchantNamePrint(bool enable)async{
+  enableMerchantNamePrint(bool enable) async {
     await sharedPreferences.setBool(Strings.EnableMerchantNamePrint, enable);
   }
-  getEnableMerchantNamePrint(){
-    if(sharedPreferences.getBool(Strings.EnableMerchantNamePrint )==null) {
+
+  getEnableMerchantNamePrint() {
+    if (sharedPreferences.getBool(Strings.EnableMerchantNamePrint) == null) {
       return false;
     }
-    return sharedPreferences.getBool(Strings.EnableMerchantNamePrint );
+    return sharedPreferences.getBool(Strings.EnableMerchantNamePrint);
   }
 
   setSignOutUser() async {
@@ -103,25 +108,25 @@ class AppProvider with ChangeNotifier {
     await sharedPreferences.remove(Strings.Token);
   }
 
-  LoginResponseModel? getUserInfo()  {
-    String ?userInfo =   sharedPreferences.getString(Strings.USER_INFO );
-    if(userInfo!=null){
-      LoginResponseModel signInModel= LoginResponseModel.fromJson(json.decode(userInfo));
+  LoginResponseModel? getUserInfo() {
+    String? userInfo = sharedPreferences.getString(Strings.USER_INFO);
+    if (userInfo != null) {
+      LoginResponseModel signInModel =
+          LoginResponseModel.fromJson(json.decode(userInfo));
 
       return signInModel;
-    }
-    else{
+    } else {
       return null;
     }
-
   }
+
   Future<bool> isUserSigned() async {
     if (sharedPreferences.getBool(Strings.IS_USER_SIGNED_IN) == null) {
       return false;
     }
     return sharedPreferences.getBool(Strings.IS_USER_SIGNED_IN)!;
   }
-  
+
   Future<String> getOldPassword() async {
     if (sharedPreferences.getString(Strings.OLD_PASSWORD) == null) {
       return "";
@@ -136,8 +141,8 @@ class AppProvider with ChangeNotifier {
     return sharedPreferences.getBool(Strings.IS_USER_AGREE_NOTI)!;
   }
 
-  Future<String> getFirebaseToken() async{
-    if(sharedPreferences.getString(Strings.FIREBASE_TOKEN) == null){
+  Future<String> getFirebaseToken() async {
+    if (sharedPreferences.getString(Strings.FIREBASE_TOKEN) == null) {
       return "";
     }
     return sharedPreferences.getString(Strings.FIREBASE_TOKEN)!;
@@ -165,7 +170,7 @@ class AppProvider with ChangeNotifier {
       territoriesModel = await mRestApi.getTerritories();
     } catch (e) {
       isLoading = false;
-      if (e is DioError) {
+      if (e is DioException) {
         try {
           throwCustomException(e);
         } catch (forcedException) {
@@ -178,13 +183,15 @@ class AppProvider with ChangeNotifier {
 
     return territoriesModel;
   }
+
   UtilitiesModel? _UtilitiesModel;
 
   UtilitiesModel? get utilitiesModel => _UtilitiesModel;
 
   set utilitiesModel(UtilitiesModel? value) {
     _UtilitiesModel = value;
-    notifyListeners();}
+    notifyListeners();
+  }
 
   AppVersionModel? _appVersionModel;
 
@@ -201,7 +208,7 @@ class AppProvider with ChangeNotifier {
       utilitiesModel = await mRestApi.getUtilities();
     } catch (e) {
       isLoading = false;
-      if (e is DioError) {
+      if (e is DioException) {
         try {
           throwCustomException(e);
         } catch (forcedException) {
@@ -221,7 +228,7 @@ class AppProvider with ChangeNotifier {
       appVersionModel = await mRestApi.getAppVersion();
     } catch (e) {
       isLoading = false;
-      if (e is DioError) {
+      if (e is DioException) {
         try {
           throwCustomException(e);
         } catch (forcedException) {
@@ -235,21 +242,22 @@ class AppProvider with ChangeNotifier {
     return appVersionModel;
   }
 
-
   AgentModel? _AgentModel;
 
   AgentModel? get agentModel => _AgentModel;
 
   set agentModel(AgentModel? value) {
     _AgentModel = value;
-    notifyListeners();}
+    notifyListeners();
+  }
+
   Future<AgentModel?> getAgentCustomers() async {
     restApi mRestApi = restApi(Dio());
     try {
       agentModel = await mRestApi.getAgentCustomers();
     } catch (e) {
       isLoading = false;
-      if (e is DioError) {
+      if (e is DioException) {
         try {
           throwCustomException(e);
         } catch (forcedException) {
@@ -263,22 +271,21 @@ class AppProvider with ChangeNotifier {
     return agentModel;
   }
 
-
-    Future<ApiResponse<LoginResponseModel>> signUp(
-        String registerRequestModel) async {
+  Future<ApiResponse<LoginResponseModel>> signUp(
+      String registerRequestModel) async {
     restApi mRestApi = restApi(Dio());
     late ApiResponse<LoginResponseModel> apiResponse;
 
-    if(await checkInternet()) {
+    if (await checkInternet()) {
       isLoading = true;
 
       try {
-
-        LoginResponseModel registerResponseModel = await mRestApi.signUp( registerRequestModel);
-        apiResponse=ApiResponse.completed(registerResponseModel);
+        LoginResponseModel registerResponseModel =
+            await mRestApi.signUp(registerRequestModel);
+        apiResponse = ApiResponse.completed(registerResponseModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -288,34 +295,33 @@ class AppProvider with ChangeNotifier {
         return apiResponse = ApiResponse.error(e.toString());
       }
       isLoading = false;
-    }
-    else{
+    } else {
       return apiResponse = ApiResponse.error("No Internet Connection");
     }
     return apiResponse;
   }
-
 
   Future<ApiResponse<LoginResponseModel>> signIn(
       String email, String password) async {
     restApi mRestApi = restApi(Dio());
     late ApiResponse<LoginResponseModel> apiResponse;
 
-    if(await checkInternet()) {
+    if (await checkInternet()) {
       isLoading = true;
 
       try {
-
-        LoginResponseModel loginResponseModel = await mRestApi.signIn(email, password);
-        if(loginResponseModel.message=='User disabled or missing'){
-          apiResponse = ApiResponse<LoginResponseModel>.error(loginResponseModel.message);
-        }
-        else{
-          apiResponse = ApiResponse<LoginResponseModel>.completed(loginResponseModel);
+        LoginResponseModel loginResponseModel =
+            await mRestApi.signIn(email, password);
+        if (loginResponseModel.message == 'User disabled or missing') {
+          apiResponse =
+              ApiResponse<LoginResponseModel>.error(loginResponseModel.message);
+        } else {
+          apiResponse =
+              ApiResponse<LoginResponseModel>.completed(loginResponseModel);
         }
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -325,8 +331,7 @@ class AppProvider with ChangeNotifier {
         return apiResponse = ApiResponse.error(e.toString());
       }
       isLoading = false;
-    }
-    else{
+    } else {
       return apiResponse = ApiResponse.error("No Internet Connection");
     }
     return apiResponse;
@@ -336,22 +341,19 @@ class AppProvider with ChangeNotifier {
     ExtraResitApi extraResitApi = ExtraResitApi();
     late ApiResponse<ResponseModel> apiResponse;
 
-    if(await checkInternet()) {
+    if (await checkInternet()) {
       isLoading = true;
 
       try {
-
         ResponseModel responseModel = await extraResitApi.resetPassword(email);
-        if(responseModel.statusCode == 200){
+        if (responseModel.statusCode == 200) {
           apiResponse = ApiResponse<ResponseModel>.completed(responseModel);
-        }
-        else{
+        } else {
           apiResponse = ApiResponse<ResponseModel>.error(responseModel.message);
         }
-
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -361,27 +363,27 @@ class AppProvider with ChangeNotifier {
         return apiResponse = ApiResponse.error(e.toString());
       }
       isLoading = false;
-    }
-    else{
+    } else {
       return apiResponse = ApiResponse.error("No Internet Connection");
     }
     return apiResponse;
   }
 
-  Future<ApiResponse<UpdateTokenModel>> sendUpdateToken (String token, String userId, String userDeviceType, String userDeviceName) async{
+  Future<ApiResponse<UpdateTokenModel>> sendUpdateToken(String token,
+      String userId, String userDeviceType, String userDeviceName) async {
     restApi mRestApi = restApi(Dio());
     late ApiResponse<UpdateTokenModel> apiResponse;
 
-    if(await checkInternet()) {
+    if (await checkInternet()) {
       isLoading = true;
 
       try {
-
-        UpdateTokenModel updateTokenModel = await mRestApi.updateToken(token, userId, userDeviceType, userDeviceName);
+        UpdateTokenModel updateTokenModel = await mRestApi.updateToken(
+            token, userId, userDeviceType, userDeviceName);
         apiResponse = ApiResponse<UpdateTokenModel>.completed(updateTokenModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -391,52 +393,37 @@ class AppProvider with ChangeNotifier {
         return apiResponse = ApiResponse.error(e.toString());
       }
       isLoading = false;
-    }
-    else{
+    } else {
       return apiResponse = ApiResponse.error("No Internet Connection");
     }
     return apiResponse;
   }
 }
 
-dynamic throwCustomException(DioError? dioError) {
+dynamic throwCustomException(DioException? dioError) {
   var response = dioError?.response?.data;
   var statusCode = dioError?.response?.statusCode;
   switch (dioError!.type) {
-    case DioErrorType.cancel:
+    case DioExceptionType.cancel:
       throw RequestWasCancelledException("CANCEL");
       break;
-    case DioErrorType.connectTimeout:
+    case DioExceptionType.connectionTimeout:
       throw ConnectionTimeout("CONNECT_TIMEOUT");
       break;
-    case DioErrorType.other:
+    case DioExceptionType.unknown:
       throw DefaultTimeout("DEFAULT");
       break;
-    case DioErrorType.receiveTimeout:
+    case DioExceptionType.receiveTimeout:
       throw ReceiveTimeout("RECEIVE_TIMEOUT");
       break;
-    case DioErrorType.sendTimeout:
+    case DioExceptionType.sendTimeout:
       throw SendTimeout("SEND_TIMEOUT");
       break;
-    case DioErrorType.response:
-      switch (statusCode) {
-        case 400:
-          throw BadRequestException(dioError.response?.data["error"]);
-          break;
-        case 401:
-        case 403:
-          throw UnauthorisedException(dioError.response?.data["message"]);
-          break;
-        case 404:
-          throw FetchDataException(
-              'Error while Communication with Server with StatusCode : ${dioError.response?.statusMessage}');
-          break;
-        case 500:
-
-        default:
-          throw FetchDataException(
-              'Error while Communication with Server with StatusCode : ${dioError.response?.statusMessage}');
-      }
+    case DioExceptionType.badResponse:
+      throw BadRequestException(dioError.response?.data["error"]);
       break;
+    default:
+      throw FetchDataException('Error occurred while Communication with Server '
+          'with StatusCode : $statusCode');
   }
 }

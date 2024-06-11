@@ -39,14 +39,14 @@ import '../utill/utitlities.dart';
 part 'resit_api.g.dart';
 
 // @RestApi(baseUrl: "https://app.jocards.com/api/")
-// @RestApi(baseUrl: "https://jocards.akwad.qa/api/")
-@RestApi(baseUrl: "https://www.jocards.com/api/")
+@RestApi(baseUrl: "https://jocards.akwad.qa/api/")
+// @RestApi(baseUrl: "https://www.jocards.com/api/")
 abstract class restApi {
   factory restApi(Dio dio, {BuildContext? context, String? baseUrl}) {
     dio.interceptors.add(InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-      options.connectTimeout = 60000;
-      options.receiveTimeout = 60000;
+      options.connectTimeout = const Duration(milliseconds: 60000);
+      options.receiveTimeout = const Duration(milliseconds: 60000);
       var customHeaders = {
         'content-type': 'application/json',
         if (sharedPreferences.getString(Strings.Token) != null)
@@ -78,7 +78,7 @@ abstract class restApi {
         }
       }
       return handler.next(response);
-    }, onError: (DioError error, ErrorInterceptorHandler handler) async {
+    }, onError: (DioException error, ErrorInterceptorHandler handler) async {
       await forceSignOut(error);
       return handler.next(error);
     }));

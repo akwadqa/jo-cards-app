@@ -13,7 +13,7 @@ class _restApi implements restApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://www.jocards.com/api/';
+    baseUrl ??= 'https://jocards.akwad.qa/api/';
   }
 
   final Dio _dio;
@@ -21,11 +21,11 @@ class _restApi implements restApi {
   String? baseUrl;
 
   @override
-  Future<HomeModel> getHome(platform) async {
-    const _extra = <String, dynamic>{};
+  Future<HomeModel> getHome(String platform) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'platform': platform};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<HomeModel>(Options(
       method: 'GET',
@@ -38,17 +38,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = HomeModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<TerritoriesModel> getTerritories() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<TerritoriesModel>(Options(
       method: 'GET',
@@ -61,23 +65,27 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = TerritoriesModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<ItemCategoryModel> getItemsOfCategory(
-    category,
-    platform,
+    String category,
+    String platform,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'category': category,
       r'platform': platform,
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<ItemCategoryModel>(Options(
       method: 'GET',
@@ -90,17 +98,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ItemCategoryModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<ProductsDetailsModel> getProductDetails(id) async {
-    const _extra = <String, dynamic>{};
+  Future<ProductsDetailsModel> getProductDetails(String id) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'website_item_id': id};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ProductsDetailsModel>(Options(
       method: 'GET',
@@ -113,17 +125,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ProductsDetailsModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<LoginResponseModel> signIn(
-    user,
-    password,
+    String user,
+    String password,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
@@ -142,14 +158,18 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = LoginResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<LoginResponseModel> signUp(registerRequestModel) async {
-    const _extra = <String, dynamic>{};
+  Future<LoginResponseModel> signUp(String registerRequestModel) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {'data': registerRequestModel};
@@ -165,14 +185,18 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = LoginResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<DirectOrderResponse> directOrder(directOrderList) async {
-    const _extra = <String, dynamic>{};
+  Future<DirectOrderResponse> directOrder(String directOrderList) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {'items': directOrderList};
@@ -188,17 +212,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = DirectOrderResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<UtilitiesModel> getUtilities() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UtilitiesModel>(Options(
       method: 'GET',
@@ -211,17 +239,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UtilitiesModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<AgentModel> getAgentCustomers() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<AgentModel>(Options(
       method: 'GET',
@@ -234,23 +266,27 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = AgentModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<ShippingOrderResponseModel> getShippingOrders(
-    pageNo,
-    filter,
+    int pageNo,
+    String filter,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'page_no': pageNo,
       r'filters': filter,
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ShippingOrderResponseModel>(Options(
       method: 'GET',
@@ -263,23 +299,27 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ShippingOrderResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<SalesInvoiceResponseModel> getSalesOrders(
-    pageNo,
-    filter,
+    int pageNo,
+    String filter,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'page_no': pageNo,
       r'filters': filter,
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<SalesInvoiceResponseModel>(Options(
       method: 'GET',
@@ -292,17 +332,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = SalesInvoiceResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<CategoriesModel> getAllCategories() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<CategoriesModel>(Options(
       method: 'GET',
@@ -315,23 +359,27 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = CategoriesModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<DirectWalletRequestLogModel> getDWRLog(
-    pageNo,
-    filter,
+    int pageNo,
+    String filter,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'page_no': pageNo,
       r'filters': filter,
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<DirectWalletRequestLogModel>(Options(
       method: 'GET',
@@ -344,17 +392,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = DirectWalletRequestLogModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<SalesOrderDetails> getSalesOrderDetails(salesOrderId) async {
-    const _extra = <String, dynamic>{};
+  Future<SalesOrderDetails> getSalesOrderDetails(String salesOrderId) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'sales_order_id': salesOrderId};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<SalesOrderDetails>(Options(
       method: 'GET',
@@ -367,19 +419,24 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = SalesOrderDetails.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<SalesInvoiceDetails> getSalesInvoiceDetails(salesInvoiceId) async {
-    const _extra = <String, dynamic>{};
+  Future<SalesInvoiceDetails> getSalesInvoiceDetails(
+      String salesInvoiceId) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'sales_invoice_id': salesInvoiceId
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<SalesInvoiceDetails>(Options(
       method: 'GET',
@@ -392,17 +449,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = SalesInvoiceDetails.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<TransferShippingResponseModel> requestTransferShipping({
-    units,
-    customerName,
+    String? units,
+    String? customerName,
   }) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -423,21 +484,25 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = TransferShippingResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<UploadResponseModel> uploadReceipt({
-    cmd,
-    doctype,
-    docname,
-    fileName,
-    fileData,
-    fromForm,
+    String? cmd,
+    String? doctype,
+    String? docname,
+    String? fileName,
+    String? fileData,
+    int? fromForm,
   }) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -462,17 +527,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UploadResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<AgentPaymentEntryResponse> agentPaymentEntry(
-    dwr,
-    paidAmount,
+    String dwr,
+    String paidAmount,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
@@ -491,17 +560,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = AgentPaymentEntryResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<ResponseModel> dwrApproval(
-    dwr,
-    status,
+    String dwr,
+    String status,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
@@ -520,17 +593,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<AppVersionModel> getAppVersion() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<AppVersionModel>(Options(
       method: 'GET',
@@ -543,23 +620,27 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = AppVersionModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<PaymentModel> getPaymentModel(
-    filter,
-    pageNo,
+    String filter,
+    int pageNo,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'filters': filter,
       r'page_no': pageNo,
     };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<PaymentModel>(Options(
       method: 'GET',
@@ -572,17 +653,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = PaymentModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<AppMessageModel> getAppMessage(pageNo) async {
-    const _extra = <String, dynamic>{};
+  Future<AppMessageModel> getAppMessage(int pageNo) async {
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'page_no': pageNo};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<AppMessageModel>(Options(
       method: 'GET',
@@ -595,17 +680,21 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = AppMessageModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<UpdatePasswordModel> updatePassword(
-    oldPassword,
-    newPassword,
+    String oldPassword,
+    String newPassword,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
@@ -624,19 +713,23 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UpdatePasswordModel.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<UpdateTokenModel> updateToken(
-    token,
-    userId,
-    userDeviceType,
-    userDeviceName,
+    String token,
+    String userId,
+    String userDeviceType,
+    String userDeviceName,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
@@ -657,7 +750,11 @@ class _restApi implements restApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UpdateTokenModel.fromJson(_result.data!);
     return value;
   }
@@ -673,5 +770,22 @@ class _restApi implements restApi {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
