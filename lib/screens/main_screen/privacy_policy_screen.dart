@@ -8,12 +8,11 @@ import '../widget/safe_on_tap.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
-String content;
+  final String content;
 
+  const PrivacyPolicyScreen(this.content, {super.key});
 
-PrivacyPolicyScreen(this.content, {super.key});
-
-@override
+  @override
   _PrivacyPolicyScreenState createState() => _PrivacyPolicyScreenState();
 }
 
@@ -21,17 +20,21 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorResources.whiteSmoke,
-        appBar: buildAppBar(context),
-    body: SingleChildScrollView(
-        child: Align(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-            child: Html(shrinkWrap: false,
-            data: widget.content,),
+      backgroundColor: ColorResources.whiteSmoke,
+      appBar: buildAppBar(context),
+      body: SingleChildScrollView(
+          child: Align(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          child: Html(
+            shrinkWrap: false,
+            data: widget.content,
           ),
-        )),);
+        ),
+      )),
+    );
   }
+
   PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
         preferredSize: const Size.fromHeight(130),

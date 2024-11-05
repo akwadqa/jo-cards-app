@@ -14,284 +14,270 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_svg/svg.dart';
 import '../widget/error.dart';
+
 class BatchHistoryScreen extends StatefulWidget {
-  const BatchHistoryScreen({Key? key}) : super(key: key);
+  const BatchHistoryScreen({super.key});
 
   @override
   State<BatchHistoryScreen> createState() => _BatchHistoryScreenState();
 }
 
 class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
-  late String filters =  '{}';
+  late String filters = '{}';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorResources.whiteSmoke,
       appBar: buildAppBar(context),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: widgetSize.getWidth(15, context)),
-          child: RefreshIndicator(
-            onRefresh: () => Future.sync(() {
-              filters =  '{}' ;
-              context.read<HomeProvider>().paymentLogPagingController?.refresh();
-              context.read<AppProvider>().getUtilities();
-            }),
-            child: CustomScrollView(slivers: <Widget>[
-              // SliverToBoxAdapter(
-              //   child: Align(
-              //     alignment: Alignment.centerRight,
-              //     child: Padding(
-              //         padding: EdgeInsets.only(
-              //             top: widgetSize.getHeight(20, context)),
-              //         child: const MyWallet()
-              //     ),
-              //   ),
-              // ),
-              SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: widgetSize.getHeight(20, context),
-                        horizontal: widgetSize.getWidth(20, context)
-                    ),
-                    child: Row(
-                      children: [
-                        Consumer<HomeProvider>(
-                            builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "الصندوق", homeProvider.paymentModel!.agentPayable != null ? "${homeProvider.paymentModel!.agentPayable!.toStringAsFixed(5)}  دينار" : ""));
-                          }
-                        ),
-                        SizedBox(width: widgetSize.getWidth(20, context)),
-                        Consumer <HomeProvider>(
-                            builder: (context, homeProvider, child) {
-                            return Expanded(child: buildBox(context, "التسويات", homeProvider.paymentModel!.agentPayment != null ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment).toStringAsFixed(5)}  دينار" : ""));
-                          }
-                        ),
-                      ],
-                    ),
+      body: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: widgetSize.getWidth(15, context)),
+        child: RefreshIndicator(
+          onRefresh: () => Future.sync(() {
+            filters = '{}';
+            context.read<HomeProvider>().paymentLogPagingController?.refresh();
+            context.read<AppProvider>().getUtilities();
+          }),
+          child: CustomScrollView(slivers: <Widget>[
+            // SliverToBoxAdapter(
+            //   child: Align(
+            //     alignment: Alignment.centerRight,
+            //     child: Padding(
+            //         padding: EdgeInsets.only(
+            //             top: widgetSize.getHeight(20, context)),
+            //         child: const MyWallet()
+            //     ),
+            //   ),
+            // ),
+            SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: widgetSize.getHeight(20, context),
+                      horizontal: widgetSize.getWidth(20, context)),
+                  child: Row(
+                    children: [
+                      Consumer<HomeProvider>(
+                          builder: (context, homeProvider, child) {
+                        return Expanded(
+                            child: buildBox(
+                                context,
+                                "الصندوق",
+                                homeProvider.paymentModel!.agentPayable != null
+                                    ? "${homeProvider.paymentModel!.agentPayable!.toStringAsFixed(5)}  دينار"
+                                    : ""));
+                      }),
+                      SizedBox(width: widgetSize.getWidth(20, context)),
+                      Consumer<HomeProvider>(
+                          builder: (context, homeProvider, child) {
+                        return Expanded(
+                            child: buildBox(
+                                context,
+                                "التسويات",
+                                homeProvider.paymentModel!.agentPayment != null
+                                    ? "${removeNegativeSign(homeProvider.paymentModel!.agentPayment).toStringAsFixed(5)}  دينار"
+                                    : ""));
+                      }),
+                    ],
                   ),
                 ),
               ),
-              SliverToBoxAdapter(
-                  child: SearchComponent(
-                    searchType:  SearchType.batchLog,
-                    onSearch: (String filters) {
-                      this.filters = filters;
-                      context.read<HomeProvider>().paymentLogPagingController?.refresh();
-                    },
-                  )
-              ),
-              SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
-              PagedSliverList<int, GLEntries>(
-
-                  shrinkWrapFirstPageIndicators: false,
-                  pagingController: context.read<HomeProvider>().paymentLogPagingController!,
-                  builderDelegate: PagedChildBuilderDelegate<GLEntries>(
-                      firstPageProgressIndicatorBuilder:(_)=>Loading(loadingText: ""),
-
-                      newPageProgressIndicatorBuilder: (_)=>Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Loading(loadingText: ""),
-                      ),
-                      noMoreItemsIndicatorBuilder: (_)=>Container(),
-                      noItemsFoundIndicatorBuilder: (_)=>Container(child: Center(child:  Text(
-                        'لايوجد طلبات',
-                        style: TextStyle(
-                          fontFamily: 'DIN Next LT W23',
-                          fontSize: widgetSize.getHeight(19, context),
-                          color: const Color(0xff2e2e2e),
-
+            ),
+            SliverToBoxAdapter(
+                child: SearchComponent(
+              searchType: SearchType.batchLog,
+              onSearch: (String filters) {
+                this.filters = filters;
+                context
+                    .read<HomeProvider>()
+                    .paymentLogPagingController
+                    ?.refresh();
+              },
+            )),
+            SliverToBoxAdapter(
+                child: SizedBox(height: widgetSize.getHeight(10, context))),
+            PagedSliverList<int, GLEntries>(
+                shrinkWrapFirstPageIndicators: false,
+                pagingController:
+                    context.read<HomeProvider>().paymentLogPagingController!,
+                builderDelegate: PagedChildBuilderDelegate<GLEntries>(
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        Loading(loadingText: ""),
+                    newPageProgressIndicatorBuilder: (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Loading(loadingText: ""),
                         ),
-                        softWrap: false,
-                      ),),),
-
-                      firstPageErrorIndicatorBuilder: (_)=>
-                          Error(errorMsg:Provider.of<HomeProvider>(context,listen: false).
-                          paymentLogPagingController!.error!.toString()),
-                      itemBuilder: (context, item, index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Stack(children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xffffffff),
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffe5e5e5)),
+                    noMoreItemsIndicatorBuilder: (_) => Container(),
+                    noItemsFoundIndicatorBuilder: (_) => Container(
+                          child: Center(
+                            child: Text(
+                              'لايوجد طلبات',
+                              style: TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: widgetSize.getHeight(19, context),
+                                color: const Color(0xff2e2e2e),
+                              ),
+                              softWrap: false,
                             ),
-                            clipBehavior: Clip.antiAlias,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                      widgetSize.getWidth(20, context)),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: widgetSize.getHeight(
-                                                28, context)),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'رقم الطلب',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff6b6b6b),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              item.referenceNo!,
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff59bce6),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: widgetSize.getHeight(
-                                                10, context)),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'رقم الدفع',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff6b6b6b),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              item.voucherNo!
-                                                  .toString(),
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff59bce6),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: widgetSize.getHeight(
-                                                10, context)),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'قيمة الدفع',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff6b6b6b),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              item.typeOfTransiction == "debit" ? "${item.debit!} دينار":"${item.credit!} دينار",
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xffec7e7e),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: widgetSize.getHeight(
-                                                10, context)),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'اسم العميل',
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff6b6b6b),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              item.againstParty !=null ? item.againstParty!.toString() : item.partyName!.toString(),
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                const Color(0xff2e2e2e),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: widgetSize.getHeight(5, context)),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: ColorResources.whisper,
-                                        borderRadius: BorderRadius.only(
-                                            bottomRight: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10))),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                          ),
+                        ),
+                    firstPageErrorIndicatorBuilder: (_) => Error(
+                        errorMsg:
+                            Provider.of<HomeProvider>(context, listen: false)
+                                .paymentLogPagingController!
+                                .error!
+                                .toString()),
+                    itemBuilder: (context, item, index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Stack(children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xffffffff),
+                                borderRadius: BorderRadius.circular(10.0),
+                                border: Border.all(
+                                    width: 1.0, color: const Color(0xffe5e5e5)),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            widgetSize.getWidth(20, context)),
+                                    child: Column(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5),
+                                          padding: EdgeInsets.only(
+                                              top: widgetSize.getHeight(
+                                                  28, context)),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
                                               Text(
-                                                item.postingDate!.toString(),
+                                                'رقم الطلب',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize.getHeight(
-                                                      14, context),
-                                                  color: const Color(0xff6b6b6b),
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff6b6b6b),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                item.referenceNo!,
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff59bce6),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: widgetSize.getHeight(
+                                                  10, context)),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'رقم الدفع',
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff6b6b6b),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                item.voucherNo!.toString(),
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff59bce6),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: widgetSize.getHeight(
+                                                  10, context)),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'قيمة الدفع',
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff6b6b6b),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                item.typeOfTransiction ==
+                                                        "debit"
+                                                    ? "${item.debit!} دينار"
+                                                    : "${item.credit!} دينار",
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xffec7e7e),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: widgetSize.getHeight(
+                                                  10, context)),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'اسم العميل',
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff6b6b6b),
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                item.againstParty != null
+                                                    ? item.againstParty!
+                                                        .toString()
+                                                    : item.partyName!
+                                                        .toString(),
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(16, context),
+                                                  color:
+                                                      const Color(0xff2e2e2e),
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: false,
                                               ),
@@ -301,47 +287,103 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: item.typeOfTransiction == 'credit' ?
-                                  const Color(0xFFEC7E7E)
-                                      : item.typeOfTransiction == 'debit'
-                                      ? const Color(0xFF4ABFA7)
-                                      : Colors.white,
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 2),
-                                child: Text(
-                                  item.typeOfTransiction == 'credit'
-                                      ? 'دفعة'
-                                      : item.typeOfTransiction == 'debit'
-                                      ? 'تسوية'
-                                      : '',
-                                  style: TextStyle(
-                                    fontFamily: 'DIN Next LT W23',
-                                    fontSize:
-                                    widgetSize.getHeight(14, context),
-                                    color: const Color(0xffffffff),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: widgetSize.getHeight(5, context)),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: ColorResources.whisper,
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  item.postingTime!,
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
+                                                    fontSize: widgetSize
+                                                        .getHeight(14, context),
+                                                    color:
+                                                        const Color(0xff6b6b6b),
+                                                  ),
+                                                  softWrap: false,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  item.postingDate!.toString(),
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
+                                                    fontSize: widgetSize
+                                                        .getHeight(14, context),
+                                                    color:
+                                                        const Color(0xff6b6b6b),
+                                                  ),
+                                                  softWrap: false,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  softWrap: false,
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              left: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: item.typeOfTransiction == 'credit'
+                                        ? const Color(0xFFEC7E7E)
+                                        : item.typeOfTransiction == 'debit'
+                                            ? const Color(0xFF4ABFA7)
+                                            : Colors.white,
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 2),
+                                  child: Text(
+                                    item.typeOfTransiction == 'credit'
+                                        ? 'دفعة'
+                                        : item.typeOfTransiction == 'debit'
+                                            ? 'تسوية'
+                                            : '',
+                                    style: TextStyle(
+                                      fontFamily: 'DIN Next LT W23',
+                                      fontSize:
+                                          widgetSize.getHeight(14, context),
+                                      color: const Color(0xffffffff),
+                                    ),
+                                    softWrap: false,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ]),
-                      )))
-            ]),
-          ),
+                          ]),
+                        )))
+          ]),
         ),
+      ),
     );
   }
 
@@ -371,12 +413,14 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                       },
                       child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
-
+                Expanded(
+                    child: SizedBox(
+                  width: widgetSize.getWidth(5, context),
+                )),
                 Expanded(
                   flex: 2,
                   child: Text(
-                  "سجل الدفعات",
+                    "سجل الدفعات",
                     style: TextStyle(
                       fontSize: widgetSize.getHeight(16, context),
                       color: const Color(0xffffffff),
@@ -387,46 +431,74 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
-                    child: SafeOnTap( onSafeTap: ()async {},
+                    padding:
+                        EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap(
+                      onSafeTap: () async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                          const Text("JD ", style: TextStyle(
-                            fontFamily: 'DIN Next LT W23',
-                            fontSize: 15,
-                            color:  Color(0xffffffff),
-                            fontWeight: FontWeight.w400,
-                          ), softWrap: false,),
-                          Text(
-                            context.watch<AppProvider>().utilitiesModel!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
-                            style: const TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: 15,
-                              color:  Color(0xffffffff),
-                              fontWeight: FontWeight.w400,
+                            const Text(
+                              "JD ",
+                              style: TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
                             ),
-                            softWrap: false,
-                          ),
-                          SizedBox(width: widgetSize.getWidth(5, context)),
-                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
-                        ],),
-                      ),),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel !=
+                                      null
+                                  ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data !=
+                                          null
+                                      ? context
+                                                  .watch<AppProvider>()
+                                                  .utilitiesModel!
+                                                  .data!
+                                                  .walletBalance !=
+                                              null
+                                          ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data!
+                                              .walletBalance!
+                                          : ""
+                                      : ""
+                                  : "",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(
+                              Assets.svgWallet,
+                              width: widgetSize.getWidth(20, context),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 )
-
               ],
             ),
           ),
         ));
   }
 
-  Card buildBox (BuildContext context, String title, String value){
+  Card buildBox(BuildContext context, String title, String value) {
     return Card(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -451,9 +523,11 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
     //    context.read<HomeProvider>().getShippingOrders();
   }
 
-  initial(){
-    context.read<HomeProvider>().paymentLogPagingController = PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
-    context.read<HomeProvider>().paymentModel = PaymentData(agentPayable: 0.0, agentPayment: 0.0, agentCustomerPayment: 0.0);
+  initial() {
+    context.read<HomeProvider>().paymentLogPagingController =
+        PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
+    context.read<HomeProvider>().paymentModel = PaymentData(
+        agentPayable: 0.0, agentPayment: 0.0, agentCustomerPayment: 0.0);
     context
         .read<HomeProvider>()
         .paymentLogPagingController!
@@ -468,9 +542,9 @@ class _BatchHistoryScreenState extends State<BatchHistoryScreen> {
     super.dispose();
   }
 
-  double removeNegativeSign(double? number){
-    if(number!<0){
-      return number*(-1.0);
+  double removeNegativeSign(double? number) {
+    if (number! < 0) {
+      return number * (-1.0);
     }
     return number;
   }

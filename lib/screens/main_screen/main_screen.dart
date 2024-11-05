@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jocards/provider/app_provider.dart';
@@ -20,14 +19,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   late List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<SharedNavBarProvider>(
-        builder: (context, sharedNavBarProvider, child){
+        builder: (context, sharedNavBarProvider, child) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: transparentStatusBarAndTransparentSystemBar,
         child: Scaffold(
@@ -35,22 +32,26 @@ class _MainScreenState extends State<MainScreen> {
           /* 3 */
           body: PageView(
             controller: sharedNavBarProvider.controller,
-            physics: context.read<AppProvider>().getUserInfo()!= null ? PageScrollPhysics() :const NeverScrollableScrollPhysics(),
+            physics: context.read<AppProvider>().getUserInfo() != null
+                ? const PageScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
             children: children,
-            onPageChanged: (int index){
+            onPageChanged: (int index) {
               sharedNavBarProvider.changeBottomIndex(index);
               sharedNavBarProvider.changeControllerIndex(index);
-            if (index != 0) {
-              context.read<HomeProvider>().homsResponse = null;
-            }},
+              if (index != 0) {
+                context.read<HomeProvider>().homsResponse = null;
+              }
+            },
           ),
         ),
-      );}
-    );
+      );
+    });
   }
 
   @override
   void initState() {
+    super.initState();
     children = [
       const HomeScreen(),
       const CategoriesScreen(),
@@ -59,5 +60,4 @@ class _MainScreenState extends State<MainScreen> {
       const ProfileScreen()
     ];
   }
-
 }

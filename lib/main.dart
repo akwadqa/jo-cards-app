@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -51,23 +52,33 @@ void main() async {
   }
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   packageInfo = await PackageInfo.fromPlatform();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (_) => AppProvider(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => HomeProvider(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => SharedNavBarProvider(),
-    ),
-  ], child: const MyApp()));
+  runZonedGuarded(() {
+    runApp(MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (_) => AppProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => HomeProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => SharedNavBarProvider(),
+      ),
+    ], child: const MyApp()));
+  }, (error, stackTrace) {
+    logError(error, stackTrace);
+  });
+}
+
+void logError(Object error, StackTrace stackTrace) {
+  // Send errors to your logging service
+  print('Error: $error');
+  print('StackTrace: $stackTrace');
 }
 
 final GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -80,7 +91,7 @@ class _MyAppState extends State<MyApp> {
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaleFactor: 1.0,
+            textScaler: const TextScaler.linear(1.0),
           ), //set desired text scale factor here
           child: child!,
         );
@@ -105,6 +116,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    super.initState();
     MyNotification.initialize(context, flutterLocalNotificationsPlugin);
   }
 }

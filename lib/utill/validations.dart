@@ -1,9 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
-import 'package:jocards/utill/app_local.dart';
-
-import '../main.dart';
-
 class Validations {
   String prefix = "              ";
 

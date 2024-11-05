@@ -2,29 +2,25 @@ class DirectOrderRequest {
    String? websiteItemCode;
    int? qty;
    String? itemUom;
-   String? orderType;
    List<RProductOptions>? productOptions;
 
   DirectOrderRequest({
     this.websiteItemCode,
     this.qty,
     this.itemUom,
-    this.orderType,
     this.productOptions,
   });
 
   DirectOrderRequest.fromJson(Map<String, dynamic> json)
-    : websiteItemCode = json['Website_item_code'] as String?,
+    : websiteItemCode = json['website_item_code'] as String?,
       qty = json['qty'] as int?,
       itemUom = json['item_uom'] as String?,
-      orderType = json['Order Type'] as String?,
       productOptions = (json['product_options'] as List?)?.map((dynamic e) => RProductOptions.fromJson(e as Map<String,dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {
-    'Website_item_code' : websiteItemCode,
+    'website_item_code' : websiteItemCode,
     'qty' : qty,
     'item_uom' : itemUom,
-    'Order Type' : orderType,
     if(productOptions!=null)
     'product_options' : productOptions?.map((e) => e.toJson()).toList()
   };

@@ -16,12 +16,12 @@ import '../widget/loading.dart';
 import '../widget/error.dart';
 import '../widget/safe_on_tap.dart';
 
-enum ShippingType{wallet, customers}
+enum ShippingType { wallet, customers }
 
 class ShippingOrderHistory extends StatefulWidget {
   final ShippingType shippingType;
 
-  const ShippingOrderHistory({Key? key, required this.shippingType}) : super(key: key);
+  const ShippingOrderHistory({super.key, required this.shippingType});
   @override
   _ShippingOrderHistoryState createState() => _ShippingOrderHistoryState();
 }
@@ -29,20 +29,17 @@ class ShippingOrderHistory extends StatefulWidget {
 class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
   late String filters = setIsTransfer();
   // widget.shippingType == ShippingType.customers ? context.read<AppProvider>().getUserInfo()!.customerType == "Agent" ? '{"is_transfer": "1"}' : '{}' : '{"is_transfer": "0"}';
-  String setIsTransfer(){
-    if(widget.shippingType == ShippingType.customers){
-      if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent"){
+  String setIsTransfer() {
+    if (widget.shippingType == ShippingType.customers) {
+      if (context.read<AppProvider>().getUserInfo()!.customerType == "Agent") {
         return '{"is_transfer": "1"}';
-      }
-      else{
+      } else {
         return '{}';
       }
-    }
-    else{
-      if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent"){
+    } else {
+      if (context.read<AppProvider>().getUserInfo()!.customerType == "Agent") {
         return '{"is_transfer": "0"}';
-      }
-      else{
+      } else {
         return '{}';
       }
     }
@@ -60,7 +57,10 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
             onRefresh: () => Future.sync(() {
               filters = setIsTransfer();
               // widget.shippingType == ShippingType.customers ? context.read<AppProvider>().getUserInfo()!.customerType == "Agent" ? '{"is_transfer": "1"}' : '{}' : '{"is_transfer": "0"}';
-              context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
+              context
+                  .read<HomeProvider>()
+                  .shippingOrdersPagingController
+                  ?.refresh();
               context.read<AppProvider>().getUtilities();
             }),
             child: CustomScrollView(slivers: <Widget>[
@@ -95,124 +95,154 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
               ),
               SliverToBoxAdapter(
                   child: SearchComponent(
-                    searchType: widget.shippingType == ShippingType.wallet ? SearchType.walletRequests : SearchType.customersRequests,
-                    onSearch: (String filters) {
-                      this.filters = filters;
-                      context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
-                    },
-                  )
+                searchType: widget.shippingType == ShippingType.wallet
+                    ? SearchType.walletRequests
+                    : SearchType.customersRequests,
+                onSearch: (String filters) {
+                  this.filters = filters;
+                  context
+                      .read<HomeProvider>()
+                      .shippingOrdersPagingController
+                      ?.refresh();
+                },
+              )),
+
+              SliverToBoxAdapter(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (!(context
+                                  .read<AppProvider>()
+                                  .getUserInfo()!
+                                  .customerType ==
+                              "Agent") ||
+                          widget.shippingType == ShippingType.customers)
+                        Consumer<HomeProvider>(
+                            builder: (context, homeProvider, child) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: widgetSize.getHeight(10, context)),
+                            child: Container(
+                              padding: EdgeInsets.all(
+                                  widgetSize.getWidth(10, context)),
+                              height: widgetSize.getHeight(100, context),
+                              width: MediaQuery.of(context).size.width / 2.5,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      widgetSize.getHeight(10, context))),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const Text(
+                                    "المدفوع",
+                                    softWrap: true,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    '${homeProvider.shippingOrderResponseModelVar == null ? "" : homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid.toStringAsFixed(2)} دينار ',
+                                    softWrap: true,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      Consumer<HomeProvider>(
+                          builder: (context, homeProvider, child) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: widgetSize.getHeight(10, context)),
+                          child: Container(
+                            padding: EdgeInsets.all(
+                                widgetSize.getWidth(10, context)),
+                            height: widgetSize.getHeight(100, context),
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                    widgetSize.getHeight(10, context))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Text(
+                                  "الغير مدفوع",
+                                  softWrap: true,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '${homeProvider.shippingOrderResponseModelVar == null ? "" : homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid.toStringAsFixed(2)} دينار ',
+                                  softWrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                      // Consumer<HomeProvider>(
+                      //   builder: (context, homeProvider, child) {
+                      //     return Padding(
+                      //       padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
+                      //       child: Container(
+                      //         padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
+                      //         height: widgetSize.getHeight(100, context),
+                      //         width: MediaQuery.of(context).size.width/3.5,
+                      //         decoration: BoxDecoration(
+                      //             color: Colors.white,
+                      //             borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
+                      //         ),
+                      //         child: Column(
+                      //           crossAxisAlignment: CrossAxisAlignment.center,
+                      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //           children: [
+                      //             const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
+                      //             Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
+                      //
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     );
+                      //   }
+                      // )
+                    ]),
               ),
-
-                SliverToBoxAdapter(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Consumer<HomeProvider>(
-                            builder: (context, homeProvider, child) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
-                                child: Container(
-                                  padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
-                                  height: widgetSize.getHeight(100, context),
-                                  width: MediaQuery.of(context).size.width/2.5,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const Text("المدفوع", softWrap: true,textAlign: TextAlign.center,),
-                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "":homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalPaid.toStringAsFixed(5)} دينار ', softWrap: true,),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                        ),
-                        Consumer<HomeProvider>(
-                            builder: (context, homeProvider, child) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
-                                child: Container(
-                                  padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
-                                  height: widgetSize.getHeight(100, context),
-                                  width: MediaQuery.of(context).size.width/2.5,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const Text("الغير مدفوع", softWrap: true, textAlign: TextAlign.center,),
-                                      Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid.toStringAsFixed(5)} دينار ', softWrap: true,),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                        ),
-                        // Consumer<HomeProvider>(
-                        //   builder: (context, homeProvider, child) {
-                        //     return Padding(
-                        //       padding: EdgeInsets.symmetric(vertical: widgetSize.getHeight(10, context)),
-                        //       child: Container(
-                        //         padding: EdgeInsets.all(widgetSize.getWidth(10, context)),
-                        //         height: widgetSize.getHeight(100, context),
-                        //         width: MediaQuery.of(context).size.width/3.5,
-                        //         decoration: BoxDecoration(
-                        //             color: Colors.white,
-                        //             borderRadius: BorderRadius.circular(widgetSize.getHeight(10, context))
-                        //         ),
-                        //         child: Column(
-                        //           crossAxisAlignment: CrossAxisAlignment.center,
-                        //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //           children: [
-                        //             const Text("المتبقي", softWrap: true, textAlign: TextAlign.center,),
-                        //             Text('${homeProvider.shippingOrderResponseModelVar == null ? "" :homeProvider.shippingOrderResponseModelVar!.totalOrderData!.totalUnPaid} دينار ', softWrap: true,),
-                        //
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     );
-                        //   }
-                        // )
-                      ]
-                  ),
-                ),
-              SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
+              SliverToBoxAdapter(
+                  child: SizedBox(height: widgetSize.getHeight(10, context))),
               PagedSliverList<int, ShippingOrdeData>(
-
                   shrinkWrapFirstPageIndicators: false,
                   pagingController: context
                       .read<HomeProvider>()
                       .shippingOrdersPagingController!,
                   builderDelegate: PagedChildBuilderDelegate<ShippingOrdeData>(
-                      firstPageProgressIndicatorBuilder:(_)=>Loading(loadingText: "")
-                      ,
-
-                      newPageProgressIndicatorBuilder: (_)=>Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Loading(loadingText: ""),
-                      ),
-                      noMoreItemsIndicatorBuilder: (_)=>Container(),
-                      noItemsFoundIndicatorBuilder: (_)=>Container(child: Center(child:  Text(
-                        'لايوجد طلبات',
-                        style: TextStyle(
-                          fontFamily: 'DIN Next LT W23',
-                          fontSize: widgetSize.getHeight(19, context),
-                          color: const Color(0xff2e2e2e),
-
-                        ),
-                        softWrap: false,
-                      ),),),
-
-                      firstPageErrorIndicatorBuilder: (_)=>
-                          Error(errorMsg:Provider.of<HomeProvider>(context,listen: false).
-                          shippingOrdersPagingController!.error!.toString()),
+                      firstPageProgressIndicatorBuilder: (_) =>
+                          const Loading(loadingText: ""),
+                      newPageProgressIndicatorBuilder: (_) => const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Loading(loadingText: ""),
+                          ),
+                      noMoreItemsIndicatorBuilder: (_) => Container(),
+                      noItemsFoundIndicatorBuilder: (_) => Container(
+                            child: Center(
+                              child: Text(
+                                'لايوجد طلبات',
+                                style: TextStyle(
+                                  fontFamily: 'DIN Next LT W23',
+                                  fontSize: widgetSize.getHeight(19, context),
+                                  color: const Color(0xff2e2e2e),
+                                ),
+                                softWrap: false,
+                              ),
+                            ),
+                          ),
+                      firstPageErrorIndicatorBuilder: (_) => Error(
+                          errorMsg:
+                              Provider.of<HomeProvider>(context, listen: false)
+                                  .shippingOrdersPagingController!
+                                  .error!
+                                  .toString()),
                       itemBuilder: (context, item, index) => Padding(
                             padding: const EdgeInsets.only(bottom: 20),
                             child: Stack(children: <Widget>[
@@ -221,7 +251,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                   color: const Color(0xffffffff),
                                   borderRadius: BorderRadius.circular(10.0),
                                   border: Border.all(
-                                      width: 1.0, color: const Color(0xffe5e5e5)),
+                                      width: 1.0,
+                                      color: const Color(0xffe5e5e5)),
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: Column(
@@ -232,7 +263,7 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                               widgetSize.getWidth(20, context)),
                                       child: Column(
                                         children: [
-                                            Padding(
+                                          Padding(
                                             padding: EdgeInsets.only(
                                                 top: widgetSize.getHeight(
                                                     28, context)),
@@ -241,7 +272,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'رقم الطلب',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -253,7 +285,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   item.digitalWalletRequestId!,
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -273,7 +306,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'مبلغ الشحن',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -286,7 +320,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                   item.requestedAmount!
                                                       .toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -306,7 +341,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'الحالة',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -318,7 +354,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   item.status!.toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -338,11 +375,12 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'المتبقي',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
-                                                    const Color(0xff6b6b6b),
+                                                        const Color(0xff6b6b6b),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -350,11 +388,12 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   item.unpaidAmount!,
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
-                                                    const Color(0xffec7e7e),
+                                                        const Color(0xffec7e7e),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -370,7 +409,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'مقدم الطلب',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -382,7 +422,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   item.owner!.toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
@@ -403,11 +444,12 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   'العميل',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
-                                                    const Color(0xff6b6b6b),
+                                                        const Color(0xff6b6b6b),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -415,11 +457,12 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                 Text(
                                                   item.customer!,
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(16, context),
                                                     color:
-                                                    const Color(0xff2e2e2e),
+                                                        const Color(0xff2e2e2e),
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                   softWrap: false,
@@ -432,33 +475,51 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          top: widgetSize.getHeight(5, context)),
+                                          top:
+                                              widgetSize.getHeight(5, context)),
                                       child: Container(
                                         decoration: const BoxDecoration(
                                             color: ColorResources.whisper,
                                             borderRadius: BorderRadius.only(
-                                                bottomRight: Radius.circular(10),
-                                                bottomLeft: Radius.circular(10))),
+                                                bottomRight:
+                                                    Radius.circular(10),
+                                                bottomLeft:
+                                                    Radius.circular(10))),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: context
+                                                          .read<AppProvider>()
+                                                          .getUserInfo()!
+                                                          .customerType ==
+                                                      "Agent" &&
+                                                  item.workflowState ==
+                                                      'Pending' &&
+                                                  item.docstatus == 0 &&
+                                                  widget.shippingType ==
+                                                      ShippingType.customers
+                                              ? MainAxisAlignment.spaceBetween
+                                              : MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 5),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   const SizedBox(
                                                     width: 20,
                                                   ),
                                                   Text(
-                                                    item.postingTime!.toString(),
+                                                    '${item.postingTime!.split(':').first}:${item.postingTime!.split(':')[1]}',
                                                     style: TextStyle(
-                                                      fontFamily: 'DIN Next LT W23',
-                                                      fontSize: widgetSize.getHeight(
-                                                          14, context),
-                                                      color: const Color(0xff6b6b6b),
+                                                      fontFamily:
+                                                          'DIN Next LT W23',
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              14, context),
+                                                      color: const Color(
+                                                          0xff6b6b6b),
                                                     ),
                                                     softWrap: false,
                                                   ),
@@ -466,90 +527,210 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                                     width: 10,
                                                   ),
                                                   Text(
-                                                    item.postingDate!.toString(),
+                                                    item.postingDate!
+                                                        .toString(),
                                                     style: TextStyle(
-                                                      fontFamily: 'DIN Next LT W23',
-                                                      fontSize: widgetSize.getHeight(
-                                                          14, context),
-                                                      color: const Color(0xff6b6b6b),
+                                                      fontFamily:
+                                                          'DIN Next LT W23',
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              14, context),
+                                                      color: const Color(
+                                                          0xff6b6b6b),
                                                     ),
                                                     softWrap: false,
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            if(context.read<AppProvider>().getUserInfo()!.customerType == "Agent" && item.workflowState == 'Pending' && item.docstatus == 0 && widget.shippingType == ShippingType.customers)
-                                            SizedBox(
-                                              width: 100,
-                                              child: DropdownButtonFormField<String>(
-                                                iconEnabledColor: Colors.white,
-                                                selectedItemBuilder: (context){
-                                                  return [const Text('اعتماد', style: TextStyle(color: Colors.white)), const Text('رفض', style: TextStyle(color: Colors.white))];
-                                                },
-                                                decoration: const InputDecoration(filled: true, fillColor: ColorResources.studio, border: InputBorder.none),
-                                                hint: const Text('الإجراء', style: TextStyle(color: Colors.white)), items: const [DropdownMenuItem<String>(value: 'اعتماد', child: Text('اعتماد')), DropdownMenuItem<String>(value: 'رفض', child: Text('رفض'))],
-                                                onChanged: (value) {
-                                                  if(value != null){
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context){
-                                                          return AlertDialog(
-                                                            title: const Align(
-                                                                alignment: AlignmentDirectional.center,
-                                                                child: Text('تأكيد الإجراء')),
-                                                            content: const Text('هل أنت متأكد من الإجراء. لا يمكن تغيير الاجراء بعد التأكيد.'),
-                                                            actions: [
-                                                              ElevatedButton(onPressed: () => Navigator.of(context).pop(), style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black), backgroundColor: MaterialStateProperty.all(ColorResources.gray89), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))), child: const Text('إلغاء')),
-                                                              Consumer<HomeProvider>(
-                                                                  builder: (context, data, _) {
-                                                                    if(data.isLoading){
-                                                                      return const CircularProgressIndicator(color: ColorResources.rose);
-                                                                    }
-                                                                    return ElevatedButton(onPressed: () async {
-                                                                      var res = await context.read<HomeProvider>().dwrApproval(item.digitalWalletRequestId!, value == 'اعتماد' ? 'Approve' : 'Reject');
-                                                                      if(res.status == Status.COMPLETED){
-                                                                        context
-                                                                            .read<HomeProvider>()
-                                                                            .shippingOrdersPagingController!.refresh();
-                                                                        Navigator.of(context).pop();
-                                                                        Fluttertoast.showToast(
-                                                                            backgroundColor: Colors.green,
-                                                                            textColor: Colors.white,
-                                                                            msg: res.data?.message ?? "",
-                                                                            timeInSecForIosWeb: 4,
-                                                                            toastLength: Toast.LENGTH_LONG);
-                                                                      }
-                                                                      else{
-                                                                        Fluttertoast.showToast(
-                                                                            backgroundColor: Colors.red,
-                                                                            textColor: Colors.white,
-                                                                            msg: res.data?.message ?? "",
-                                                                            timeInSecForIosWeb: 4,
-                                                                            toastLength: Toast.LENGTH_LONG);
-                                                                      }
-                                                                    }, style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ColorResources.rose), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))), child: const Text('تأكيد'));
+                                            if (context
+                                                        .read<AppProvider>()
+                                                        .getUserInfo()!
+                                                        .customerType ==
+                                                    "Agent" &&
+                                                item.workflowState ==
+                                                    'Pending' &&
+                                                item.docstatus == 0 &&
+                                                widget.shippingType ==
+                                                    ShippingType.customers)
+                                              SizedBox(
+                                                width: 100,
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  iconEnabledColor:
+                                                      Colors.white,
+                                                  selectedItemBuilder:
+                                                      (context) {
+                                                    return [
+                                                      const Text('اعتماد',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
+                                                      const Text('رفض',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white))
+                                                    ];
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          filled: true,
+                                                          fillColor:
+                                                              ColorResources
+                                                                  .studio,
+                                                          border:
+                                                              InputBorder.none),
+                                                  hint: const Text('الإجراء',
+                                                      style: TextStyle(
+                                                          color: Colors.white)),
+                                                  items: const [
+                                                    DropdownMenuItem<String>(
+                                                        value: 'اعتماد',
+                                                        child: Text('اعتماد')),
+                                                    DropdownMenuItem<String>(
+                                                        value: 'رفض',
+                                                        child: Text('رفض'))
+                                                  ],
+                                                  onChanged: (value) {
+                                                    if (value != null) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: const Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional
+                                                                          .center,
+                                                                  child: Text(
+                                                                      'تأكيد الإجراء')),
+                                                              content: const Text(
+                                                                  'هل أنت متأكد من الإجراء. لا يمكن تغيير الاجراء بعد التأكيد.'),
+                                                              actions: [
+                                                                ElevatedButton(
+                                                                    onPressed: () =>
+                                                                        Navigator.of(context)
+                                                                            .pop(),
+                                                                    style: ButtonStyle(
+                                                                        foregroundColor: WidgetStateProperty.all(Colors
+                                                                            .black),
+                                                                        backgroundColor: WidgetStateProperty.all(ColorResources
+                                                                            .gray89),
+                                                                        shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.circular(
+                                                                                15))),
+                                                                        padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
+                                                                            horizontal: 30,
+                                                                            vertical: 10))),
+                                                                    child: const Text('إلغاء')),
+                                                                Consumer<
+                                                                        HomeProvider>(
+                                                                    builder:
+                                                                        (context,
+                                                                            data,
+                                                                            _) {
+                                                                  if (data
+                                                                      .isLoading) {
+                                                                    return const CircularProgressIndicator(
+                                                                        color: ColorResources
+                                                                            .rose);
                                                                   }
-                                                              ),
-                                                            ],
-                                                            alignment: AlignmentDirectional.center,
-                                                            actionsAlignment: MainAxisAlignment.center,
-                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                                                          );
-                                                        }
-                                                    );
-                                                  }
-                                                },),
-                                            ),
-                                            if(context.read<AppProvider>().getUserInfo()!.customerType =="Agent" && item.workflowState == 'Approved' && item.docstatus == 1 && (item.status == 'Partially Paid' || item.status == 'Unpaid') && widget.shippingType == ShippingType.customers)
+                                                                  return ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        var res = await context.read<HomeProvider>().dwrApproval(
+                                                                            item
+                                                                                .digitalWalletRequestId!,
+                                                                            value == 'اعتماد'
+                                                                                ? 'Approve'
+                                                                                : 'Reject');
+                                                                        if (res.status ==
+                                                                            Status.COMPLETED) {
+                                                                          context
+                                                                              .read<HomeProvider>()
+                                                                              .shippingOrdersPagingController!
+                                                                              .refresh();
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                          Fluttertoast.showToast(
+                                                                              backgroundColor: Colors.green,
+                                                                              textColor: Colors.white,
+                                                                              msg: res.data?.message ?? "",
+                                                                              timeInSecForIosWeb: 4,
+                                                                              toastLength: Toast.LENGTH_LONG);
+                                                                        } else {
+                                                                          Fluttertoast.showToast(
+                                                                              backgroundColor: Colors.red,
+                                                                              textColor: Colors.white,
+                                                                              msg: res.data?.message ?? "",
+                                                                              timeInSecForIosWeb: 4,
+                                                                              toastLength: Toast.LENGTH_LONG);
+                                                                        }
+                                                                      },
+                                                                      style: ButtonStyle(
+                                                                          backgroundColor: WidgetStateProperty.all(ColorResources
+                                                                              .rose),
+                                                                          shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                  15))),
+                                                                          padding: WidgetStateProperty.all(const EdgeInsets
+                                                                              .symmetric(
+                                                                              horizontal:
+                                                                                  30,
+                                                                              vertical:
+                                                                                  10))),
+                                                                      child: const Text(
+                                                                          'تأكيد'));
+                                                                }),
+                                                              ],
+                                                              alignment:
+                                                                  AlignmentDirectional
+                                                                      .center,
+                                                              actionsAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15)),
+                                                            );
+                                                          });
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            if (context
+                                                        .read<AppProvider>()
+                                                        .getUserInfo()!
+                                                        .customerType ==
+                                                    "Agent" &&
+                                                item.workflowState ==
+                                                    'Approved' &&
+                                                item.docstatus == 1 &&
+                                                (item.status ==
+                                                        'Partially Paid' ||
+                                                    item.status == 'Unpaid') &&
+                                                widget.shippingType ==
+                                                    ShippingType.customers)
                                               Container(
-                                                decoration: const BoxDecoration(color: ColorResources.summerSky),
+                                                decoration: const BoxDecoration(
+                                                    color: ColorResources
+                                                        .summerSky),
                                                 child: Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
-                                                    onTap: () => _showAgentPaymentEntryDialog(item),
+                                                    onTap: () =>
+                                                        _showAgentPaymentEntryDialog(
+                                                            item),
                                                     child: const Padding(
-                                                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                                      child: Text('سند قبض', style: TextStyle(color: Colors.white)),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 8,
+                                                              horizontal: 16),
+                                                      child: Text('سند قبض',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
                                                     ),
                                                   ),
                                                 ),
@@ -565,8 +746,8 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                 left: 0,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: item.workflowState == 'Pending' ?
-                                          const Color(0xffECAE7E)
+                                      color: item.workflowState == 'Pending'
+                                          ? const Color(0xffECAE7E)
                                           : item.workflowState == 'Approved'
                                               ? const Color(0xff4ABFA7)
                                               : item.workflowState == 'Rejected'
@@ -582,10 +763,10 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                                       item.workflowState == 'Pending'
                                           ? 'تحت الاجراء'
                                           : item.workflowState == 'Approved'
-                                          ? 'معتمد'
-                                          : item.workflowState == 'Rejected'
-                                          ? 'مرفوض'
-                                          : '',
+                                              ? 'معتمد'
+                                              : item.workflowState == 'Rejected'
+                                                  ? 'مرفوض'
+                                                  : '',
                                       style: TextStyle(
                                         fontFamily: 'DIN Next LT W23',
                                         fontSize:
@@ -604,20 +785,23 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
         ));
   }
 
-  void _showAgentPaymentEntryDialog(ShippingOrdeData item){
+  void _showAgentPaymentEntryDialog(ShippingOrdeData item) {
     final formKey = GlobalKey<FormState>();
     String? amount;
     showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return Form(
             key: formKey,
             child: AlertDialog(
               title: Row(
                 children: [
-                  Expanded(child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)))),
+                  Expanded(
+                      child: Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: IconButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: const Icon(Icons.close)))),
                   const Expanded(flex: 2, child: Text('تسجيل سند قبض')),
                   const Spacer()
                 ],
@@ -631,7 +815,10 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('رقم الطلب'),
-                        Text(item.digitalWalletRequestId.toString(), style: const TextStyle(color: ColorResources.pictonBlue, decoration: TextDecoration.underline))
+                        Text(item.digitalWalletRequestId.toString(),
+                            style: const TextStyle(
+                                color: ColorResources.pictonBlue,
+                                decoration: TextDecoration.underline))
                       ],
                     ),
                     Row(
@@ -643,34 +830,50 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                         Expanded(
                             child: Align(
                                 alignment: AlignmentDirectional.centerEnd,
-                                child: Text(item.owner!, style: const TextStyle(fontWeight: FontWeight.bold))))
+                                child: Text(item.owner!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold))))
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('الحالة'),
-                        Text(item.status!, style: const TextStyle(fontWeight: FontWeight.bold))
+                        Text(item.status!,
+                            style: const TextStyle(fontWeight: FontWeight.bold))
                       ],
                     ),
                     const Text('المبلغ المستلم'),
                     const SizedBox(height: 5),
                     TextFormField(
-                      validator: (value){
-                        if(value == null || value.isEmpty){
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return 'مطلوب';
                         }
-                        if(double.parse(value) > double.parse(item.unpaidAmount!)){
+                        if (double.parse(value) >
+                            double.parse(item.unpaidAmount!)) {
                           return 'المبلغ لا يمكن أن يتعدى المبلغ المتبقي';
                         }
                         return null;
                       },
                       onSaved: (value) => amount = value,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: ColorResources.mainColor)),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: ColorResources.mainColor)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: ColorResources.mainColor)),
-                        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Theme.of(context).colorScheme.error)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: ColorResources.mainColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: ColorResources.mainColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: ColorResources.mainColor)),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.error)),
                       ),
                       keyboardType: TextInputType.number,
                     ),
@@ -679,46 +882,58 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                 ),
               ),
               actions: [
-                Consumer<HomeProvider>(
-                    builder: (context, data, child) {
-                      if(data.isLoading){
-                        return const Center(child: CircularProgressIndicator());
+                Consumer<HomeProvider>(builder: (context, data, child) {
+                  if (data.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return ElevatedButton.icon(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+                        var res = await context
+                            .read<HomeProvider>()
+                            .agentPaymentEntry(
+                                item.digitalWalletRequestId!, amount!);
+                        if (res.status == Status.COMPLETED) {
+                          context
+                              .read<HomeProvider>()
+                              .shippingOrdersPagingController
+                              ?.refresh();
+                          Navigator.of(context).pop();
+                          Fluttertoast.showToast(
+                              backgroundColor: Colors.green,
+                              textColor: Colors.white,
+                              msg: res.data?.message ?? "",
+                              timeInSecForIosWeb: 4,
+                              toastLength: Toast.LENGTH_LONG);
+                        } else {
+                          Fluttertoast.showToast(
+                              backgroundColor: ColorResources.studio,
+                              textColor: Colors.white,
+                              msg: res.message ?? "",
+                              timeInSecForIosWeb: 4,
+                              toastLength: Toast.LENGTH_LONG);
+                        }
                       }
-                      return ElevatedButton.icon(
-                        onPressed: () async {
-                          if(formKey.currentState!.validate()){
-                            formKey.currentState!.save();
-                            var res = await context.read<HomeProvider>().agentPaymentEntry(item.digitalWalletRequestId!, amount!);
-                            if(res.status == Status.COMPLETED){
-                              context.read<HomeProvider>().shippingOrdersPagingController?.refresh();
-                              Navigator.of(context).pop();
-                              Fluttertoast.showToast(
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  msg: res.data?.message ?? "",
-                                  timeInSecForIosWeb: 4,
-                                  toastLength: Toast.LENGTH_LONG);
-                            }
-                            else{
-                              Fluttertoast.showToast(
-                                  backgroundColor: ColorResources.studio,
-                                  textColor: Colors.white,
-                                  msg: res.message ?? "",
-                                  timeInSecForIosWeb: 4,
-                                  toastLength: Toast.LENGTH_LONG);
-                            }
-                          }
-                        }, label: const Text('تسجيل استلام'), style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10))), icon: const Icon(Icons.file_download_rounded),);
-                    }
-                ),
+                    },
+                    label: const Text('تسجيل استلام'),
+                    style: ButtonStyle(
+                        shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15))),
+                        padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10))),
+                    icon: const Icon(Icons.file_download_rounded),
+                  );
+                }),
               ],
               alignment: AlignmentDirectional.center,
               actionsAlignment: MainAxisAlignment.center,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
             ),
           );
-        }
-    );
+        });
   }
 
   PreferredSize buildAppBar(BuildContext context) {
@@ -747,12 +962,16 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                       },
                       child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
-
+                Expanded(
+                    child: SizedBox(
+                  width: widgetSize.getWidth(5, context),
+                )),
                 Expanded(
                   flex: 2,
                   child: Text(
-                    widget.shippingType == ShippingType.wallet ? "طلبات شحن المحفظة" : "طلبات شحن العملاء",
+                    widget.shippingType == ShippingType.wallet
+                        ? "طلبات شحن المحفظة"
+                        : "طلبات شحن العملاء",
                     style: TextStyle(
                       fontSize: widgetSize.getHeight(16, context),
                       color: const Color(0xffffffff),
@@ -761,40 +980,71 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
                     softWrap: true,
                   ),
                 ),
-                SizedBox(width: widgetSize.getWidth(2, context),),
+                SizedBox(
+                  width: widgetSize.getWidth(2, context),
+                ),
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.only(left: widgetSize.getWidth(8, context)),
-                    child: SafeOnTap( onSafeTap: ()async {},
+                    padding:
+                        EdgeInsets.only(left: widgetSize.getWidth(8, context)),
+                    child: SafeOnTap(
+                      onSafeTap: () async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                          const Text("JD ", style: TextStyle(
-                            fontFamily: 'DIN Next LT W23',
-                            fontSize: 15,
-                            color:  Color(0xffffffff),
-                            fontWeight: FontWeight.w400,
-                          ), softWrap: true,),
-                          Text(
-                            context.watch<AppProvider>().utilitiesModel!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
-                            style: const TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: 15,
-                              color:  Color(0xffffffff),
-                              fontWeight: FontWeight.w400,
+                            const Text(
+                              "JD ",
+                              style: TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: true,
                             ),
-                            softWrap: false,
-                          ),
-                          SizedBox(width: widgetSize.getWidth(5, context)),
-                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
-                        ],),
-                      ),),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel !=
+                                      null
+                                  ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data !=
+                                          null
+                                      ? context
+                                                  .watch<AppProvider>()
+                                                  .utilitiesModel!
+                                                  .data!
+                                                  .walletBalance !=
+                                              null
+                                          ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data!
+                                              .walletBalance!
+                                          : ""
+                                      : ""
+                                  : "",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(
+                              Assets.svgWallet,
+                              width: widgetSize.getWidth(20, context),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -807,18 +1057,22 @@ class _ShippingOrderHistoryState extends State<ShippingOrderHistory> {
   void initState() {
     super.initState();
     initial();
-      //    context.read<HomeProvider>().getShippingOrders();
+    //    context.read<HomeProvider>().getShippingOrders();
   }
 
-  initial(){
+  initial() {
     context.read<HomeProvider>().shippingOrdersPagingController =
         PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
-    context.read<HomeProvider>().shippingOrderResponseModelVar = ShippingOrderResponseModel(totalOrderData: TotalOrderData(totalUnPaid: 0.0, totalPaid: 0.0));
+    context.read<HomeProvider>().shippingOrderResponseModelVar =
+        ShippingOrderResponseModel(
+            totalOrderData: TotalOrderData(totalUnPaid: 0.0, totalPaid: 0.0));
     context
         .read<HomeProvider>()
         .shippingOrdersPagingController!
         .addPageRequestListener((pageKey) {
-      context.read<HomeProvider>().fetchShippingOrders(pageKey, context, filters);
+      context
+          .read<HomeProvider>()
+          .fetchShippingOrders(pageKey, context, filters);
     });
   }
 

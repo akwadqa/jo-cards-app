@@ -11,6 +11,7 @@ import 'package:jocards/Network/app_exceptions.dart';
 import 'package:jocards/Network/extra_resit_api.dart';
 import 'package:jocards/Network/resit_api.dart';
 import 'package:jocards/model/app_version_model.dart';
+import 'package:jocards/model/customer_model.dart';
 import 'package:jocards/model/response_model.dart';
 import 'package:jocards/model/territories_model.dart';
 import 'package:jocards/model/update_token_model.dart';
@@ -31,14 +32,6 @@ class AppProvider with ChangeNotifier {
   set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();
-  }
-
-  late String _imei;
-
-  String get imei => _imei;
-
-  set imei(String value) {
-    _imei = value;
   }
 
   setSignInUser(bool isSignIn, String? userInfo, String token) async {
@@ -184,12 +177,12 @@ class AppProvider with ChangeNotifier {
     return territoriesModel;
   }
 
-  UtilitiesModel? _UtilitiesModel;
+  UtilitiesModel? _utilitiesModel;
 
-  UtilitiesModel? get utilitiesModel => _UtilitiesModel;
+  UtilitiesModel? get utilitiesModel => _utilitiesModel;
 
   set utilitiesModel(UtilitiesModel? value) {
-    _UtilitiesModel = value;
+    _utilitiesModel = value;
     notifyListeners();
   }
 
@@ -242,12 +235,12 @@ class AppProvider with ChangeNotifier {
     return appVersionModel;
   }
 
-  AgentModel? _AgentModel;
+  AgentModel? _agentModel;
 
-  AgentModel? get agentModel => _AgentModel;
+  AgentModel? get agentModel => _agentModel;
 
   set agentModel(AgentModel? value) {
-    _AgentModel = value;
+    _agentModel = value;
     notifyListeners();
   }
 
@@ -269,6 +262,35 @@ class AppProvider with ChangeNotifier {
     isLoading = false;
 
     return agentModel;
+  }
+
+  CustomerModel? _customerModel;
+
+  CustomerModel? get customerModel => _customerModel;
+
+  set customerModel(CustomerModel? value) {
+    _customerModel = value;
+    notifyListeners();
+  }
+
+  Future<CustomerModel?> getAgentCustomersList() async {
+    restApi mRestApi = restApi(Dio());
+    try {
+      customerModel = await mRestApi.getAgentCustomersList();
+    } catch (e) {
+      isLoading = false;
+      if (e is DioException) {
+        try {
+          throwCustomException(e);
+        } catch (forcedException) {
+          return customerModel = null;
+        }
+      }
+      return customerModel = null;
+    }
+    isLoading = false;
+
+    return customerModel;
   }
 
   Future<ApiResponse<LoginResponseModel>> signUp(
@@ -401,27 +423,20 @@ class AppProvider with ChangeNotifier {
 }
 
 dynamic throwCustomException(DioException? dioError) {
-  var response = dioError?.response?.data;
   var statusCode = dioError?.response?.statusCode;
   switch (dioError!.type) {
     case DioExceptionType.cancel:
       throw RequestWasCancelledException("CANCEL");
-      break;
     case DioExceptionType.connectionTimeout:
       throw ConnectionTimeout("CONNECT_TIMEOUT");
-      break;
     case DioExceptionType.unknown:
       throw DefaultTimeout("DEFAULT");
-      break;
     case DioExceptionType.receiveTimeout:
       throw ReceiveTimeout("RECEIVE_TIMEOUT");
-      break;
     case DioExceptionType.sendTimeout:
       throw SendTimeout("SEND_TIMEOUT");
-      break;
     case DioExceptionType.badResponse:
       throw BadRequestException(dioError.response?.data["error"]);
-      break;
     default:
       throw FetchDataException('Error occurred while Communication with Server '
           'with StatusCode : $statusCode');

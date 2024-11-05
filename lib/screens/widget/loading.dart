@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jocards/utill/color_resources.dart';
 
 class Loading extends StatelessWidget {
-  String? loadingText;
-  Loading({Key? key, this.loadingText}) : super(key: key);
+  final String? loadingText;
+  const Loading({super.key, this.loadingText});
 
   @override
   Widget build(BuildContext context) {

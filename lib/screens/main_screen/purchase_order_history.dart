@@ -34,6 +34,7 @@ class PurchaseOrderHistory extends StatefulWidget {
   @override
   _PurchaseOrderHistoryState createState() => _PurchaseOrderHistoryState();
 }
+
 // si ===> instead
 class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
   String filters = '{}';
@@ -49,7 +50,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
           child: RefreshIndicator(
             onRefresh: () => Future.sync(() {
               filters = '{}';
-              context.read<HomeProvider>().salesInvoiceDataPagingController?.refresh();
+              context
+                  .read<HomeProvider>()
+                  .salesInvoiceDataPagingController
+                  ?.refresh();
               context.read<AppProvider>().getUtilities();
             }),
             child: CustomScrollView(slivers: <Widget>[
@@ -83,15 +87,18 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: SearchComponent(
-                  searchType: SearchType.salesRequests,
-                  onSearch: (String filters) {
-                    this.filters = filters;
-                    context.read<HomeProvider>().salesInvoiceDataPagingController!.refresh();
-                  },
-                )
-              ),
-              SliverToBoxAdapter(child: SizedBox(height: widgetSize.getHeight(10, context))),
+                  child: SearchComponent(
+                searchType: SearchType.salesRequests,
+                onSearch: (String filters) {
+                  this.filters = filters;
+                  context
+                      .read<HomeProvider>()
+                      .salesInvoiceDataPagingController!
+                      .refresh();
+                },
+              )),
+              SliverToBoxAdapter(
+                  child: SizedBox(height: widgetSize.getHeight(10, context))),
               PagedSliverList<int, SalesInvoiceData>(
                   shrinkWrapFirstPageIndicators: false,
                   pagingController: context
@@ -135,7 +142,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: widgetSize.getWidth(12, context)),
+                                    horizontal:
+                                        widgetSize.getWidth(12, context)),
                                 child: Column(
                                   children: [
                                     SizedBox(
@@ -147,7 +155,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width: widgetSize.getWidth(10, context),
+                                          width:
+                                              widgetSize.getWidth(10, context),
                                         ),
                                         Column(
                                           children: [
@@ -164,17 +173,18 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       borderRadius:
-                                                          const BorderRadius.all(
+                                                          const BorderRadius
+                                                              .all(
                                                               Radius.circular(
                                                                   10)),
                                                       shape: BoxShape.rectangle,
-                                                      color: item
-                                                          .items![0]
-                                                          .backgroundColor !=
-                                                          null
-                                                          ? hexToColor( item.items![0]
-                                                              .backgroundColor!
-                                                          ): Colors.white,
+                                                      color: item.items![0]
+                                                                  .backgroundColor !=
+                                                              null
+                                                          ? hexToColor(item
+                                                              .items![0]
+                                                              .backgroundColor!)
+                                                          : Colors.white,
                                                       image: DecorationImage(
                                                           image: imageProvider,
                                                           fit: BoxFit.contain),
@@ -229,15 +239,17 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                               onSafeTap: () async {
                                                 context
                                                     .read<HomeProvider>()
-                                                    .getPurchaseInvoiceDetails(item
-                                                        .salesInvoiceId
-                                                        .toString())
+                                                    .getPurchaseInvoiceDetails(
+                                                        item.salesInvoiceId
+                                                            .toString())
                                                     .then((result) {
                                                   if (result.data != null &&
-                                                      result.data!.data != null) {
+                                                      result.data!.data !=
+                                                          null) {
                                                     var response =
                                                         result.data!.data!;
-                                                    directOrderResponse.currency =
+                                                    directOrderResponse
+                                                            .currency =
                                                         response.currency;
                                                     directOrderResponse
                                                             .grandTotal =
@@ -249,26 +261,29 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                         response.postingTime;
                                                     directOrderResponse.owner =
                                                         response.owner;
-                                                    directOrderResponse.invoiceId =
-                                                        response.salesInvoiceId;
+                                                    directOrderResponse
+                                                            .salesOrderId =
+                                                        response.salesOrderId;
                                                     directOrderResponse
                                                         .orderItems = [];
                                                     var orderItems = OrderItems(
                                                         websiteItemName: response
-                                                            .itemsDetail![0]
+                                                            .orderItems![0]
                                                             .websiteItemName,
                                                         websiteItemCode: response
-                                                            .itemsDetail![0]
+                                                            .orderItems![0]
                                                             .websiteItemCode,
                                                         quantity: response
-                                                            .itemsDetail![0].qty,
+                                                            .orderItems![0].qty,
                                                         totalAmount: response
-                                                            .itemsDetail![0]
+                                                            .orderItems![0]
                                                             .netAmount,
-                                                        stockDetails: []);
-                                                    for (var element in response.itemsDetail![0]
+                                                        digitalCardDetails: []);
+                                                    for (var element in response
+                                                        .orderItems![0]
                                                         .serialNumber!) {
-                                                      orderItems.stockDetails!
+                                                      orderItems
+                                                          .digitalCardDetails!
                                                           .add(element);
                                                     }
 
@@ -283,16 +298,18 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                   builder:
                                                       (BuildContext context) =>
                                                           Dialog(
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                12.0)),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0)),
                                                     //this right here
                                                     child: Padding(
                                                         padding: EdgeInsets.symmetric(
                                                             horizontal: widgetSize
-                                                                .getWidth(
-                                                                    20, context)),
+                                                                .getWidth(20,
+                                                                    context)),
                                                         child: Consumer<
                                                                 HomeProvider>(
                                                             builder: (context,
@@ -304,7 +321,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                             switch (homeProvider
                                                                 .salesInvoiceDetailsResponse!
                                                                 .status!) {
-                                                              case Status.LOADING:
+                                                              case Status
+                                                                    .LOADING:
                                                                 return SizedBox(
                                                                   height: 300,
                                                                   width: MediaQuery.of(
@@ -312,14 +330,13 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                       .size
                                                                       .width,
                                                                   child: Loading(
-                                                                      loadingText:
-                                                                          homeProvider
-                                                                              .salesInvoiceDetailsResponse!
-                                                                              .message),
+                                                                      loadingText: homeProvider
+                                                                          .salesInvoiceDetailsResponse!
+                                                                          .message),
                                                                 );
 
                                                               case Status
-                                                                  .COMPLETED:
+                                                                    .COMPLETED:
                                                                 SalesInvoiceDetailsData?
                                                                     items =
                                                                     homeProvider
@@ -333,12 +350,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                       ListView(
                                                                         shrinkWrap:
                                                                             true,
-                                                                        children: <
-                                                                            Widget>[
+                                                                        children: <Widget>[
                                                                           SizedBox(
-                                                                            height: widgetSize.getHeight(
-                                                                                20,
-                                                                                context),
+                                                                            height:
+                                                                                widgetSize.getHeight(20, context),
                                                                           ),
                                                                           Row(
                                                                             children: [
@@ -371,16 +386,15 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                             ],
                                                                           ),
                                                                           SizedBox(
-                                                                            height: widgetSize.getHeight(
-                                                                                25,
-                                                                                context),
+                                                                            height:
+                                                                                widgetSize.getHeight(25, context),
                                                                           ),
                                                                           Column(
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.center,
                                                                             children: [
                                                                               Text(
-                                                                                items.itemsDetail?.first.websiteItemName != null ? items.itemsDetail!.first.websiteItemName! : "",
+                                                                                items.salesOrderId != null ? items.salesOrderId! : "",
                                                                                 style: TextStyle(
                                                                                   fontFamily: 'DIN Next LT W23',
                                                                                   fontSize: widgetSize.getHeight(20, context),
@@ -389,118 +403,123 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                 ),
                                                                                 softWrap: false,
                                                                               ),
-                                                                              if(items.itemsDetail?.first.serialNumber != null && items.itemsDetail!.first.serialNumber!.isNotEmpty) ListView(
-                                                                                  physics: const NeverScrollableScrollPhysics(),
-                                                                                  shrinkWrap: true,
-                                                                                  children: items.itemsDetail![0].serialNumber!.map<Widget>((data)=> Align(
-                                                                                    alignment: Alignment.center,
-                                                                                    child: Column(
-                                                                                      children: [
-                                                                                        SizedBox(
-                                                                                          height: widgetSize.getHeight(10, context),
-                                                                                        ),
-                                                                                        Text(
-                                                                                          "الرقم التسلسلي:",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: widgetSize.getHeight(16, context),
-                                                                                            color: const Color(0xff2e2e2e),
-                                                                                          ),
-                                                                                          softWrap: false,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          data.serialNo!,
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: widgetSize.getHeight(20, context),
-                                                                                            color: const Color(0xffec7e7e),
-                                                                                          ),
-                                                                                          softWrap: false,
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          height: widgetSize.getHeight(10, context),
-                                                                                        ),
-                                                                                        Text(
-                                                                                          "رقم المرجع:",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: widgetSize.getHeight(16, context),
-                                                                                            color: const Color(0xff2e2e2e),
-                                                                                          ),
-                                                                                          softWrap: false,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          data.refNo!,
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: widgetSize.getHeight(20, context),
-                                                                                            color: const Color(0xffec7e7e),
-                                                                                          ),
-                                                                                          softWrap: false,
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          height: widgetSize.getHeight(10, context),
-                                                                                        ),
-                                                                                        Text(
-                                                                                          "الرقم السري:",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'DIN Next LT W23',
-                                                                                            fontSize: widgetSize.getHeight(16, context),
-                                                                                            color: const Color(0xff2e2e2e),
-                                                                                          ),
-                                                                                          softWrap: false,
-                                                                                        ),
-                                                                                        Row(
-                                                                                          mainAxisAlignment:
-                                                                                          MainAxisAlignment.center,
-                                                                                          children: [
-                                                                                            const Spacer(),
-                                                                                            Expanded(
-                                                                                              flex: 6,
-                                                                                              child: Center(
-                                                                                                child: Text(
-                                                                                                  data.secretCode!,
-                                                                                                  style: const TextStyle(
-                                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                                    fontSize: 23,
-                                                                                                    color:
-                                                                                                    Color(0xffec7e7e),
-                                                                                                    fontWeight: FontWeight.w500,
-                                                                                                  ),
-                                                                                                  textAlign: TextAlign.right,
-                                                                                                  softWrap: true,
-                                                                                                  maxLines: 2,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                            Expanded(
-                                                                                              child: SafeOnTap(
-                                                                                                  onSafeTap: () async {
-                                                                                                    await Clipboard.setData(
-                                                                                                        ClipboardData(
-                                                                                                            text: data.secretCode!));
-                                                                                                    var snackBar = const SnackBar(
-                                                                                                        content:
-                                                                                                        Text("تم النسخ"));
-                                                                                                    ScaffoldMessenger.of(
-                                                                                                        context)
-                                                                                                        .showSnackBar(snackBar);
-                                                                                                  },
-                                                                                                  child: SvgPicture.asset(
-                                                                                                      Assets.svgCopy)),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                        Divider(),
-                                                                                      ],
-                                                                                    ),
-                                                                                  )).toList()),
-
                                                                               SizedBox(
                                                                                 height: widgetSize.getHeight(10, context),
                                                                               ),
-                                                                              if (items.itemsDetail?.first.qty !=
-                                                                                  null) ...[
+                                                                              Text(
+                                                                                items.orderItems?.first.websiteItemName != null ? items.orderItems!.first.websiteItemName! : "",
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'DIN Next LT W23',
+                                                                                  fontSize: widgetSize.getHeight(20, context),
+                                                                                  color: const Color(0xff2e2e2e),
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                ),
+                                                                                softWrap: false,
+                                                                              ),
+                                                                              if (items.orderItems?.first.serialNumber != null && items.orderItems!.first.serialNumber!.isNotEmpty)
+                                                                                ListView(
+                                                                                    physics: const NeverScrollableScrollPhysics(),
+                                                                                    shrinkWrap: true,
+                                                                                    children: items.orderItems![0].serialNumber!
+                                                                                        .map<Widget>((data) => Align(
+                                                                                              alignment: Alignment.center,
+                                                                                              child: Column(
+                                                                                                children: [
+                                                                                                  SizedBox(
+                                                                                                    height: widgetSize.getHeight(10, context),
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    "الرقم التسلسلي:",
+                                                                                                    style: TextStyle(
+                                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                                      fontSize: widgetSize.getHeight(16, context),
+                                                                                                      color: const Color(0xff2e2e2e),
+                                                                                                    ),
+                                                                                                    softWrap: false,
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    data.serialNo!,
+                                                                                                    style: TextStyle(
+                                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                                      fontSize: widgetSize.getHeight(20, context),
+                                                                                                      color: const Color(0xffec7e7e),
+                                                                                                    ),
+                                                                                                    softWrap: false,
+                                                                                                  ),
+                                                                                                  SizedBox(
+                                                                                                    height: widgetSize.getHeight(10, context),
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    "رقم المرجع:",
+                                                                                                    style: TextStyle(
+                                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                                      fontSize: widgetSize.getHeight(16, context),
+                                                                                                      color: const Color(0xff2e2e2e),
+                                                                                                    ),
+                                                                                                    softWrap: false,
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    data.refNo!,
+                                                                                                    style: TextStyle(
+                                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                                      fontSize: widgetSize.getHeight(20, context),
+                                                                                                      color: const Color(0xffec7e7e),
+                                                                                                    ),
+                                                                                                    softWrap: false,
+                                                                                                  ),
+                                                                                                  SizedBox(
+                                                                                                    height: widgetSize.getHeight(10, context),
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    "الرقم السري:",
+                                                                                                    style: TextStyle(
+                                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                                      fontSize: widgetSize.getHeight(16, context),
+                                                                                                      color: const Color(0xff2e2e2e),
+                                                                                                    ),
+                                                                                                    softWrap: false,
+                                                                                                  ),
+                                                                                                  Row(
+                                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                    children: [
+                                                                                                      const Spacer(),
+                                                                                                      Expanded(
+                                                                                                        flex: 6,
+                                                                                                        child: Center(
+                                                                                                          child: Text(
+                                                                                                            data.secretCode!,
+                                                                                                            style: const TextStyle(
+                                                                                                              fontFamily: 'DIN Next LT W23',
+                                                                                                              fontSize: 23,
+                                                                                                              color: Color(0xffec7e7e),
+                                                                                                              fontWeight: FontWeight.w500,
+                                                                                                            ),
+                                                                                                            textAlign: TextAlign.right,
+                                                                                                            softWrap: true,
+                                                                                                            maxLines: 2,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Expanded(
+                                                                                                        child: SafeOnTap(
+                                                                                                            onSafeTap: () async {
+                                                                                                              await Clipboard.setData(ClipboardData(text: data.secretCode!));
+                                                                                                              var snackBar = const SnackBar(content: Text("تم النسخ"));
+                                                                                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                                            },
+                                                                                                            child: SvgPicture.asset(Assets.svgCopy)),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                  const Divider(),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ))
+                                                                                        .toList()),
+                                                                              SizedBox(
+                                                                                height: widgetSize.getHeight(10, context),
+                                                                              ),
+                                                                              if (items.orderItems?.first.qty != null) ...[
                                                                                 Row(
                                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                                   children: [
@@ -514,7 +533,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                       softWrap: false,
                                                                                     ),
                                                                                     Text(
-                                                                                      items.itemsDetail?.first.qty != null ? items.itemsDetail!.first.qty.toString() : "",
+                                                                                      items.orderItems?.first.qty != null ? items.orderItems!.first.qty.toString() : "",
                                                                                       style: TextStyle(
                                                                                         fontFamily: 'DIN Next LT W23',
                                                                                         fontSize: widgetSize.getHeight(16, context),
@@ -528,8 +547,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                   height: widgetSize.getHeight(10, context),
                                                                                 ),
                                                                               ],
-                                                                              if (item.totalTaxesAndCharges !=
-                                                                                  null && item.totalTaxesAndCharges != '0.0') ...[
+                                                                              if (item.totalTaxesAndCharges != null && item.totalTaxesAndCharges != '0.0') ...[
                                                                                 Align(
                                                                                   alignment: Alignment.center,
                                                                                   child: Text(
@@ -547,11 +565,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                   height: widgetSize.getHeight(10, context),
                                                                                 ),
                                                                               ],
-                                                                              if (items.itemsDetail?.first.productOptions != null &&
-                                                                                  items.itemsDetail!.first.productOptions!.isNotEmpty) ...[
+                                                                              if (items.orderItems?.first.productOptions != null && items.orderItems!.first.productOptions!.isNotEmpty) ...[
                                                                                 Column(
                                                                                     crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                    children: items.itemsDetail!.first.productOptions!.map<Widget>((e) {
+                                                                                    children: items.orderItems!.first.productOptions!.map<Widget>((e) {
                                                                                       if (e.productOptionFieldValue != null && e.productOptionFieldValue!.isNotEmpty) {
                                                                                         return Padding(
                                                                                           padding: const EdgeInsets.symmetric(vertical: 3),
@@ -587,8 +604,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                   height: widgetSize.getHeight(20, context),
                                                                                 ),
                                                                               ],
-                                                                              if (items.grandTotal != null &&
-                                                                                  item.grandTotal != "0.0") ...[
+                                                                              if (items.grandTotal != null && item.grandTotal != "0.0") ...[
                                                                                 Text(
                                                                                   item.grandTotal!.toString(),
                                                                                   style: const TextStyle(
@@ -606,7 +622,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                             ],
                                                                           ),
                                                                           Row(
-                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: SafeOnTap(
@@ -647,9 +663,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                                if(Platform.isAndroid) SizedBox(
-                                                                                  width: widgetSize.getWidth(10, context),
-                                                                                ),
+                                                                                if (Platform.isAndroid)
+                                                                                  SizedBox(
+                                                                                    width: widgetSize.getWidth(10, context),
+                                                                                  ),
                                                                                 Visibility(
                                                                                   visible: Platform.isAndroid,
                                                                                   child: Expanded(
@@ -659,7 +676,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                           await printOnTelpo(directOrderResponse, context.read<AppProvider>().getEnableMerchantNamePrint() ? context.read<AppProvider>().utilitiesModel : null, context);
                                                                                         } else {
                                                                                           if (context.read<AppProvider>().getBluetoothDevice() == null) {
-                                                                                            var result = await Navigator.push(
+                                                                                            await Navigator.push(
                                                                                               context,
                                                                                               PageTransition(
                                                                                                 type: PageTransitionType.fade,
@@ -708,7 +725,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                                                 ),
                                                                               ]),
                                                                           SizedBox(
-                                                                            height: widgetSize.getHeight(10, context),
+                                                                            height:
+                                                                                widgetSize.getHeight(10, context),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -753,25 +771,31 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xff2892d7),
+                                                  color:
+                                                      const Color(0xff2892d7),
                                                   borderRadius:
-                                                      BorderRadius.circular(20.0),
+                                                      BorderRadius.circular(
+                                                          20.0),
                                                 ),
                                                 child: Center(
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal:
-                                                            widgetSize.getWidth(
-                                                                20, context),
-                                                        vertical: 2),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                widgetSize
+                                                                    .getWidth(
+                                                                        20,
+                                                                        context),
+                                                            vertical: 2),
                                                     child: Text(
                                                       'التفاصيل',
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'DIN Next LT W23',
-                                                        fontSize:
-                                                            widgetSize.getHeight(
+                                                        fontSize: widgetSize
+                                                            .getHeight(
                                                                 14, context),
                                                         color: const Color(
                                                             0xffffffff),
@@ -789,7 +813,8 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                           ],
                                         ),
                                         SizedBox(
-                                          width: widgetSize.getWidth(10, context),
+                                          width:
+                                              widgetSize.getWidth(10, context),
                                         ),
                                         Expanded(
                                           child: Column(
@@ -827,7 +852,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 softWrap: false,
                                               ),
                                               Text(
-                                                item.invoiceStatus.toString(),
+                                                item.orderStatus.toString(),
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
@@ -876,8 +901,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                       fontFamily:
                                                           'DIN Next LT W23',
                                                       fontSize: 22,
-                                                      color:
-                                                          Color(0xffec7e7e),
+                                                      color: Color(0xffec7e7e),
                                                       fontWeight:
                                                           FontWeight.w700),
                                                   softWrap: false,
@@ -889,10 +913,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                 child: Text(
                                                   item.currency!.toString(),
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 18,
-                                                    color:
-                                                        Color(0xffec7e7e),
+                                                    color: Color(0xffec7e7e),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -912,10 +936,11 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                     style: TextStyle(
                                                       fontFamily:
                                                           'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(12, context),
-                                                      color:
-                                                          const Color(0xff6b6b6b),
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              12, context),
+                                                      color: const Color(
+                                                          0xff6b6b6b),
                                                     ),
                                                     softWrap: false,
                                                   ),
@@ -927,10 +952,11 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                                                     style: TextStyle(
                                                       fontFamily:
                                                           'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(12, context),
-                                                      color:
-                                                          const Color(0xff6b6b6b),
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              12, context),
+                                                      color: const Color(
+                                                          0xff6b6b6b),
                                                     ),
                                                     softWrap: false,
                                                   ),
@@ -977,8 +1003,10 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                       },
                       child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
-
+                Expanded(
+                    child: SizedBox(
+                  width: widgetSize.getWidth(5, context),
+                )),
                 Expanded(
                   flex: 2,
                   child: Text(
@@ -994,36 +1022,65 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
-                    child: SafeOnTap( onSafeTap: ()async {},
+                    padding:
+                        EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap(
+                      onSafeTap: () async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                          const Text("JD ", style: TextStyle(
-                            fontFamily: 'DIN Next LT W23',
-                            fontSize: 15,
-                            color:  Color(0xffffffff),
-                            fontWeight: FontWeight.w400,
-                          ), softWrap: false,),
-                          Text(
-                            context.watch<AppProvider>().utilitiesModel!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
-                            style: const TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: 15,
-                              color:  Color(0xffffffff),
-                              fontWeight: FontWeight.w400,
+                            const Text(
+                              "JD ",
+                              style: TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
                             ),
-                            softWrap: false,
-                          ),
-                          SizedBox(width: widgetSize.getWidth(5, context)),
-                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
-                        ],),
-                      ),),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel !=
+                                      null
+                                  ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data !=
+                                          null
+                                      ? context
+                                                  .watch<AppProvider>()
+                                                  .utilitiesModel!
+                                                  .data!
+                                                  .walletBalance !=
+                                              null
+                                          ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data!
+                                              .walletBalance!
+                                          : ""
+                                      : ""
+                                  : "",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(
+                              Assets.svgWallet,
+                              width: widgetSize.getWidth(20, context),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -1037,7 +1094,7 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
   @override
   void initState() {
     super.initState();
-    userModel= context.read<AppProvider>().getUserInfo();
+    userModel = context.read<AppProvider>().getUserInfo();
     context.read<HomeProvider>().salesInvoiceDataPagingController =
         PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
     context
@@ -1051,11 +1108,12 @@ class _PurchaseOrderHistoryState extends State<PurchaseOrderHistory> {
 
   initlizeCategory() async {
     List<String> items = [];
-    ApiResponse<CategoriesModel> apiResponse =await context.read<HomeProvider>().getAllCategories();
+    ApiResponse<CategoriesModel> apiResponse =
+        await context.read<HomeProvider>().getAllCategories();
     if (apiResponse.status == Status.COMPLETED) {
-      if(apiResponse.data!.data != null){
+      if (apiResponse.data!.data != null) {
         List<Data>? list = apiResponse.data!.data;
-        for(int i=0; i< list!.length; i++){
+        for (int i = 0; i < list!.length; i++) {
           items.add(list[i].itemGroupId!);
         }
       }

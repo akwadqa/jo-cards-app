@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocards/provider/home_provider.dart';
-import 'package:jocards/provider/shared_nav_bar_provider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
@@ -454,7 +453,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
           return suggestions;
         },
         controller: mobileController,
-        searchInputDecoration: InputDecoration(
+        searchInputDecoration: SearchInputDecoration(
           border: OutlineInputBorder(
             borderRadius:
             BorderRadius.circular(
@@ -500,7 +499,6 @@ else{ data = context.read<AppProvider>().agentModel!.data!.where((element) => va
     if(value != null){
       List<Data> dataNumbers = context.read<AppProvider>().agentModel!.data!.where((element) => element.mobileNo!.contains(value)).toList();
       List<Data> dataNames = context.read<AppProvider>().agentModel!.data!.where((element) => element.customerName!.contains(value)).toList();
-      final RegExp numberExp = RegExp(r'[^0-9]+$');
       final List<String> numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
       if(value.isNotEmpty) {
         if (numbers.contains(value[0])) {
@@ -544,7 +542,7 @@ else{ data = context.read<AppProvider>().agentModel!.data!.where((element) => va
 
   Future<void> showAgentCustomersName(BuildContext context) async {
     if( context.read<AppProvider>().getUserInfo()!.customerType == "Agent") {
-      var res = await showMaterialModalBottomSheet(
+      await showMaterialModalBottomSheet(
         expand: false,
         context: context,
         backgroundColor: Colors.transparent,
@@ -661,12 +659,10 @@ else{ data = context.read<AppProvider>().agentModel!.data!.where((element) => va
   final picker = ImagePicker();
 
   Future<XFile?> getImagePicker(ImageSource source) async {
-    File? image;
     final pickedFile =
     await picker.pickImage(source: source, maxHeight: 480, maxWidth: 640);
     setState(() {
       if (pickedFile != null) {
-        image = File(pickedFile.path);
       } else {}
     });
 

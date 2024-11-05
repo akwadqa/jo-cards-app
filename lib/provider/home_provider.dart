@@ -159,7 +159,7 @@ class HomeProvider extends AppProvider {
         homsResponse = ApiResponse.completed(homeModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -186,7 +186,7 @@ class HomeProvider extends AppProvider {
         itemCategoryResponse = ApiResponse.completed(itemCategoryModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -214,7 +214,7 @@ class HomeProvider extends AppProvider {
         productDetailsResponse = ApiResponse.completed(productsDetailsModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -273,7 +273,7 @@ class HomeProvider extends AppProvider {
         }
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
             if (e.response!.statusCode == 500 &&
@@ -316,7 +316,7 @@ class HomeProvider extends AppProvider {
         }
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -352,7 +352,7 @@ class HomeProvider extends AppProvider {
         apiResponse = ApiResponse.completed(uploadResponseModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -408,7 +408,7 @@ class HomeProvider extends AppProvider {
         categoriesModelResponse = ApiResponse.completed(categoriesModel);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -490,7 +490,7 @@ class HomeProvider extends AppProvider {
         }
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -695,7 +695,7 @@ class HomeProvider extends AppProvider {
         agentPaymentEntryResponse = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -724,7 +724,7 @@ class HomeProvider extends AppProvider {
         apiResponse = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -751,7 +751,7 @@ class HomeProvider extends AppProvider {
         apiUpdateProfileResponse = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {
@@ -781,7 +781,7 @@ class HomeProvider extends AppProvider {
         updatePasswordModel = ApiResponse.completed(response);
       } catch (e) {
         isLoading = false;
-        if (e is DioError) {
+        if (e is DioException) {
           try {
             throwCustomException(e);
           } catch (forcedException) {

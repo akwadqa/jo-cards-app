@@ -26,11 +26,11 @@ import '../../provider/home_provider.dart';
 import '../main_screen/main_screen.dart';
 
 class SignInScreen extends StatefulWidget {
-  String? email;
-  String? password;
-  bool? fromSetting;
+  final String? email;
+  final String? password;
+  final bool? fromSetting;
 
-  SignInScreen({super.key, this.email, this.password, this.fromSetting});
+  const SignInScreen({super.key, this.email, this.password, this.fromSetting});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -237,10 +237,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             if (context
                                 .read<SharedNavBarProvider>()
                                 .controller
-                                .hasClients)
+                                .hasClients) {
                               context
                                   .read<SharedNavBarProvider>()
                                   .initialController();
+                            }
                             context
                                 .read<SharedNavBarProvider>()
                                 .changeBottomIndex(0);
@@ -330,7 +331,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 .getFirebaseToken(),
             userInfo!.profileDetails!.email!,
             deviceType,
-            device ?? '');
+            device);
       }
       await Navigator.pushAndRemoveUntil(
           context,
@@ -347,33 +348,28 @@ class _SignInScreenState extends State<SignInScreen> {
       if (message != null && message.contains('User disabled or missing')) {
         message = 'المستخدم معطل أو مفقود';
       }
-      Fluttertoast.showToast(
-          backgroundColor: ColorResources.studio,
-          textColor: Colors.white,
-          msg: message ?? "",
-          timeInSecForIosWeb: 4,
-          toastLength: Toast.LENGTH_LONG);
     }
   }
 
   resetPassword(String email) async {
     var res = await context.read<AppProvider>().resetPassword(email);
 
-    if (res.status == Status.COMPLETED) {
-      Fluttertoast.showToast(
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          msg: (res.data!.message) ?? "",
-          timeInSecForIosWeb: 4,
-          toastLength: Toast.LENGTH_LONG);
-    } else {
-      String? message = res.message;
-      Fluttertoast.showToast(
+    if (res.data?.message != null) {
+      if (res.status == Status.COMPLETED) {
+        Fluttertoast.showToast(
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            msg: (res.data!.message) ?? "",
+            timeInSecForIosWeb: 4,
+            toastLength: Toast.LENGTH_LONG);
+      } else {
+        Fluttertoast.showToast(
           backgroundColor: ColorResources.studio,
           textColor: Colors.white,
           msg: res.message ?? "",
           timeInSecForIosWeb: 4,
           toastLength: Toast.LENGTH_LONG);
+      }
     }
   }
 
@@ -408,6 +404,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.email != null && widget.password != null) {
       emailController.text = widget.email!;
       passwordController.text = widget.password!;

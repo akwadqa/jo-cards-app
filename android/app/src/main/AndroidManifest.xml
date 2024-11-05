@@ -10,7 +10,12 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="tel" />
         </intent>
+        
         <package android:name="com.whatsapp" />
+        <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="https" />
+  </intent>
     </queries>
     <application
         android:label="jocards"

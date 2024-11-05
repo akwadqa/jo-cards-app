@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../../../provider/app_provider.dart';
 import '../../../../utill/color_resources.dart';
 import 'custom_text_form_field.dart';
+import 'customer_name_drop_down.dart';
 
 enum SearchType {
   salesRequests,
@@ -22,14 +23,17 @@ enum SearchType {
 }
 
 class SearchComponent extends StatelessWidget {
-  const SearchComponent({Key? key, required this.searchType, required this.onSearch}) : super(key: key);
+  const SearchComponent(
+      {super.key, required this.searchType, required this.onSearch});
   final SearchType searchType;
   final void Function(String filters) onSearch;
   @override
   Widget build(BuildContext context) {
-    String searchText = (searchType == SearchType.walletRequestsLog || searchType == SearchType.batchLog) ? 'البحث  في عمليات المحفظة' : 'البحث في الطلبات';
-    LoginResponseModel? userModel= context.read<AppProvider>().getUserInfo();
-    print(userModel!.customerType);
+    String searchText = (searchType == SearchType.walletRequestsLog ||
+            searchType == SearchType.batchLog)
+        ? 'البحث  في عمليات المحفظة'
+        : 'البحث في الطلبات';
+    LoginResponseModel? userModel = context.read<AppProvider>().getUserInfo();
     return TextFormField(
       readOnly: true,
       onTap: () {
@@ -47,7 +51,7 @@ class SearchComponent extends StatelessWidget {
         final formKey = GlobalKey<FormState>();
         showBarModalBottomSheet(
             context: context,
-            builder: (context){
+            builder: (context) {
               return Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: SingleChildScrollView(
@@ -55,10 +59,14 @@ class SearchComponent extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(searchText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(searchText,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       SizedBox(height: widgetSize.getHeight(10, context)),
-                      if(searchType != SearchType.walletRequestsLog && searchType != SearchType.batchLog)...[
-                        const Text('رقم الطلب', style: TextStyle(fontWeight: FontWeight.w500)),
+                      if (searchType != SearchType.walletRequestsLog &&
+                          searchType != SearchType.batchLog) ...[
+                        const Text('رقم الطلب',
+                            style: TextStyle(fontWeight: FontWeight.w500)),
                         SizedBox(height: widgetSize.getHeight(10, context)),
                       ],
                       Form(
@@ -69,262 +77,381 @@ class SearchComponent extends StatelessWidget {
                             Row(
                               children: [
                                 Expanded(
-                                  flex: searchType == SearchType.walletRequestsLog ? 4 :  searchType == SearchType.batchLog ? 1: 2,
+                                  flex:
+                                      searchType == SearchType.walletRequestsLog
+                                          ? 4
+                                          : searchType == SearchType.batchLog
+                                              ? 1
+                                              : 2,
                                   child: CustomTextFormField(
                                     hintText: 'رقم الطلب',
                                     onSaved: (value) => orderNumber = value,
                                   ),
                                 ),
-                                if(searchType != SearchType.walletRequests && searchType != SearchType.batchLog && searchType != SearchType.customersRequests)
+                                if (searchType != SearchType.walletRequests &&
+                                    searchType != SearchType.batchLog &&
+                                    searchType != SearchType.customersRequests)
                                   const Spacer(),
-                                 if((searchType == SearchType.walletRequests || searchType == SearchType.customersRequests) && userModel.customerType == "Agent")
-                                  Expanded(flex : 3, child: Row(
-                                    children: [
-                                      TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer: searchType == SearchType.customersRequests ? true :false, reedOnly: true,),
-                                      const Text("تحويل"),
-                                    ],
-                                  ),),
-
-                                if(searchType == SearchType.walletRequestsLog)
+                                if ((searchType == SearchType.walletRequests ||
+                                        searchType ==
+                                            SearchType.customersRequests) &&
+                                    userModel!.customerType == "Agent")
+                                  Expanded(
+                                    flex: 3,
+                                    child: Row(
+                                      children: [
+                                        TransferCheckBox(
+                                          onChanged: (bool value) =>
+                                              isTransfer = value,
+                                          isTransfer: searchType ==
+                                                  SearchType.customersRequests
+                                              ? true
+                                              : false,
+                                          reedOnly: true,
+                                        ),
+                                        const Text("تحويل"),
+                                      ],
+                                    ),
+                                  ),
+                                if (searchType == SearchType.walletRequestsLog)
                                   Expanded(
                                     flex: 4,
                                     child: CustomTextFormField(
                                       hintText: 'رقم التحويل',
-                                      onSaved: (value) => transactionNumber = value,
+                                      onSaved: (value) =>
+                                          transactionNumber = value,
                                     ),
                                   ),
-
-                                if(searchType == SearchType.batchLog)...[
-                                  SizedBox(width: widgetSize.getWidth(10, context)),
+                                if (searchType == SearchType.batchLog) ...[
+                                  SizedBox(
+                                      width: widgetSize.getWidth(10, context)),
                                   Expanded(
                                     flex: 1,
                                     child: CustomTextFormField(
                                       hintText: 'رقم الدفع',
-                                      onSaved: (value) => transactionNumber = value,
+                                      onSaved: (value) =>
+                                          transactionNumber = value,
                                     ),
                                   ),
-                                  ],
+                                ],
                               ],
                             ),
                             SizedBox(height: widgetSize.getHeight(10, context)),
-                            if((searchType == SearchType.walletRequests || searchType == SearchType.customersRequests || searchType == SearchType.salesRequests || searchType == SearchType.batchLog ) && userModel.customerType == "Agent") ...[
-                              CustomTextFormField(
-                                hintText: 'اسم العميل',
-                                onSaved: (value) => customerName = value,
-                              ),
-                              SizedBox(height: widgetSize.getHeight(10, context)),
+                            if ((searchType == SearchType.walletRequests ||
+                                    searchType ==
+                                        SearchType.customersRequests ||
+                                    searchType == SearchType.batchLog) &&
+                                userModel!.customerType == "Agent") ...[
+                              const Text('اسم العميل',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w500)),
+                              SizedBox(
+                                  height: widgetSize.getHeight(10, context)),
+                              CustomerNameDropDown(
+                                  onSaved: (value) => customerName = value),
+                              SizedBox(
+                                  height: widgetSize.getHeight(10, context)),
                             ],
-
-                            if(searchType == SearchType.walletRequests || searchType == SearchType.walletRequestsLog || searchType == SearchType.customersRequests || searchType == SearchType.salesRequests) ...[
-                              const Text('الإجمالي (دينار)', style: TextStyle(fontWeight: FontWeight.w500)),
-                              SizedBox(height: widgetSize.getHeight(10, context)),
+                            if (searchType == SearchType.walletRequests ||
+                                searchType == SearchType.walletRequestsLog ||
+                                searchType == SearchType.customersRequests ||
+                                searchType == SearchType.salesRequests) ...[
+                              const Text('الإجمالي (دينار)',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w500)),
+                              SizedBox(
+                                  height: widgetSize.getHeight(10, context)),
                               Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: CustomTextFormField(keyboardType: TextInputType.number,
-                                    readOnly: false,
-                                    align: TextAlign.center,
-                                    onSaved: (value) => fromTotal = value,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: CustomTextFormField(
+                                      keyboardType: TextInputType.number,
+                                      readOnly: false,
+                                      align: TextAlign.center,
+                                      onSaved: (value) => fromTotal = value,
+                                    ),
                                   ),
-                                ),
-                                const Expanded(child: Center(child: Text('من/إلى'))),
-                                Expanded(
-                                  flex: 2,
-                                  child: CustomTextFormField(keyboardType: TextInputType.number,
-                                    readOnly: false,
-                                    align: TextAlign.center,
-                                    onSaved: (value) => toTotal = value,
-                                  ),
-                                )
-                              ],
-                            ),
-                              SizedBox(height: widgetSize.getHeight(10, context)),
+                                  const Expanded(
+                                      child: Center(child: Text('من/إلى'))),
+                                  Expanded(
+                                    flex: 2,
+                                    child: CustomTextFormField(
+                                      keyboardType: TextInputType.number,
+                                      readOnly: false,
+                                      align: TextAlign.center,
+                                      onSaved: (value) => toTotal = value,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                  height: widgetSize.getHeight(10, context)),
                             ]
                           ],
                         ),
                       ),
-                      if(searchType == SearchType.salesRequests)...[
-                        const Text('الفئة', style: TextStyle(fontWeight: FontWeight.w500)),
-                        CategorySelectWidget(getSelectedCategory: (String? data)=> category = data),
+                      if (searchType == SearchType.salesRequests) ...[
+                        const Text('الفئة',
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                        CategorySelectWidget(
+                            getSelectedCategory: (String? data) =>
+                                category = data),
                         TitledList(
-                            title: 'حالة الطلب',
+                          title: 'حالة الطلب',
                           height: 60,
-                            child: _ChipsRow(
+                          child: _ChipsRow(
                               titles: const ['مدفوع', 'غير مدفوع', 'ملغي'],
-                              onItemSelected: (String? item) => paymentStatus =  item
-                            ),
+                              onItemSelected: (String? item) =>
+                                  paymentStatus = item),
                         ),
                       ],
-                      if(searchType == SearchType.walletRequests || searchType == SearchType.customersRequests)...[
+                      if (searchType == SearchType.walletRequests ||
+                          searchType == SearchType.customersRequests) ...[
                         TitledList(
-                            title: 'حالة الدفع',
-                            child: _ChipsRow(
-                              titles: const ['مدفوع', 'غير مدفوع', 'مدفوع جزئياً', 'ملغي'],
-                              onItemSelected: (String? item) => paymentStatus = item,
-                            )
+                          title: 'حالة الدفع',
+                          height: 100,
+                          child: _ChipsRow(
+                            titles: const [
+                              'مدفوع',
+                              'غير مدفوع',
+                              'مدفوع جزئياً',
+                              'ملغي'
+                            ],
+                            onItemSelected: (String? item) =>
+                                paymentStatus = item,
+                          ),
                         ),
                         SizedBox(height: widgetSize.getHeight(10, context)),
                         TitledList(
                             title: 'حالة الطلب',
                             child: _ChipsRow(
                               titles: const ['معتمد', 'مرفوض', 'تحت الإجراء'],
-                              onItemSelected: (String? item) => orderStatus = item,
-                            )
-                        ),
+                              onItemSelected: (String? item) =>
+                                  orderStatus = item,
+                            )),
                         SizedBox(height: widgetSize.getHeight(10, context)),
                       ],
-                      if(searchType == SearchType.walletRequestsLog)...[
+                      if (searchType == SearchType.walletRequestsLog) ...[
                         TitledList(
                             title: 'نوع الحركة',
                             child: Row(
                               children: [
                                 _ChipsRow(
                                   titles: const ['ايداع', 'خصم'],
-                                  onItemSelected: (String? item) => transactionType = item,
+                                  onItemSelected: (String? item) =>
+                                      transactionType = item,
                                 ),
-                                SizedBox(width: widgetSize.getWidth(20, context)),
-                                if(userModel.customerType == "Agent")...[TransferCheckBox(onChanged: (bool value) => isTransfer = value, isTransfer : false, reedOnly: false,),
-                                const Text('تحويل', style: TextStyle(fontWeight: FontWeight.w500)),]
-                               ],
-                            )
-                        ),
+                                SizedBox(
+                                    width: widgetSize.getWidth(20, context)),
+                                if (userModel!.customerType == "Agent") ...[
+                                  TransferCheckBox(
+                                    onChanged: (bool value) =>
+                                        isTransfer = value,
+                                    isTransfer: false,
+                                    reedOnly: false,
+                                  ),
+                                  const Text('تحويل',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500)),
+                                ]
+                              ],
+                            )),
                         SizedBox(height: widgetSize.getHeight(10, context)),
-                        // TitledList(
-                        //   title: 'اسم الحركة',
-                        //   height: 100,
-                        //   child: _ChipsRow(
-                        //       titles: const ['إيداع من قبل برهان', 'خصم من قبل برهان', 'طلب شحن من قبل العميل', ],
-                        //       onItemSelected: (String? item) => _paymentStatus =  item
-                        //   ),
-                        // ),
-                        // SizedBox(height: widgetSize.getHeight(10, context)),
                       ],
-                      if(searchType == SearchType.batchLog)...[
+                      if (searchType == SearchType.batchLog) ...[
                         TitledList(
                             title: 'نوع الحركة',
                             child: Row(
                               children: [
                                 _ChipsRow(
                                   titles: const ['التسويات', 'الدفعات'],
-                                  onItemSelected: (String? item) => transactionType = item,
+                                  onItemSelected: (String? item) =>
+                                      transactionType = item,
                                 ),
-                                SizedBox(width: widgetSize.getWidth(20, context)),
+                                SizedBox(
+                                    width: widgetSize.getWidth(20, context)),
                               ],
-                            )
-                        ),
+                            )),
                         SizedBox(height: widgetSize.getHeight(10, context)),
                       ],
                       // if(searchType != SearchType.batchLog) ...[
-                        const Text('الفترة الزمنية', style: TextStyle(fontWeight: FontWeight.w500)),
+                      const Text('الفترة الزمنية',
+                          style: TextStyle(fontWeight: FontWeight.w500)),
                       SizedBox(height: widgetSize.getHeight(10, context)),
-                      DateWidget(getDateRange: (DateTimeRange? range) => dateTimeRange = range),
+                      DateWidget(
+                          getDateRange: (DateTimeRange? range) =>
+                              dateTimeRange = range),
                       SizedBox(height: widgetSize.getHeight(20, context)),
 
                       ElevatedButton(
-                          onPressed: () {
-                            formKey.currentState!.save();
-                            _filter(userModel, context, orderNumber, transactionNumber, paymentStatus, orderStatus, transactionType, isTransfer, dateTimeRange, customerName, fromTotal, toTotal, category);
-                            },
-                          style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50)),
-                              backgroundColor: MaterialStateProperty.all(ColorResources.lightBlue),
-                              foregroundColor: MaterialStateProperty.all(Colors.white),
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
-                          child: const Text('بحث'),
+                        onPressed: () {
+                          formKey.currentState!.save();
+                          _filter(
+                              userModel!,
+                              context,
+                              orderNumber,
+                              transactionNumber,
+                              paymentStatus,
+                              orderStatus,
+                              transactionType,
+                              isTransfer,
+                              dateTimeRange,
+                              customerName,
+                              fromTotal,
+                              toTotal,
+                              category);
+                        },
+                        style: ButtonStyle(
+                            minimumSize: WidgetStateProperty.all(
+                                const Size(double.infinity, 50)),
+                            backgroundColor: WidgetStateProperty.all(
+                                ColorResources.lightBlue),
+                            foregroundColor:
+                                WidgetStateProperty.all(Colors.white),
+                            shape: WidgetStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                        child: const Text('بحث'),
                       )
                     ],
                   ),
                 ),
               );
-            }
-        );
+            });
       },
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search),
-        hintText: searchText,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        suffixIcon: const Icon(Icons.arrow_forward_ios)
-      ),
+          prefixIcon: const Icon(Icons.search),
+          hintText: searchText,
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          suffixIcon: const Icon(Icons.arrow_forward_ios)),
     );
   }
 
-  void _filter(LoginResponseModel userModel ,BuildContext context, String? orderNumber, String? transactionNumber, String? paymentStatus, String? orderStatus, String? transactionType, bool? isTransfer, DateTimeRange? dateTimeRange, String? customerName, String? fromTotal, String? toTotal, String? category) {
+  void _filter(
+      LoginResponseModel userModel,
+      BuildContext context,
+      String? orderNumber,
+      String? transactionNumber,
+      String? paymentStatus,
+      String? orderStatus,
+      String? transactionType,
+      bool? isTransfer,
+      DateTimeRange? dateTimeRange,
+      String? customerName,
+      String? fromTotal,
+      String? toTotal,
+      String? category) {
     Navigator.of(context).pop();
     String? startDate = dateTimeRange?.start.dateString;
     String? endDate = dateTimeRange?.end.dateString;
     Map<String, dynamic> filters;
-    switch(searchType){
+    switch (searchType) {
       case SearchType.salesRequests: // طلبات الشراء
         filters = {
-          if(orderNumber != null && orderNumber.isNotEmpty) 'invoice_no': orderNumber,
-          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
-          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
-          if(fromTotal !=null && fromTotal.isNotEmpty) "from_total": fromTotal,
-          if(toTotal !=null && toTotal.isNotEmpty) "to_total": toTotal,
-          if(customerName != null && customerName.isNotEmpty) 'customer': customerName,
-          if(paymentStatus != null && paymentStatus.isNotEmpty) "status" : _getSalesInvoiceState(paymentStatus),
-          if(category != null && category.isNotEmpty) "category" : category
+          if (orderNumber != null && orderNumber.isNotEmpty)
+            'order_no': orderNumber,
+          if (startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+          if (fromTotal != null && fromTotal.isNotEmpty)
+            "from_total": fromTotal,
+          if (toTotal != null && toTotal.isNotEmpty) "to_total": toTotal,
+          if (customerName != null && customerName.isNotEmpty)
+            'customer': customerName,
+          if (paymentStatus != null && paymentStatus.isNotEmpty)
+            "status": _getSalesInvoiceState(paymentStatus),
+          if (category != null && category.isNotEmpty) "category": category
         };
         break;
       case SearchType.walletRequests: // dwr طلبات الشحن
         filters = {
-          if(orderNumber != null && orderNumber.isNotEmpty) 'name': orderNumber,
-          if(customerName != null && customerName.isNotEmpty) 'customer': customerName,
-          'is_transfer': (isTransfer != null && userModel.customerType == "Agent") ? isTransfer ? "1"  : "0" :(userModel.customerType == "Agent Customer") ? "1": "0",
-          if(fromTotal != null && fromTotal.isNotEmpty) "from_total" : fromTotal,
-          if(toTotal != null && toTotal.isNotEmpty) "to_total" : toTotal,
-          if(paymentStatus != null && paymentStatus.isNotEmpty) 'status': _getPaymentState(paymentStatus),
-          if(orderStatus != null && orderStatus.isNotEmpty) 'workflow_state': _getWorkFlowState(orderStatus),
-          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
-          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+          if (orderNumber != null && orderNumber.isNotEmpty)
+            'name': orderNumber,
+          if (customerName != null && customerName.isNotEmpty)
+            'customer': customerName,
+          'is_transfer':
+              (isTransfer != null && userModel.customerType == "Agent")
+                  ? isTransfer
+                      ? "1"
+                      : "0"
+                  : (userModel.customerType == "Agent Customer")
+                      ? "1"
+                      : "0",
+          if (fromTotal != null && fromTotal.isNotEmpty)
+            "from_total": fromTotal,
+          if (toTotal != null && toTotal.isNotEmpty) "to_total": toTotal,
+          if (paymentStatus != null && paymentStatus.isNotEmpty)
+            'status': _getPaymentState(paymentStatus),
+          if (orderStatus != null && orderStatus.isNotEmpty)
+            'workflow_state': _getWorkFlowState(orderStatus),
+          if (startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'to_date': endDate,
         };
         break;
       case SearchType.customersRequests: // dwr طلبات شحن العملاء
         filters = {
-          if(orderNumber != null && orderNumber.isNotEmpty) 'name': orderNumber,
-          if(customerName != null && customerName.isNotEmpty) 'customer': customerName,
-          'is_transfer': (isTransfer != null && userModel.customerType == "Agent") ? isTransfer ? "1"  : "0" : "1",
-          if(fromTotal != null && fromTotal.isNotEmpty) "from_total" : fromTotal,
-          if(toTotal != null && toTotal.isNotEmpty) "to_total" : toTotal,
-          if(paymentStatus != null && paymentStatus.isNotEmpty) 'status': _getPaymentState(paymentStatus),
-          if(orderStatus != null && orderStatus.isNotEmpty) 'workflow_state': _getWorkFlowState(orderStatus),
-          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
-          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+          if (orderNumber != null && orderNumber.isNotEmpty)
+            'name': orderNumber,
+          if (customerName != null && customerName.isNotEmpty)
+            'customer': customerName,
+          'is_transfer':
+              (isTransfer != null && userModel.customerType == "Agent")
+                  ? isTransfer
+                      ? "1"
+                      : "0"
+                  : "1",
+          if (fromTotal != null && fromTotal.isNotEmpty)
+            "from_total": fromTotal,
+          if (toTotal != null && toTotal.isNotEmpty) "to_total": toTotal,
+          if (paymentStatus != null && paymentStatus.isNotEmpty)
+            'status': _getPaymentState(paymentStatus),
+          if (orderStatus != null && orderStatus.isNotEmpty)
+            'workflow_state': _getWorkFlowState(orderStatus),
+          if (startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'to_date': endDate,
         };
         break;
       case SearchType.walletRequestsLog: // محفظتي
         filters = {
-          if(orderNumber != null && orderNumber.isNotEmpty) 'dwr_number': orderNumber,
-          if(transactionNumber != null && transactionNumber.isNotEmpty) 'order_number' : transactionNumber,
-          if(transactionType != null && transactionType.isNotEmpty) 'log_type': _getTransactionType(transactionType),
-          if(isTransfer != null) 'is_transfer': isTransfer? '1' : '0',
-          if(fromTotal !=null && fromTotal.isNotEmpty) "from_total": fromTotal,
-          if(toTotal !=null && toTotal.isNotEmpty) "to_total": toTotal,
-          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
-          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+          if (orderNumber != null && orderNumber.isNotEmpty)
+            'dwr_number': orderNumber,
+          if (transactionNumber != null && transactionNumber.isNotEmpty)
+            'order_number': transactionNumber,
+          if (transactionType != null && transactionType.isNotEmpty)
+            'log_type': _getTransactionType(transactionType),
+          if (isTransfer != null) 'is_transfer': isTransfer ? '1' : '0',
+          if (fromTotal != null && fromTotal.isNotEmpty)
+            "from_total": fromTotal,
+          if (toTotal != null && toTotal.isNotEmpty) "to_total": toTotal,
+          if (startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'to_date': endDate,
         };
         break;
       case SearchType.batchLog: // سجل الدفعات payment
         filters = {
-          if(orderNumber != null && orderNumber.isNotEmpty) 'order_no': orderNumber,
-          if(transactionNumber != null && transactionNumber.isNotEmpty) 'payment_no' : transactionNumber,
-          if(transactionType != null && transactionType.isNotEmpty) 'transaction_type': _getTransactionType(transactionType),
-          if(customerName !=null && customerName.isNotEmpty) 'customer': customerName,
-          if(startDate != null && startDate.isNotEmpty) 'from_date': startDate,
-          if(endDate != null && endDate.isNotEmpty) 'to_date': endDate,
+          if (orderNumber != null && orderNumber.isNotEmpty)
+            'order_no': orderNumber,
+          if (transactionNumber != null && transactionNumber.isNotEmpty)
+            'payment_no': transactionNumber,
+          if (transactionType != null && transactionType.isNotEmpty)
+            'transaction_type': _getTransactionType(transactionType),
+          if (customerName != null && customerName.isNotEmpty)
+            'customer': customerName,
+          if (startDate != null && startDate.isNotEmpty) 'from_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'to_date': endDate,
         };
         break;
     }
     onSearch(jsonEncode(filters));
   }
 
-  String _getWorkFlowState(String value){
-    switch(value){
+  String _getWorkFlowState(String value) {
+    switch (value) {
       case 'معتمد':
         return 'Approved';
       case 'مرفوض':
@@ -334,8 +461,8 @@ class SearchComponent extends StatelessWidget {
     }
   }
 
-  String _getSalesInvoiceState(String value){
-    switch(value){
+  String _getSalesInvoiceState(String value) {
+    switch (value) {
       case 'مدفوع':
         return 'Paid';
       case "غير مدفوع":
@@ -349,8 +476,8 @@ class SearchComponent extends StatelessWidget {
     }
   }
 
-  String _getPaymentState(String value){
-    switch(value){
+  String _getPaymentState(String value) {
+    switch (value) {
       case 'مدفوع':
         return 'Paid';
       case 'غير مدفوع':
@@ -362,8 +489,8 @@ class SearchComponent extends StatelessWidget {
     }
   }
 
-  String _getTransactionType(String value){
-    switch(value){
+  String _getTransactionType(String value) {
+    switch (value) {
       case 'خصم':
         return 'Debit';
       case "التسويات":
@@ -377,7 +504,8 @@ class SearchComponent extends StatelessWidget {
 }
 
 class _ChipsRow extends StatefulWidget {
-  const _ChipsRow({Key? key, required this.titles, required this.onItemSelected}) : super(key: key);
+  const _ChipsRow(
+      {super.key, required this.titles, required this.onItemSelected});
   final List<String> titles;
   final void Function(String? item) onItemSelected;
 
@@ -386,28 +514,33 @@ class _ChipsRow extends StatefulWidget {
 }
 
 class _ChipsRowState extends State<_ChipsRow> {
-  late final List<bool> _isSelectedList = List<bool>.generate(widget.titles.length, (index) => false);
+  late final List<bool> _isSelectedList =
+      List<bool>.generate(widget.titles.length, (index) => false);
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 10,
-      children: widget.titles.map((e) => ChoiceChip(
-        backgroundColor: ColorResources.babyBlue,
-        selectedColor: Colors.blue,
-          label: Text(e),
-          labelStyle: TextStyle(color: _isSelectedList[widget.titles.indexOf(e)] ? Colors.white : Colors.blue),
-          selected: _isSelectedList[widget.titles.indexOf(e)],
-        onSelected: (bool value) {
-          if(value) {
-            setState(() {
-              _isSelectedList.fillRange(0, widget.titles.length, false);
-              _isSelectedList[widget.titles.indexOf(e)] = value;
-            });
-            widget.onItemSelected(e);
-          }
-        },
-      )).toList()
-    );
+        spacing: 10,
+        children: widget.titles
+            .map((e) => ChoiceChip(
+                  backgroundColor: ColorResources.babyBlue,
+                  selectedColor: Colors.blue,
+                  label: Text(e),
+                  labelStyle: TextStyle(
+                      color: _isSelectedList[widget.titles.indexOf(e)]
+                          ? Colors.white
+                          : Colors.blue),
+                  selected: _isSelectedList[widget.titles.indexOf(e)],
+                  onSelected: (bool value) {
+                    if (value) {
+                      setState(() {
+                        _isSelectedList.fillRange(
+                            0, widget.titles.length, false);
+                        _isSelectedList[widget.titles.indexOf(e)] = value;
+                      });
+                      widget.onItemSelected(e);
+                    }
+                  },
+                ))
+            .toList());
   }
 }
-

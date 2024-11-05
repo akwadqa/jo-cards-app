@@ -256,358 +256,438 @@ class _ShippingScreenState extends State<ShippingScreen> {
                     SizedBox(
                       height: widgetSize.getHeight(35, context),
                     ),
-                    Consumer<HomeProvider>(
-                      builder: (context, state, child) {
-                        return SafeOnTap(
-                          onSafeTap: () async {
-                            if(!state.isLoading){
-                              final FormState form = _key.currentState!;
-                              FocusScope.of(context).unfocus();
-                              if (form.validate()) {
-                                form.save();
+                    Consumer<HomeProvider>(builder: (context, state, child) {
+                      return SafeOnTap(
+                        onSafeTap: () async {
+                          if (!state.isLoading) {
+                            final FormState form = _key.currentState!;
+                            FocusScope.of(context).unfocus();
+                            if (form.validate()) {
+                              form.save();
 
-                                var dialogResult = await showDialog(
-                                    context: context,
-                                    builder: (context) => Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                            widgetSize.getWidth(20, context)),
-                                        child: ListView(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          children: <Widget>[
-                                            SizedBox(
-                                              height: widgetSize.getHeight(
-                                                  20, context),
-                                            ),
-                                            Row(
-                                              children: [
-                                                SafeOnTap(
-                                                    onSafeTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: SvgPicture.asset(Assets
-                                                        .svgCancelDirectOrder)),
-                                                const Spacer(),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: widgetSize.getHeight(
-                                                  10, context),
-                                            ),
-                                            Text(
-                                              "هل  انت متأكد من متابعة العملية ؟",
-                                              style: TextStyle(
-                                                fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize.getHeight(
-                                                    19, context),
-                                                fontWeight: FontWeight.w500,
-                                                color: const Color(0xff2e2e2e),
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                            SizedBox(
-                                              height: widgetSize.getHeight(
-                                                  20, context),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                              children: [
-                                                SafeOnTap(
-                                                  onSafeTap: () {
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                  },
-                                                  child: Text(
-                                                    "نعم",
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                      'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(16, context),
-                                                      color:
-                                                      const Color(0xff2e2e2e),
-                                                    ),
-                                                    softWrap: false,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: widgetSize.getWidth(
-                                                      90, context),
-                                                ),
-                                                SafeOnTap(
-                                                  onSafeTap: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    "لا",
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                      'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(16, context),
-                                                      color:
-                                                      const Color(0xff2e2e2e),
-                                                    ),
-                                                    softWrap: false,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: widgetSize.getHeight(
-                                                  20, context),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ));
-                                if (dialogResult != null && dialogResult) {
-                                  if (!context.read<AppProvider>().isLoading) {
-                                    var res = await context
-                                        .read<HomeProvider>()
-                                        .requestTransferShipping(transferAmount,
-                                        customerName: context
-                                            .read<AppProvider>()
-                                            .getUserInfo()!
-                                            .customerID!);
-                                    if (res.status == Status.COMPLETED) {
-
-                                      var result = await showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (context) => Dialog(
-
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
+                              var dialogResult = await showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
                                                 BorderRadius.circular(12.0)),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: widgetSize.getWidth(
-                                                      20, context)),
-                                              child: ListView(
-                                                physics:
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: widgetSize.getWidth(
+                                                  20, context)),
+                                          child: ListView(
+                                            physics:
                                                 const NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                children: <Widget>[
-                                                  SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        20, context),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      SafeOnTap(
-                                                          onSafeTap: () {
-                                                            // context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
-                                                            Navigator.pop(
-                                                                context,true);
-                                                          },
-                                                          child: SvgPicture.asset(
-                                                              Assets
-                                                                  .svgCancelDirectOrder)),
-                                                      const Spacer(),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        10, context),
-                                                  ),
-                                                  Text(
-                                                    res.data!.message!,maxLines: null,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                      'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(19, context),
-                                                      fontWeight: FontWeight.w500,
-                                                      color:
+                                            shrinkWrap: true,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    20, context),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SafeOnTap(
+                                                      onSafeTap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: SvgPicture.asset(Assets
+                                                          .svgCancelDirectOrder)),
+                                                  const Spacer(),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    10, context),
+                                              ),
+                                              Text(
+                                                "هل انت متأكد من متابعة العملية؟",
+                                                style: TextStyle(
+                                                  fontFamily: 'DIN Next LT W23',
+                                                  fontSize: widgetSize
+                                                      .getHeight(19, context),
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
                                                       const Color(0xff2e2e2e),
-                                                    )
-
-                                                    ,textAlign: TextAlign.center,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    20, context),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SafeOnTap(
+                                                    onSafeTap: () {
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    },
+                                                    child: Text(
+                                                      "نعم",
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'DIN Next LT W23',
+                                                        fontSize: widgetSize
+                                                            .getHeight(
+                                                                16, context),
+                                                        color: const Color(
+                                                            0xff2e2e2e),
+                                                      ),
+                                                      softWrap: false,
+                                                    ),
                                                   ),
                                                   SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        20, context),
+                                                    width: widgetSize.getWidth(
+                                                        90, context),
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      SafeOnTap(
-                                                        onSafeTap: () async {
-                                                          var result = await showImagePicker(context);
-                                                          if (result != null && result) {
-                                                            context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
-                                                            Navigator.pop(context);
-                                                            var uploadReceiptRes = await context
-                                                                .read<HomeProvider>()
-                                                                .uploadReceipt(
-                                                                imageName!,res.data!.data!.name!
-                                                                ,fileData: imageB64!);
-                                                            if (uploadReceiptRes.status ==
-                                                                Status.COMPLETED) {
-
-                                                              Fluttertoast.showToast(
-                                                                  backgroundColor:
-                                                                  Colors.green,
-                                                                  textColor:
-                                                                  Colors.white,
-                                                                  msg: "تم ارفاق الصورة بنجاح",
-                                                                  timeInSecForIosWeb:
-                                                                  4,
-                                                                  toastLength: Toast
-                                                                      .LENGTH_LONG);
-                                                              // Navigator.pop(navigator.currentContext!);
-                                                              Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
-                                                            }
-                                                            else{
-                                                              Fluttertoast.showToast(
-                                                                  backgroundColor: ColorResources.studio,
-                                                                  textColor: Colors.white,
-                                                                  msg:"حدث خطأ تقني  ",
-                                                                  timeInSecForIosWeb: 4,
-                                                                  toastLength: Toast.LENGTH_LONG);
-                                                            }
-                                                          }
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                          children: [
-                                                            Text(
-                                                              "ارفاق وصل",
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                'DIN Next LT W23',
-                                                                fontSize: widgetSize
-                                                                    .getHeight(16,
-                                                                    context),
-                                                                color: const Color(
-                                                                    0xff2e2e2e),
-                                                              ),
-                                                              softWrap: false,
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                              widgetSize.getWidth(
-                                                                  20, context),
-                                                            ),
-                                                            const Icon(
-                                                              Icons.image,
-                                                              color: ColorResources
-                                                                  .studio,
-                                                            ),
-                                                          ],
-                                                        ),
+                                                  SafeOnTap(
+                                                    onSafeTap: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text(
+                                                      "لا",
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'DIN Next LT W23',
+                                                        fontSize: widgetSize
+                                                            .getHeight(
+                                                                16, context),
+                                                        color: const Color(
+                                                            0xff2e2e2e),
                                                       ),
-                                                      SafeOnTap(
-                                                        onSafeTap: () async {
-                                                          context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
-                                                          Navigator.of(navigator.currentContext!).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                          children: [
-                                                            Text(
-                                                              "تخطي",
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                'DIN Next LT W23',
-                                                                fontSize: widgetSize
-                                                                    .getHeight(16,
-                                                                    context),
-                                                                color: const Color(
-                                                                    0xff2e2e2e),
-                                                              ),
-                                                              softWrap: false,
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                              widgetSize.getWidth(
-                                                                  20, context),
-                                                            ),
-                                                            const Icon(
-                                                              Icons.skip_previous,
-                                                              color: ColorResources
-                                                                  .studio,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        20, context),
+                                                      softWrap: false,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ));
-                                      if(result!=null&&result){
-                                        Navigator.pop(context);
-                                      }
-                                    } else {
-                                      String? message = res.message;
-                                      if(message == 'You have pending order'){
-                                        message = 'يوجد طلب معلق، جاري اتخاذ الاجراء من قبل الادارة.';
-                                      }
-                                      Fluttertoast.showToast(
-                                          backgroundColor: ColorResources.studio,
-                                          textColor: Colors.white,
-                                          msg: message ?? "",
-                                          timeInSecForIosWeb: 4,
-                                          toastLength: Toast.LENGTH_LONG);
+                                              SizedBox(
+                                                height: widgetSize.getHeight(
+                                                    20, context),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ));
+                              if (dialogResult != null && dialogResult) {
+                                if (!context.read<AppProvider>().isLoading) {
+                                  var res = await context
+                                      .read<HomeProvider>()
+                                      .requestTransferShipping(transferAmount,
+                                          customerName: context
+                                              .read<AppProvider>()
+                                              .getUserInfo()!
+                                              .customerID!);
+                                  if (res.status == Status.COMPLETED) {
+                                    var result = await showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) => Dialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0)),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: widgetSize
+                                                        .getWidth(20, context)),
+                                                child: ListView(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  children: <Widget>[
+                                                    SizedBox(
+                                                      height:
+                                                          widgetSize.getHeight(
+                                                              20, context),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SafeOnTap(
+                                                            onSafeTap: () {
+                                                              // context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  true);
+                                                            },
+                                                            child: SvgPicture
+                                                                .asset(Assets
+                                                                    .svgCancelDirectOrder)),
+                                                        const Spacer(),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          widgetSize.getHeight(
+                                                              10, context),
+                                                    ),
+                                                    Text(
+                                                      res.data!.message!,
+                                                      maxLines: null,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'DIN Next LT W23',
+                                                        fontSize: widgetSize
+                                                            .getHeight(
+                                                                19, context),
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: const Color(
+                                                            0xff2e2e2e),
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          widgetSize.getHeight(
+                                                              20, context),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        SafeOnTap(
+                                                          onSafeTap: () async {
+                                                            var result =
+                                                                await showImagePicker(
+                                                                    context);
+                                                            if (result !=
+                                                                    null &&
+                                                                result) {
+                                                              context
+                                                                  .read<
+                                                                      SharedNavBarProvider>()
+                                                                  .controller
+                                                                  .detach(context
+                                                                      .read<
+                                                                          SharedNavBarProvider>()
+                                                                      .controller
+                                                                      .position);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              var uploadReceiptRes = await context
+                                                                  .read<
+                                                                      HomeProvider>()
+                                                                  .uploadReceipt(
+                                                                      imageName!,
+                                                                      res
+                                                                          .data!
+                                                                          .data!
+                                                                          .name!,
+                                                                      fileData:
+                                                                          imageB64!);
+                                                              if (uploadReceiptRes
+                                                                      .status ==
+                                                                  Status
+                                                                      .COMPLETED) {
+                                                                Fluttertoast.showToast(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .green,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    msg:
+                                                                        "تم ارفاق الصورة بنجاح",
+                                                                    timeInSecForIosWeb:
+                                                                        4,
+                                                                    toastLength:
+                                                                        Toast
+                                                                            .LENGTH_LONG);
+                                                                // Navigator.pop(navigator.currentContext!);
+                                                                Navigator.of(navigator.currentContext!).pushAndRemoveUntil(
+                                                                    MaterialPageRoute(
+                                                                        builder: (_) => const SharedBottomNavigationBar(
+                                                                            widget:
+                                                                                MainScreen())),
+                                                                    (route) =>
+                                                                        false);
+                                                              } else {
+                                                                Fluttertoast.showToast(
+                                                                    backgroundColor:
+                                                                        ColorResources
+                                                                            .studio,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    msg:
+                                                                        "حدث خطأ تقني  ",
+                                                                    timeInSecForIosWeb:
+                                                                        4,
+                                                                    toastLength:
+                                                                        Toast
+                                                                            .LENGTH_LONG);
+                                                              }
+                                                            }
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                "ارفاق وصل",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'DIN Next LT W23',
+                                                                  fontSize: widgetSize
+                                                                      .getHeight(
+                                                                          16,
+                                                                          context),
+                                                                  color: const Color(
+                                                                      0xff2e2e2e),
+                                                                ),
+                                                                softWrap: false,
+                                                              ),
+                                                              SizedBox(
+                                                                width: widgetSize
+                                                                    .getWidth(
+                                                                        20,
+                                                                        context),
+                                                              ),
+                                                              const Icon(
+                                                                Icons.image,
+                                                                color:
+                                                                    ColorResources
+                                                                        .studio,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SafeOnTap(
+                                                          onSafeTap: () async {
+                                                            context
+                                                                .read<
+                                                                    SharedNavBarProvider>()
+                                                                .controller
+                                                                .detach(context
+                                                                    .read<
+                                                                        SharedNavBarProvider>()
+                                                                    .controller
+                                                                    .position);
+                                                            Navigator.of(navigator
+                                                                    .currentContext!)
+                                                                .pushAndRemoveUntil(
+                                                                    MaterialPageRoute(
+                                                                        builder: (_) => const SharedBottomNavigationBar(
+                                                                            widget:
+                                                                                MainScreen())),
+                                                                    (route) =>
+                                                                        false);
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                "تخطي",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'DIN Next LT W23',
+                                                                  fontSize: widgetSize
+                                                                      .getHeight(
+                                                                          16,
+                                                                          context),
+                                                                  color: const Color(
+                                                                      0xff2e2e2e),
+                                                                ),
+                                                                softWrap: false,
+                                                              ),
+                                                              SizedBox(
+                                                                width: widgetSize
+                                                                    .getWidth(
+                                                                        20,
+                                                                        context),
+                                                              ),
+                                                              const Icon(
+                                                                Icons
+                                                                    .skip_previous,
+                                                                color:
+                                                                    ColorResources
+                                                                        .studio,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          widgetSize.getHeight(
+                                                              20, context),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ));
+                                    if (result != null && result) {
+                                      Navigator.pop(context);
                                     }
+                                  } else {
+                                    String? message = res.message;
+                                    if (message == 'You have pending order') {
+                                      message =
+                                          'يوجد طلب معلق، جاري اتخاذ الاجراء من قبل الادارة.';
+                                    }
+                                    Fluttertoast.showToast(
+                                        backgroundColor: ColorResources.studio,
+                                        textColor: Colors.white,
+                                        msg: message ?? "",
+                                        timeInSecForIosWeb: 4,
+                                        toastLength: Toast.LENGTH_LONG);
                                   }
                                 }
                               }
                             }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: widgetSize.getWidth(15, context)),
-                            child: Container(
-                              height: widgetSize.getHeight(50, context),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: state.isLoading ? Colors.grey : const Color(0xff2892d7),
-                                borderRadius: BorderRadius.circular(15.0),
-                                border: Border.all(
-                                    width: 1.0, color: state.isLoading ? Colors.grey : const Color(0xff2892d7)),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0x401d4c9b),
-                                    offset: Offset(0, 5),
-                                    blurRadius: 11,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'شحن المبلغ',
-                                  style: TextStyle(
-                                    fontFamily: 'DIN Next LT W23',
-                                    fontSize: widgetSize.getHeight(16, context),
-                                    color: const Color(0xffffffff),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  softWrap: false,
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: widgetSize.getWidth(15, context)),
+                          child: Container(
+                            height: widgetSize.getHeight(50, context),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: state.isLoading
+                                  ? Colors.grey
+                                  : const Color(0xff2892d7),
+                              borderRadius: BorderRadius.circular(15.0),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: state.isLoading
+                                      ? Colors.grey
+                                      : const Color(0xff2892d7)),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x401d4c9b),
+                                  offset: Offset(0, 5),
+                                  blurRadius: 11,
                                 ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'شحن المبلغ',
+                                style: TextStyle(
+                                  fontFamily: 'DIN Next LT W23',
+                                  fontSize: widgetSize.getHeight(16, context),
+                                  color: const Color(0xffffffff),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                softWrap: false,
                               ),
                             ),
                           ),
-                        );
-                      }
-                    ),
+                        ),
+                      );
+                    }),
                     SizedBox(
                       height: widgetSize.getHeight(10, context),
                     ),
@@ -654,8 +734,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
                       .isLoading,
                   child: const Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          ColorResources.studio),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(ColorResources.studio),
                     ),
                   )),
             ),
@@ -691,8 +771,10 @@ class _ShippingScreenState extends State<ShippingScreen> {
                       },
                       child: SvgPicture.asset(Assets.svgBack)),
                 ),
-                Expanded(child: SizedBox(width: widgetSize.getWidth(5, context),)),
-
+                Expanded(
+                    child: SizedBox(
+                  width: widgetSize.getWidth(5, context),
+                )),
                 Expanded(
                   flex: 2,
                   child: Text(
@@ -708,36 +790,65 @@ class _ShippingScreenState extends State<ShippingScreen> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
-                    child: SafeOnTap( onSafeTap: ()async {},
+                    padding:
+                        EdgeInsets.only(left: widgetSize.getWidth(10, context)),
+                    child: SafeOnTap(
+                      onSafeTap: () async {},
                       child: SizedBox(
                         width: widgetSize.getWidth(100, context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                          const Text("JD ", style: TextStyle(
-                            fontFamily: 'DIN Next LT W23',
-                            fontSize: 15,
-                            color:  Color(0xffffffff),
-                            fontWeight: FontWeight.w400,
-                          ), softWrap: false,),
-                          Text(
-                            context.watch<AppProvider>().utilitiesModel!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                            context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
-                            style: const TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: 15,
-                              color:  Color(0xffffffff),
-                              fontWeight: FontWeight.w400,
+                            const Text(
+                              "JD ",
+                              style: TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
                             ),
-                            softWrap: false,
-                          ),
-                          SizedBox(width: widgetSize.getWidth(5, context)),
-                          SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
-                        ],),
-                      ),),
+                            Text(
+                              context.watch<AppProvider>().utilitiesModel !=
+                                      null
+                                  ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data !=
+                                          null
+                                      ? context
+                                                  .watch<AppProvider>()
+                                                  .utilitiesModel!
+                                                  .data!
+                                                  .walletBalance !=
+                                              null
+                                          ? context
+                                              .watch<AppProvider>()
+                                              .utilitiesModel!
+                                              .data!
+                                              .walletBalance!
+                                          : ""
+                                      : ""
+                                  : "",
+                              style: const TextStyle(
+                                fontFamily: 'DIN Next LT W23',
+                                fontSize: 15,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              softWrap: false,
+                            ),
+                            SizedBox(width: widgetSize.getWidth(5, context)),
+                            SvgPicture.asset(
+                              Assets.svgWallet,
+                              width: widgetSize.getWidth(20, context),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -783,12 +894,10 @@ class _ShippingScreenState extends State<ShippingScreen> {
   final picker = ImagePicker();
 
   Future<XFile?> getImagePicker(ImageSource source) async {
-    File? image;
     final pickedFile =
         await picker.pickImage(source: source, maxHeight: 480, maxWidth: 640);
     setState(() {
       if (pickedFile != null) {
-        image = File(pickedFile.path);
       } else {}
     });
 
@@ -833,9 +942,8 @@ class _ShippingScreenState extends State<ShippingScreen> {
                             print(value.path);
                             imageB64 = base64Encode(imageBytes);
                             imageName = value.name;
-                           Navigator.pop(context, true);
+                            Navigator.pop(context, true);
                             //    sendImageOrVideoMessage(context,Provider.of<ChatProvider>(context,listen:false),"Image",File(value.path));
-
                           }
                         }),
                   ],

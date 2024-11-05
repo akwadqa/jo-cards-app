@@ -50,34 +50,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   final GlobalKey<FormState> _key = GlobalKey();
   bool moreThanAvailableWalletBalance = false;
   double percent = 0.0;
-   // 1
+  // 1
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      onPopInvokedWithResult: (result, _) => _onWillPop(),
       child: Scaffold(
           backgroundColor: ColorResources.gray89,
           appBar: buildAppBar(context),
           body: RefreshIndicator(
-            onRefresh: () async{
+            onRefresh: () async {
               count = 1;
               isPressed = false;
               selectedIndex = 0;
               moreThanAvailableWalletBalance = false;
-                var res = await context.read<HomeProvider>().getProductDetails(widget.id);
-                if (res.data != null && res.data!.data != null) {
-                  var temp = res.data!.data![0];
-                  if (temp.productOptions != null && temp.productOptions!.isNotEmpty) {
-                    for (ProductOptions productOptions in temp.productOptions!) {
-                      multiLineAreaOptions.add(TextEditingController());
-                      textAreaOptions.add(TextEditingController());
-                      numberOptions.add(TextEditingController());
-                    }
+              var res = await context
+                  .read<HomeProvider>()
+                  .getProductDetails(widget.id);
+              if (res.data != null && res.data!.data != null) {
+                var temp = res.data!.data![0];
+                if (temp.productOptions != null &&
+                    temp.productOptions!.isNotEmpty) {
+                  for (ProductOptions productOptions in temp.productOptions!) {
+                    multiLineAreaOptions.add(TextEditingController());
+                    textAreaOptions.add(TextEditingController());
+                    numberOptions.add(TextEditingController());
                   }
                 }
+              }
               context.read<AppProvider>().getUtilities();
             },
-            child: Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+            child:
+                Consumer<HomeProvider>(builder: (context, homeProvider, child) {
               if (homeProvider.productDetailsResponse != null) {
                 switch (homeProvider.productDetailsResponse!.status!) {
                   case Status.LOADING:
@@ -97,38 +101,44 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                               horizontal: widgetSize.getWidth(16, context),
                               vertical: widgetSize.getHeight(20, context)),
                           child: Container(
-            decoration:  BoxDecoration(
-              color: item.backgroundColor == null  ? Colors.white: hexToColor(item.backgroundColor!),
-
-              borderRadius:
-              const BorderRadius.all(Radius.circular(15)),
-              shape: BoxShape.rectangle,),
+                            decoration: BoxDecoration(
+                              color: item.backgroundColor == null
+                                  ? Colors.white
+                                  : hexToColor(item.backgroundColor!),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              shape: BoxShape.rectangle,
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CachedNetworkImage(
                                 imageUrl: Strings.BASR_URl + item.websiteImage!,
-                                imageBuilder: (context, imageProvider) => AspectRatio(
+                                imageBuilder: (context, imageProvider) =>
+                                    AspectRatio(
                                   aspectRatio: 2.46,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          const BorderRadius.all(Radius.circular(15)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(15)),
                                       shape: BoxShape.rectangle,
-
                                       image: DecorationImage(
-                                          image: imageProvider, fit: BoxFit.contain),
+                                          image: imageProvider,
+                                          fit: BoxFit.contain),
                                     ),
                                   ),
                                 ),
-                                placeholder: (context, url) => const AspectRatio(
+                                placeholder: (context, url) =>
+                                    const AspectRatio(
                                   aspectRatio: 2.46,
                                   child: Center(
                                     child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                            ColorResources.studio)),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                ColorResources.studio)),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) => const AspectRatio(
+                                errorWidget: (context, url, error) =>
+                                    const AspectRatio(
                                   aspectRatio: 2.46,
                                   child: Center(
                                     child: Icon(Icons.error),
@@ -150,8 +160,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                   color: Colors.white),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: widgetSize.getWidth(16, context),
-                                    vertical: widgetSize.getHeight(20, context)),
+                                    horizontal:
+                                        widgetSize.getWidth(16, context),
+                                    vertical:
+                                        widgetSize.getHeight(20, context)),
                                 child: Align(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
@@ -162,8 +174,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                           item.websiteItemName!,
                                           style: TextStyle(
                                             fontFamily: 'DIN Next LT W23',
-                                            fontSize:
-                                                widgetSize.getHeight(23, context),
+                                            fontSize: widgetSize.getHeight(
+                                                23, context),
                                             color: const Color(0xff2e2e2e),
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -172,7 +184,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         ),
                                       ),
                                       SizedBox(
-                                        height: widgetSize.getHeight(26, context),
+                                        height:
+                                            widgetSize.getHeight(26, context),
                                       ),
                                       if (item.productOptions != null &&
                                           item.productOptions!.isEmpty) ...[
@@ -195,27 +208,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                               widgetSize.getHeight(5, context),
                                         ),
                                         Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            item.webLongDescription != null
-                                                ? item.webLongDescription!
-                                                : "",
-                                            style: TextStyle(
-                                              fontSize: widgetSize.getHeight(
-                                                  16, context),
-                                              color: const Color(0xff2e2e2e),
-                                            ),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
+                                            alignment: Alignment.centerRight,
+                                            child: buildTextWithURL(
+                                                text: item.webLongDescription ??
+                                                    "",
+                                                defaultTextStyle: TextStyle(
+                                                    fontSize: widgetSize
+                                                        .getHeight(16, context),
+                                                    color: const Color(
+                                                        0xff2e2e2e)))),
                                       ],
                                       if (item.productOptions != null &&
                                           item.productOptions!.isNotEmpty) ...[
                                         TabBar(
                                           indicatorColor: ColorResources.studio,
-                                          indicatorSize: TabBarIndicatorSize.tab,
+                                          indicatorSize:
+                                              TabBarIndicatorSize.tab,
                                           indicatorWeight: 2,
-                                          indicatorPadding: const EdgeInsets.all(0),
+                                          indicatorPadding:
+                                              const EdgeInsets.all(0),
                                           controller: tabController,
                                           labelColor: ColorResources.studio,
                                           unselectedLabelColor:
@@ -282,7 +293,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 fontFamily:
                                                                     'DIN Next LT W23',
                                                                 fontSize: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                                 color: const Color(
                                                                     0xff6b6b6b),
@@ -295,96 +307,109 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                       context),
                                                             ),
                                                             item
-                                                                .productOptions![
-                                                            index].viewOption == 'Label' ?  Wrap(
-                                                              direction:
-                                                                  Axis.horizontal,
-                                                              runSpacing: 10,
-                                                              spacing: 30,
-                                                              children: item
-                                                                  .productOptions![
-                                                                      index]
-                                                                  .radioGroupOption!
-                                                                  .map<Widget>(
-                                                                      (e) =>
-                                                                          SafeOnTap(
-                                                                            onSafeTap:
-                                                                                () {
-                                                                              for (RadioGroupOption item
-                                                                                  in item.productOptions![index].radioGroupOption!) {
-                                                                                item.selected = false;
-                                                                              }
-                                                                              item.productOptions![index].answer =
-                                                                                  e.name1;
-                                                                              e.selected =
-                                                                                  true;
-                                                                              setState(() {});
-                                                                            },
-                                                                            child:
-                                                                                Container(
-                                                                              decoration:
-                                                                                  BoxDecoration(
-                                                                                color: e.selected! ? ColorResources.studio : const Color(0xfff8f2ff),
-                                                                                borderRadius: BorderRadius.circular(14.0),
-                                                                              ),
-                                                                              child:
-                                                                                  Padding(
-                                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                                                                child: Text(
-                                                                                  e.name1!,
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'DIN Next LT W23',
-                                                                                    fontSize: widgetSize.getHeight(14, context),
-                                                                                    color: e.selected! ? Colors.white : const Color(0xff2e2e2e),
+                                                                        .productOptions![
+                                                                            index]
+                                                                        .viewOption ==
+                                                                    'Label'
+                                                                ? Wrap(
+                                                                    direction: Axis
+                                                                        .horizontal,
+                                                                    runSpacing:
+                                                                        10,
+                                                                    spacing: 30,
+                                                                    children: item
+                                                                        .productOptions![
+                                                                            index]
+                                                                        .radioGroupOption!
+                                                                        .map<Widget>((e) =>
+                                                                            SafeOnTap(
+                                                                              onSafeTap: () {
+                                                                                for (RadioGroupOption item in item.productOptions![index].radioGroupOption!) {
+                                                                                  item.selected = false;
+                                                                                }
+                                                                                item.productOptions![index].answer = e.name1;
+                                                                                e.selected = true;
+                                                                                setState(() {});
+                                                                              },
+                                                                              child: Container(
+                                                                                decoration: BoxDecoration(
+                                                                                  color: e.selected! ? ColorResources.studio : const Color(0xfff8f2ff),
+                                                                                  borderRadius: BorderRadius.circular(14.0),
+                                                                                ),
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                                                                  child: Text(
+                                                                                    e.name1!,
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'DIN Next LT W23',
+                                                                                      fontSize: widgetSize.getHeight(14, context),
+                                                                                      color: e.selected! ? Colors.white : const Color(0xff2e2e2e),
+                                                                                    ),
+                                                                                    softWrap: false,
                                                                                   ),
-                                                                                  softWrap: false,
                                                                                 ),
                                                                               ),
-                                                                            ),
-                                                                          ))
-                                                                  .toList(),
-                                                            ) : DropdownButtonFormField<RadioGroupOption>(
-                                                              hint: const Text('اختر الخيار'),
-                                                              decoration: InputDecoration(
-                                                                border: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          14.0),
-                                                                ),
-                                                                focusedBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          14.0),
-                                                                  borderSide: const BorderSide(
-                                                                      color: ColorResources.sliver),
-                                                                ),
-                                                                enabledBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          14.0),
-                                                                  borderSide: const BorderSide(
-                                                                      color: ColorResources.sliver),
-                                                                ),
-                                                              ),
-                                                                items: item
-                                                                .productOptions![
-                                                            index]
-                                                                .radioGroupOption!.map((e) => DropdownMenuItem<RadioGroupOption>(value: e, child: Text(e.name1!))).toList(), onChanged: (value){
-                                                              for (RadioGroupOption item
-                                                              in item.productOptions![index].radioGroupOption!) {
-                                                                item.selected = false;
-                                                              }
-                                                              item.productOptions![index].answer =
-                                                                  value!.name1;
-                                                              value.selected =
-                                                              true;
-                                                            }),
+                                                                            ))
+                                                                        .toList(),
+                                                                  )
+                                                                : DropdownButtonFormField<
+                                                                        RadioGroupOption>(
+                                                                    hint: const Text(
+                                                                        'اختر الخيار'),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(14.0),
+                                                                      ),
+                                                                      focusedBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(14.0),
+                                                                        borderSide:
+                                                                            const BorderSide(color: ColorResources.sliver),
+                                                                      ),
+                                                                      enabledBorder:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(14.0),
+                                                                        borderSide:
+                                                                            const BorderSide(color: ColorResources.sliver),
+                                                                      ),
+                                                                    ),
+                                                                    items: item
+                                                                        .productOptions![
+                                                                            index]
+                                                                        .radioGroupOption!
+                                                                        .map((e) => DropdownMenuItem<RadioGroupOption>(
+                                                                            value:
+                                                                                e,
+                                                                            child: Text(e
+                                                                                .name1!)))
+                                                                        .toList(),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      for (RadioGroupOption item in item
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .radioGroupOption!) {
+                                                                        item.selected =
+                                                                            false;
+                                                                      }
+                                                                      item.productOptions![index].answer =
+                                                                          value!
+                                                                              .name1;
+                                                                      value.selected =
+                                                                          true;
+                                                                    }),
                                                             if (item.productOptions!
                                                                     .length >
                                                                 1) ...[
                                                               SizedBox(
                                                                 height: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                               ),
                                                             ]
@@ -410,7 +435,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 fontFamily:
                                                                     'DIN Next LT W23',
                                                                 fontSize: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                                 color: const Color(
                                                                     0xff6b6b6b),
@@ -419,16 +445,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                             ),
                                                             SizedBox(
                                                               height: widgetSize
-                                                                  .getHeight(
-                                                                      8, context),
+                                                                  .getHeight(8,
+                                                                      context),
                                                             ),
                                                             CustomTextField(
                                                               maxLines: 6,
                                                               borderRaduis: 10,
-                                                              obscureText: false,
+                                                              obscureText:
+                                                                  false,
                                                               hint: item
                                                                   .productOptions![
-                                                              index].hint,
+                                                                      index]
+                                                                  .hint,
                                                               validate: item
                                                                           .productOptions![
                                                                               index]
@@ -438,10 +466,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                       .filedRequired
                                                                   : null,
                                                               hintStyle: item
-                                                                  .productOptions![
-                                                              index]
-                                                                  .isMandatory ==
-                                                                  1 ? const TextStyle(color: ColorResources.red) : null,
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? const TextStyle(
+                                                                      color: ColorResources
+                                                                          .red)
+                                                                  : null,
                                                               keyboardType:
                                                                   TextInputType
                                                                       .multiline,
@@ -461,7 +493,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 1) ...[
                                                               SizedBox(
                                                                 height: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                               ),
                                                             ]
@@ -473,7 +506,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                   index]
                                                               .optionType ==
                                                           "Number Input") {
-                                                        if(item.productOptions![index].isPriceModifier == 1) percent = percent + item.productOptions![index].percentage;
+                                                        if (item
+                                                                .productOptions![
+                                                                    index]
+                                                                .isPriceModifier ==
+                                                            1) {
+                                                          percent = percent +
+                                                              item
+                                                                  .productOptions![
+                                                                      index]
+                                                                  .percentage;
+                                                        }
                                                         return Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -488,7 +531,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 fontFamily:
                                                                     'DIN Next LT W23',
                                                                 fontSize: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                                 color: const Color(
                                                                     0xff6b6b6b),
@@ -497,32 +541,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                             ),
                                                             SizedBox(
                                                               height: widgetSize
-                                                                  .getHeight(
-                                                                      8, context),
+                                                                  .getHeight(8,
+                                                                      context),
                                                             ),
                                                             CustomTextField(
                                                               maxLines: 1,
                                                               borderRaduis: 10,
-                                                              onChanged: (value) {
-                                                                value = changeDigit(value!, NumStrLanguage.English);
+                                                              onChanged:
+                                                                  (value) {
+                                                                value = changeDigit(
+                                                                    value!,
+                                                                    NumStrLanguage
+                                                                        .English);
 
-                                                               numberOptions[index].text = value;
-                                                                numberOptions[index].selection =
+                                                                numberOptions[
+                                                                        index]
+                                                                    .text = value;
+                                                                numberOptions[
+                                                                            index]
+                                                                        .selection =
                                                                     TextSelection.fromPosition(TextPosition(
-                                                                        offset:  numberOptions[index].text.length));
+                                                                        offset: numberOptions[index]
+                                                                            .text
+                                                                            .length));
 
-                                                                  _key.currentState!.save();
-                                                                  setState(() {
-                                                                    getFinalPriceModifier(item);
-
-                                                                  });
-
-
+                                                                _key.currentState!
+                                                                    .save();
+                                                                setState(() {
+                                                                  getFinalPriceModifier(
+                                                                      item);
+                                                                });
                                                               },
                                                               hint: item
                                                                   .productOptions![
-                                                              index].hint,
-                                                              obscureText: false,
+                                                                      index]
+                                                                  .hint,
+                                                              obscureText:
+                                                                  false,
                                                               keyboardType:
                                                                   TextInputType
                                                                       .number,
@@ -538,10 +593,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                       .filedRequired
                                                                   : null,
                                                               hintStyle: item
-                                                              .productOptions![
-                                                          index]
-                                                              .isMandatory ==
-                                                          1 ? const TextStyle(color: ColorResources.red) : null,
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? const TextStyle(
+                                                                      color: ColorResources
+                                                                          .red)
+                                                                  : null,
                                                               onSaved: (String?
                                                                   value) {
                                                                 item
@@ -549,15 +608,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                         index]
                                                                     .answer = value;
                                                               },
-
                                                             ),
-
                                                             if (item.productOptions!
                                                                     .length >
                                                                 1) ...[
                                                               SizedBox(
                                                                 height: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                               ),
                                                             ]
@@ -583,7 +641,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 fontFamily:
                                                                     'DIN Next LT W23',
                                                                 fontSize: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                                 color: const Color(
                                                                     0xff6b6b6b),
@@ -592,16 +651,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                             ),
                                                             SizedBox(
                                                               height: widgetSize
-                                                                  .getHeight(
-                                                                      8, context),
+                                                                  .getHeight(8,
+                                                                      context),
                                                             ),
                                                             CustomTextField(
                                                               maxLines: 1,
                                                               borderRaduis: 10,
-                                                              obscureText: false,
+                                                              obscureText:
+                                                                  false,
                                                               hint: item
                                                                   .productOptions![
-                                                              index].hint,
+                                                                      index]
+                                                                  .hint,
                                                               keyboardType:
                                                                   TextInputType
                                                                       .emailAddress,
@@ -617,10 +678,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                       .filedRequired
                                                                   : null,
                                                               hintStyle: item
-                                                                  .productOptions![
-                                                              index]
-                                                                  .isMandatory ==
-                                                                  1 ? const TextStyle(color: ColorResources.red) : null,
+                                                                          .productOptions![
+                                                                              index]
+                                                                          .isMandatory ==
+                                                                      1
+                                                                  ? const TextStyle(
+                                                                      color: ColorResources
+                                                                          .red)
+                                                                  : null,
                                                               onSaved: (String?
                                                                   value) {
                                                                 item
@@ -634,7 +699,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                                 1) ...[
                                                               SizedBox(
                                                                 height: widgetSize
-                                                                    .getHeight(15,
+                                                                    .getHeight(
+                                                                        15,
                                                                         context),
                                                               ),
                                                             ]
@@ -651,15 +717,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 child: Align(
                                                   alignment:
                                                       Alignment.centerRight,
-                                                  child: Text(
-                                                    item.webLongDescription ?? '',
-                                                    style: TextStyle(
-                                                      fontSize: widgetSize
-                                                          .getHeight(16, context),
-                                                      color:
-                                                          const Color(0xff2e2e2e),
+                                                  child: buildTextWithURL(
+                                                    text:
+                                                        item.webLongDescription ??
+                                                            '',
+                                                    defaultTextStyle: TextStyle(
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              16, context),
+                                                      color: const Color(
+                                                          0xff2e2e2e),
                                                     ),
-                                                    textAlign: TextAlign.right,
                                                   ),
                                                 )),
                                           ],
@@ -678,7 +746,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 Text(
                                                   'الكمية',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(18, context),
                                                     color:
@@ -698,28 +767,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                     children: [
                                                       SafeOnTap(
                                                           onSafeTap: () {
-                                                            if(!isPressed){
+                                                            if (!isPressed) {
                                                               setState(() {
-                                                                isPressed = true;
-                                                                count = int.parse(item.minimumOrderQuantities!);
+                                                                isPressed =
+                                                                    true;
+                                                                count = int
+                                                                    .parse(item
+                                                                        .minimumOrderQuantities!);
                                                               });
                                                             }
-                                                            if(item.maximumOrderQuantities == null ? count < 100 : count < int.parse(item.maximumOrderQuantities!)){
+                                                            if (item.maximumOrderQuantities ==
+                                                                    null
+                                                                ? count < 100
+                                                                : count <
+                                                                    int.parse(item
+                                                                        .maximumOrderQuantities!)) {
                                                               setState(() {
-                                                                count = count + 1;
-                                                                getFinalPrice(item);
+                                                                count =
+                                                                    count + 1;
+                                                                getFinalPrice(
+                                                                    item);
                                                               });
                                                             }
                                                           },
-                                                          child: SvgPicture.asset(
-                                                              Assets.svgAdd)),
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                  Assets
+                                                                      .svgAdd)),
                                                       SizedBox(
                                                         width:
                                                             widgetSize.getWidth(
                                                                 10, context),
                                                       ),
                                                       Text(
-                                                        (isPressed && item.minimumOrderQuantities != null) ? count.toString() : item.minimumOrderQuantities!,
+                                                        (isPressed &&
+                                                                item.minimumOrderQuantities !=
+                                                                    null)
+                                                            ? count.toString()
+                                                            : item
+                                                                .minimumOrderQuantities!,
                                                         style: TextStyle(
                                                           fontFamily:
                                                               'DIN Next LT W23',
@@ -740,22 +826,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                       ),
                                                       SafeOnTap(
                                                           onSafeTap: () {
-                                                            if(!isPressed){
+                                                            if (!isPressed) {
                                                               setState(() {
-                                                                isPressed = true;
-                                                                count = int.parse(item.minimumOrderQuantities!);
+                                                                isPressed =
+                                                                    true;
+                                                                count = int
+                                                                    .parse(item
+                                                                        .minimumOrderQuantities!);
                                                               });
                                                             }
-                                                            if (count > 1 && count > int.parse(item.minimumOrderQuantities!)) {
+                                                            if (count > 1 &&
+                                                                count >
+                                                                    int.parse(item
+                                                                        .minimumOrderQuantities!)) {
                                                               setState(() {
-                                                                count = count - 1;
+                                                                count =
+                                                                    count - 1;
                                                                 getFinalPrice(
                                                                     item);
                                                               });
                                                             }
                                                           },
-                                                          child: SvgPicture.asset(
-                                                              Assets.svgSub)),
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                  Assets
+                                                                      .svgSub)),
                                                     ],
                                                   ),
                                                 )
@@ -765,7 +860,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         ),
                                       ),
                                       SizedBox(
-                                        height: widgetSize.getHeight(30, context),
+                                        height:
+                                            widgetSize.getHeight(30, context),
                                       ),
                                       Column(
                                         children: [
@@ -784,30 +880,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                             ),
                                           ),
                                           SizedBox(
-                                            height:
-                                                widgetSize.getHeight(8, context),
+                                            height: widgetSize.getHeight(
+                                                8, context),
                                           ),
                                           Container(
-                                            height:
-                                                widgetSize.getHeight(70, context),
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            height: widgetSize.getHeight(
+                                                70, context),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             decoration: BoxDecoration(
                                               color: const Color(0xfff6f6f6),
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
                                               border: Border.all(
                                                   width: 1.0,
-                                                  color: const Color(0xffe3e3e3)),
+                                                  color:
+                                                      const Color(0xffe3e3e3)),
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                 hideQuantity(item) ?getFinalPriceModifier(item): getFinalPrice(item),
+                                                  hideQuantity(item)
+                                                      ? getFinalPriceModifier(
+                                                          item)
+                                                      : getFinalPrice(item),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(32, context),
                                                     color:
@@ -823,7 +925,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 Text(
                                                   item.currency!,
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(18, context),
                                                     color:
@@ -837,14 +940,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         ],
                                       ),
                                       SizedBox(
-                                        height: widgetSize.getHeight(70, context),
+                                        height:
+                                            widgetSize.getHeight(70, context),
                                       ),
                                       if (item.inStock != null &&
                                           item.inStock == 1) ...[
                                         SafeOnTap(
                                           onSafeTap: () async {
                                             FocusScope.of(context).unfocus();
-                                            if (!moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0) {
+                                            if (!moreThanAvailableWalletBalance &&
+                                                double.parse(item
+                                                        .discountedPrice!) !=
+                                                    0.0) {
                                               if (context
                                                       .read<AppProvider>()
                                                       .getUserInfo() !=
@@ -856,27 +963,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            SignInScreen(
+                                                            const SignInScreen(
                                                               fromSetting: true,
                                                             )));
                                               }
                                             }
                                           },
                                           child: Container(
-                                            height:
-                                                widgetSize.getHeight(60, context),
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            height: widgetSize.getHeight(
+                                                60, context),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0
-                                                      ? const Color(0xff2892d7)
-                                                      : const Color(0xffa2a2a2),
+                                              color: !moreThanAvailableWalletBalance &&
+                                                      double.parse(item
+                                                              .discountedPrice!) !=
+                                                          0.0
+                                                  ? const Color(0xff2892d7)
+                                                  : const Color(0xffa2a2a2),
                                               borderRadius:
                                                   BorderRadius.circular(15.0),
                                               border: Border.all(
                                                   width: 1.0,
-                                                  color: const Color(0xff2892d7)),
+                                                  color:
+                                                      const Color(0xff2892d7)),
                                               boxShadow: const [
                                                 BoxShadow(
                                                   color: Color(0x401d4c9b),
@@ -887,12 +998,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                             ),
                                             child: Center(
                                               child: Text(
-                                                !moreThanAvailableWalletBalance && double.parse(item.discountedPrice!) != 0.0 ? 'متابعة الشراء' : 'لا يوجد رصيد كافي',
+                                                !moreThanAvailableWalletBalance &&
+                                                        double.parse(item
+                                                                .discountedPrice!) !=
+                                                            0.0
+                                                    ? 'متابعة الشراء'
+                                                    : 'لا يوجد رصيد كافي',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize.getHeight(
-                                                      20, context),
-                                                  color: const Color(0xffffffff),
+                                                  fontSize: widgetSize
+                                                      .getHeight(20, context),
+                                                  color:
+                                                      const Color(0xffffffff),
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                                 softWrap: false,
@@ -906,17 +1023,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         SafeOnTap(
                                           onSafeTap: () {},
                                           child: Container(
-                                            height:
-                                                widgetSize.getHeight(60, context),
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            height: widgetSize.getHeight(
+                                                60, context),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             decoration: BoxDecoration(
                                               color: const Color(0xffa2a2a2),
                                               borderRadius:
                                                   BorderRadius.circular(15.0),
                                               border: Border.all(
                                                   width: 1.0,
-                                                  color: const Color(0xffa2a2a2)),
+                                                  color:
+                                                      const Color(0xffa2a2a2)),
                                               boxShadow: const [
                                                 BoxShadow(
                                                   color: Color(0x401d4c9b),
@@ -930,9 +1049,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                 'غير متوفر بالمخزون',
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
-                                                  fontSize: widgetSize.getHeight(
-                                                      20, context),
-                                                  color: const Color(0xffffffff),
+                                                  fontSize: widgetSize
+                                                      .getHeight(20, context),
+                                                  color:
+                                                      const Color(0xffffffff),
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                                 softWrap: false,
@@ -957,20 +1077,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                               Dialog(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(12.0)),
+                                                    BorderRadius.circular(
+                                                        12.0)),
                                             //this right here
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: widgetSize.getWidth(
-                                                      20, context)),
+                                                  horizontal: widgetSize
+                                                      .getWidth(20, context)),
                                               child: ListView(
                                                 physics:
                                                     const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 children: <Widget>[
                                                   SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        20, context),
+                                                    height: widgetSize
+                                                        .getHeight(20, context),
                                                   ),
                                                   Row(
                                                     children: [
@@ -979,15 +1100,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                             Navigator.pop(
                                                                 context);
                                                           },
-                                                          child: SvgPicture.asset(
-                                                              Assets
+                                                          child: SvgPicture
+                                                              .asset(Assets
                                                                   .svgCancelDirectOrder)),
                                                       const Spacer(),
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        10, context),
+                                                    height: widgetSize
+                                                        .getHeight(10, context),
                                                   ),
                                                   Text(
                                                     item.shortDescription!,
@@ -995,15 +1116,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                                     style: TextStyle(
                                                       fontFamily:
                                                           'DIN Next LT W23',
-                                                      fontSize: widgetSize
-                                                          .getHeight(18, context),
-                                                      color:
-                                                          const Color(0xff2e2e2e),
+                                                      fontSize:
+                                                          widgetSize.getHeight(
+                                                              18, context),
+                                                      color: const Color(
+                                                          0xff2e2e2e),
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                    height: widgetSize.getHeight(
-                                                        20, context),
+                                                    height: widgetSize
+                                                        .getHeight(20, context),
                                                   ),
                                                 ],
                                               ),
@@ -1012,8 +1134,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                         );
                                       }
                                     },
-                                    child:
-                                        SvgPicture.asset(Assets.svgProductInfo)))
+                                    child: SvgPicture.asset(
+                                        Assets.svgProductInfo)))
                           ],
                         )
                       ],
@@ -1029,6 +1151,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           )),
     );
   }
+
   checkValidationAndDirectRequest(ProductsDetailsData item) async {
     if (_key.currentState != null) {
       _key.currentState!.save();
@@ -1071,7 +1194,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     List<DirectOrderRequest> directOrderList = [];
     DirectOrderRequest directOrderRequest = DirectOrderRequest();
     directOrderRequest.websiteItemCode = item.websiteItemId;
-    directOrderRequest.orderType = "Direct Order";
     directOrderRequest.itemUom = item.stockUom;
     directOrderRequest.qty = count;
     if (item.productOptions != null && item.productOptions!.isNotEmpty) {
@@ -1089,37 +1211,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     ApiResponse<DirectOrderResponse> resultOfConfirmDirectOrder =
         await confirmDirectOrder(
             context, directOrderRequest, item, directOrderList);
-print("resultOfConfirmDirectOrder.status");
-print(resultOfConfirmDirectOrder.status);
-print(resultOfConfirmDirectOrder.data!.invoiceId);
+    print("resultOfConfirmDirectOrder.status");
+    print(resultOfConfirmDirectOrder.status);
+    print(resultOfConfirmDirectOrder.data!.salesOrderId);
 
     if (resultOfConfirmDirectOrder.status == Status.COMPLETED) {
       if (resultOfConfirmDirectOrder.data != null &&
           resultOfConfirmDirectOrder.data!.error == null) {
-        if (context.read<AppProvider>().getEnablePrintAuto()) {
-          if (!androidInfo.model.contains("TPS")) {
-            await printOnBluetoothPrinter(
-                resultOfConfirmDirectOrder.data!,
-                context.read<AppProvider>().getEnableMerchantNamePrint()
-                    ? context.read<AppProvider>().utilitiesModel
-                    : null, context);
-          } else {
-            await printOnTelpo(
-                resultOfConfirmDirectOrder.data!,
-                context.read<AppProvider>().getEnableMerchantNamePrint()
-                    ? context.read<AppProvider>().utilitiesModel
-                    : null, context);
+        try {
+          if (context.read<AppProvider>().getEnablePrintAuto()) {
+            if (!androidInfo.model.contains("TPS")) {
+              await printOnBluetoothPrinter(
+                  resultOfConfirmDirectOrder.data!,
+                  context.read<AppProvider>().getEnableMerchantNamePrint()
+                      ? context.read<AppProvider>().utilitiesModel
+                      : null,
+                  context);
+            } else {
+              await printOnTelpo(
+                  resultOfConfirmDirectOrder.data!,
+                  context.read<AppProvider>().getEnableMerchantNamePrint()
+                      ? context.read<AppProvider>().utilitiesModel
+                      : null,
+                  context);
+            }
           }
+        } on Exception catch (e) {
+          print(e);
         }
         var orderReceiptResult = await showDialog(
             context: context,
-            builder: (BuildContext context) => WillPopScope(
-              onWillPop: () async {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                return true;
-              },
-              child: StatefulBuilder(
+            builder: (BuildContext context) => PopScope(
+                  onPopInvokedWithResult: (result, _) async {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: StatefulBuilder(
                     builder: (context, setState) => Dialog(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0)),
@@ -1130,7 +1257,6 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                         child: Stack(
                           children: [
                             ListView(
-
                               shrinkWrap: true,
                               children: <Widget>[
                                 SizedBox(
@@ -1140,7 +1266,6 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                   children: [
                                     SafeOnTap(
                                         onSafeTap: () {
-                                          Navigator.pop(context);
                                           Navigator.pop(context);
                                         },
                                         child: SvgPicture.asset(
@@ -1174,7 +1299,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: widgetSize.getHeight(20, context),
+                                        height:
+                                            widgetSize.getHeight(20, context),
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
@@ -1182,8 +1308,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            width:
-                                                widgetSize.getWidth(10, context),
+                                            width: widgetSize.getWidth(
+                                                10, context),
                                           ),
                                           Column(
                                             children: [
@@ -1203,18 +1329,22 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                     child: Container(
                                                       decoration: BoxDecoration(
                                                         borderRadius:
-                                                            const BorderRadius.all(
+                                                            const BorderRadius
+                                                                .all(
                                                                 Radius.circular(
                                                                     10)),
-                                                        shape: BoxShape.rectangle,
+                                                        shape:
+                                                            BoxShape.rectangle,
                                                         color: hexToColor(
                                                             resultOfConfirmDirectOrder
                                                                 .data!
                                                                 .orderItems![0]
                                                                 .backgroundColor!),
                                                         image: DecorationImage(
-                                                            image: imageProvider,
-                                                            fit: BoxFit.contain),
+                                                            image:
+                                                                imageProvider,
+                                                            fit:
+                                                                BoxFit.contain),
                                                       ),
                                                     ),
                                                   ),
@@ -1262,8 +1392,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                             ],
                                           ),
                                           SizedBox(
-                                            width:
-                                                widgetSize.getWidth(10, context),
+                                            width: widgetSize.getWidth(
+                                                10, context),
                                           ),
                                           Expanded(
                                             child: Column(
@@ -1271,7 +1401,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 const Text(
                                                   'رقم الطلب',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 12,
                                                     color: Color(0xffa2a2a2),
                                                   ),
@@ -1279,9 +1410,10 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 ),
                                                 Text(
                                                   resultOfConfirmDirectOrder
-                                                      .data!.invoiceId!,
+                                                      .data!.salesOrderId!,
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 14,
                                                     color: Color(0xff6b6b6b),
                                                     fontWeight: FontWeight.w700,
@@ -1296,7 +1428,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 const Text(
                                                   'حالة الطلب',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 12,
                                                     color: Color(0xffa2a2a2),
                                                   ),
@@ -1307,7 +1440,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       .data!.salesOrderStatus
                                                       .toString(),
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 14,
                                                     color: Color(0xff6b6b6b),
                                                     fontWeight: FontWeight.w700,
@@ -1324,10 +1458,12 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       .split('.')[0]
                                                       .toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
-                                                    fontSize: widgetSize.getHeight(
-                                                        16, context),
-                                                    color: const Color(0xff6b6b6b),
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
+                                                    fontSize: widgetSize
+                                                        .getHeight(16, context),
+                                                    color:
+                                                        const Color(0xff6b6b6b),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -1343,10 +1479,10 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       .data!.grandTotal!
                                                       .toString(),
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 22,
-                                                    color:
-                                                        Color(0xffec7e7e),
+                                                    color: Color(0xffec7e7e),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -1355,10 +1491,10 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       .data!.currency!
                                                       .toString(),
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 18,
-                                                    color:
-                                                        Color(0xffec7e7e),
+                                                    color: Color(0xffec7e7e),
                                                   ),
                                                   softWrap: false,
                                                 ),
@@ -1369,22 +1505,24 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 const Text(
                                                   'الكمية',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 12,
-                                                    color:
-                                                        Color(0xffa2a2a2),
+                                                    color: Color(0xffa2a2a2),
                                                   ),
                                                   softWrap: false,
                                                 ),
                                                 Text(
-                                                  resultOfConfirmDirectOrder.data!
-                                                      .orderItems![0].quantity!
+                                                  resultOfConfirmDirectOrder
+                                                      .data!
+                                                      .orderItems![0]
+                                                      .quantity!
                                                       .toString(),
                                                   style: const TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 14,
-                                                    color:
-                                                        Color(0xff6b6b6b),
+                                                    color: Color(0xff6b6b6b),
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                   softWrap: false,
@@ -1394,7 +1532,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       .data!.date!
                                                       .toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: widgetSize
                                                         .getHeight(14, context),
                                                     color:
@@ -1414,10 +1553,11 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                   height: widgetSize.getHeight(15, context),
                                 ),
                                 ListView(
-                                  physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    children: resultOfConfirmDirectOrder
-                                        .data!.orderItems![0].stockDetails!
+                                    children: resultOfConfirmDirectOrder.data!
+                                        .orderItems![0].digitalCardDetails!
                                         .map<Widget>((data) {
                                       return Align(
                                         alignment: Alignment.center,
@@ -1449,13 +1589,16 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                     child: Text(
                                                       data.secretCode!,
                                                       style: const TextStyle(
-                                                        fontFamily: 'DIN Next LT W23',
+                                                        fontFamily:
+                                                            'DIN Next LT W23',
                                                         fontSize: 23,
                                                         color:
                                                             Color(0xffec7e7e),
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
-                                                      textAlign: TextAlign.right,
+                                                      textAlign:
+                                                          TextAlign.right,
                                                       softWrap: true,
                                                       maxLines: 2,
                                                     ),
@@ -1466,14 +1609,17 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       onSafeTap: () async {
                                                         await Clipboard.setData(
                                                             ClipboardData(
-                                                                text: data
-                                                                    .secretCode ?? ''));
-                                                        var snackBar = const SnackBar(
-                                                            content:
-                                                                Text("تم النسخ"));
+                                                                text:
+                                                                    data.secretCode ??
+                                                                        ''));
+                                                        var snackBar =
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    "تم النسخ"));
                                                         ScaffoldMessenger.of(
                                                                 context)
-                                                            .showSnackBar(snackBar);
+                                                            .showSnackBar(
+                                                                snackBar);
                                                       },
                                                       child: SvgPicture.asset(
                                                           Assets.svgCopy)),
@@ -1543,7 +1689,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                       child: SafeOnTap(
                                         onSafeTap: () async {
                                           await shareOrder(
-                                              resultOfConfirmDirectOrder.data!, context);
+                                              resultOfConfirmDirectOrder.data!,
+                                              context);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -1594,7 +1741,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                       child: Expanded(
                                         child: SafeOnTap(
                                           onSafeTap: () async {
-                                            if (androidInfo.model.contains("TPS")) {
+                                            if (androidInfo.model
+                                                .contains("TPS")) {
                                               await printOnTelpo(
                                                   resultOfConfirmDirectOrder
                                                       .data!,
@@ -1604,7 +1752,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                       ? context
                                                           .read<AppProvider>()
                                                           .utilitiesModel
-                                                      : null, context);
+                                                      : null,
+                                                  context);
                                             } else {
                                               if (context
                                                       .read<AppProvider>()
@@ -1613,7 +1762,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 await Navigator.push(
                                                   context,
                                                   PageTransition(
-                                                    type: PageTransitionType.fade,
+                                                    type:
+                                                        PageTransitionType.fade,
                                                     child: PrintScreen(
                                                         resultOfConfirmDirectOrder
                                                             .data!),
@@ -1629,7 +1779,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                         ? context
                                                             .read<AppProvider>()
                                                             .utilitiesModel
-                                                        : null, context);
+                                                        : null,
+                                                    context);
                                               }
                                             }
                                           },
@@ -1640,7 +1791,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                   BorderRadius.circular(5.0),
                                               border: Border.all(
                                                   width: 1.0,
-                                                  color: const Color(0xfff3f3f3)),
+                                                  color:
+                                                      const Color(0xfff3f3f3)),
                                             ),
                                             child: Column(
                                               mainAxisAlignment:
@@ -1659,10 +1811,10 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                                 const Text(
                                                   'طباعة البطاقة',
                                                   style: TextStyle(
-                                                    fontFamily: 'DIN Next LT W23',
+                                                    fontFamily:
+                                                        'DIN Next LT W23',
                                                     fontSize: 11,
-                                                    color:
-                                                        Color(0xff6b6b6b),
+                                                    color: Color(0xff6b6b6b),
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                   softWrap: false,
@@ -1684,7 +1836,14 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                       child: SafeOnTap(
                                         onSafeTap: () {
                                           Navigator.pop(context, true);
-                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const SharedBottomNavigationBar(widget: MainScreen())), (route) => false);
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const SharedBottomNavigationBar(
+                                                          widget:
+                                                              MainScreen())),
+                                              (route) => false);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -1756,7 +1915,7 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                       ),
                     ),
                   ),
-            ));
+                ));
         if (orderReceiptResult != null && orderReceiptResult) {
           Navigator.pushReplacement(
             context,
@@ -1813,42 +1972,73 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                   ),
                   softWrap: false,
                 ),
-                if(context.read<AppProvider>().getUserInfo()!=null && context.read<AppProvider>().getUserInfo()!.profileDetails!=null) Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: widgetSize.getWidth(10, context)),
-                    child: SafeOnTap( onSafeTap: ()async {},
-                      child: SizedBox(
-                        width: widgetSize.getWidth(100, context),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Text("JD ", style: TextStyle(
-                              fontFamily: 'DIN Next LT W23',
-                              fontSize: 15,
-                              color:  Color(0xffffffff),
-                              fontWeight: FontWeight.w400,
-                            ), softWrap: false,),
-                            Text(
-                              context.watch<AppProvider>().utilitiesModel!=null?
-                              context.watch<AppProvider>().utilitiesModel!.data!=null?
-                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!=null?
-                              context.watch<AppProvider>().utilitiesModel!.data!.walletBalance!:"":"":"",
-                              style: const TextStyle(
-                                fontFamily: 'DIN Next LT W23',
-                                fontSize: 15,
-                                color:  Color(0xffffffff),
-                                fontWeight: FontWeight.w400,
+                if (context.read<AppProvider>().getUserInfo() != null &&
+                    context.read<AppProvider>().getUserInfo()!.profileDetails !=
+                        null)
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: widgetSize.getWidth(10, context)),
+                      child: SafeOnTap(
+                        onSafeTap: () async {},
+                        child: SizedBox(
+                          width: widgetSize.getWidth(100, context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Text(
+                                "JD ",
+                                style: TextStyle(
+                                  fontFamily: 'DIN Next LT W23',
+                                  fontSize: 15,
+                                  color: Color(0xffffffff),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                softWrap: false,
                               ),
-                              softWrap: false,
-                            ),
-                            SizedBox(width: widgetSize.getWidth(5, context)),
-                            SvgPicture.asset(Assets.svgWallet,width: widgetSize.getWidth(20, context),color: Colors.white,),
-                          ],),
-                      ),),
-                  ),
-                )
-
+                              Text(
+                                context.watch<AppProvider>().utilitiesModel !=
+                                        null
+                                    ? context
+                                                .watch<AppProvider>()
+                                                .utilitiesModel!
+                                                .data !=
+                                            null
+                                        ? context
+                                                    .watch<AppProvider>()
+                                                    .utilitiesModel!
+                                                    .data!
+                                                    .walletBalance !=
+                                                null
+                                            ? context
+                                                .watch<AppProvider>()
+                                                .utilitiesModel!
+                                                .data!
+                                                .walletBalance!
+                                            : ""
+                                        : ""
+                                    : "",
+                                style: const TextStyle(
+                                  fontFamily: 'DIN Next LT W23',
+                                  fontSize: 15,
+                                  color: Color(0xffffffff),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                softWrap: false,
+                              ),
+                              SizedBox(width: widgetSize.getWidth(5, context)),
+                              SvgPicture.asset(
+                                Assets.svgWallet,
+                                width: widgetSize.getWidth(20, context),
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
               ],
             ),
           ),
@@ -1870,7 +2060,7 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
               //this right here
-          /// Dialog for ( تأكيد الشراء )
+              /// Dialog for ( تأكيد الشراء )
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widgetSize.getWidth(20, context)),
@@ -1970,7 +2160,9 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                               Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                 hideQuantity(item)? getFinalPriceModifier(item):getFinalPrice(item),
+                                  hideQuantity(item)
+                                      ? getFinalPriceModifier(item)
+                                      : getFinalPrice(item),
                                   style: TextStyle(
                                     fontFamily: 'DIN Next LT W23',
                                     fontSize: widgetSize.getHeight(22, context),
@@ -2014,10 +2206,9 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                                               e.optionValue!,
                                               style: TextStyle(
                                                 fontFamily: 'DIN Next LT W23',
-                                                fontSize: widgetSize
-                                                    .getHeight(16, context),
-                                                color:
-                                                    const Color(0xff2e2e2e),
+                                                fontSize: widgetSize.getHeight(
+                                                    16, context),
+                                                color: const Color(0xff2e2e2e),
                                               ),
                                               softWrap: true,
                                             ),
@@ -2097,66 +2288,81 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
                               height: widgetSize.getHeight(30, context),
                             ),
                             Consumer<HomeProvider>(
-                              builder: (context, state, child) {
-                                return SafeOnTap(
-                                  onSafeTap: () async {
-                                    if(!state.isLoading){
-                                      var res = await state
-                                          .directOrder(directOrderList);
-                                      print("after assign value to res");
-                                      print("res.stats.toString()");
-                                      print(res.message);
-                                      if (res.status == Status.COMPLETED) {
-                                        Navigator.pop(context, res);
-                                        context.read<AppProvider>().getUtilities();
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ProductDetailsScreen(item.websiteItemName!, item.websiteItemId!)));
-                                      } else {
-                                        Fluttertoast.showToast(
-                                            backgroundColor: ColorResources.nightRider,
-                                            textColor: Colors.white,
-                                            msg: res.message == "Error During Communication: Error while Communication with Server with StatusCode : EXPECTATION FAILED" ?"منته من المتجر": "",
-                                            timeInSecForIosWeb: 4,
-                                            toastLength: Toast.LENGTH_LONG);
-                                      }
+                                builder: (context, state, child) {
+                              return SafeOnTap(
+                                onSafeTap: () async {
+                                  if (!state.isLoading) {
+                                    var res = await state
+                                        .directOrder(directOrderList);
+                                    print("after assign value to res");
+                                    print("res.stats.toString()");
+                                    print(res.message);
+                                    if (res.status == Status.COMPLETED) {
+                                      Navigator.pop(context, res);
+                                      context
+                                          .read<AppProvider>()
+                                          .getUtilities();
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ProductDetailsScreen(
+                                                      item.websiteItemName!,
+                                                      item.websiteItemId!)));
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          backgroundColor:
+                                              ColorResources.nightRider,
+                                          textColor: Colors.white,
+                                          msg: res.message ==
+                                                  "Error During Communication: Error while Communication with Server with StatusCode : EXPECTATION FAILED"
+                                              ? "منته من المتجر"
+                                              : "",
+                                          timeInSecForIosWeb: 4,
+                                          toastLength: Toast.LENGTH_LONG);
                                     }
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            widgetSize.getHeight(30, context)),
-                                    height: widgetSize.getHeight(50, context),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: state.isLoading ? Colors.grey : const Color(0xff2892d7),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: state.isLoading ? Colors.grey : const Color(0xff2892d7)),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Color(0x401d4c9b),
-                                          offset: Offset(0, 5),
-                                          blurRadius: 11,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'تأكيد الشراء',
-                                        style: TextStyle(
-                                          fontFamily: 'DIN Next LT W23',
-                                          fontSize:
-                                              widgetSize.getHeight(20, context),
-                                          color: const Color(0xffffffff),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        softWrap: false,
+                                  }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                          widgetSize.getHeight(30, context)),
+                                  height: widgetSize.getHeight(50, context),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: state.isLoading
+                                        ? Colors.grey
+                                        : const Color(0xff2892d7),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    border: Border.all(
+                                        width: 1.0,
+                                        color: state.isLoading
+                                            ? Colors.grey
+                                            : const Color(0xff2892d7)),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x401d4c9b),
+                                        offset: Offset(0, 5),
+                                        blurRadius: 11,
                                       ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'تأكيد الشراء',
+                                      style: TextStyle(
+                                        fontFamily: 'DIN Next LT W23',
+                                        fontSize:
+                                            widgetSize.getHeight(20, context),
+                                        color: const Color(0xffffffff),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      softWrap: false,
                                     ),
                                   ),
-                                );
-                              }
-                            ),
+                                ),
+                              );
+                            }),
                             SizedBox(
                               height: widgetSize.getHeight(20, context),
                             )
@@ -2201,7 +2407,10 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
 
   getFinalPrice(ProductsDetailsData item) {
     double finalPrice = 0.0;
-    finalPrice = (!isPressed) ?(double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) : (double.parse(item.discountedPrice!)) * count  ;
+    finalPrice = (!isPressed)
+        ? (double.parse(item.discountedPrice!)) *
+            int.parse(item.minimumOrderQuantities!)
+        : (double.parse(item.discountedPrice!)) * count;
     if (context.read<AppProvider>().utilitiesModel != null &&
         context.read<AppProvider>().utilitiesModel!.data != null &&
         context.read<AppProvider>().utilitiesModel!.data!.walletBalance !=
@@ -2225,7 +2434,7 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
   }
 
   getFinalPriceModifier(ProductsDetailsData item) {
-    double finalPrice =  (double.parse(item.discountedPrice!)) * count;
+    double finalPrice = (double.parse(item.discountedPrice!)) * count;
 
     var tempList = item.productOptions!
         .where((element) =>
@@ -2236,10 +2445,16 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
       for (ProductOptions p in tempList) {
         if (p.answer != null && p.answer!.isNotEmpty) {
           finalPrice = (!isPressed && percent == 0.0)
-              ? (double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) + double.parse(p.answer!)
-          :(!isPressed && percent != 0.0)
-              ? (double.parse(item.discountedPrice!)) * int.parse(item.minimumOrderQuantities!) + (double.parse(p.answer!)+ ((double.parse(p.answer!) * (p.percentage/100))))
-              : (double.parse(item.discountedPrice!)) * count + double.parse(p.answer!);
+              ? (double.parse(item.discountedPrice!)) *
+                      int.parse(item.minimumOrderQuantities!) +
+                  double.parse(p.answer!)
+              : (!isPressed && percent != 0.0)
+                  ? (double.parse(item.discountedPrice!)) *
+                          int.parse(item.minimumOrderQuantities!) +
+                      (double.parse(p.answer!) +
+                          ((double.parse(p.answer!) * (p.percentage / 100))))
+                  : (double.parse(item.discountedPrice!)) * count +
+                      double.parse(p.answer!);
         }
       }
     }
@@ -2266,8 +2481,8 @@ print(resultOfConfirmDirectOrder.data!.invoiceId);
     return finalPrice.toStringAsFixed(4);
   }
 
-  void calculatePercentPrice(double additionalData, double percentage){
-    double amount = ((percentage/100) * additionalData) + additionalData;
+  void calculatePercentPrice(double additionalData, double percentage) {
+    double amount = ((percentage / 100) * additionalData) + additionalData;
     setState(() {
       percent = percent + amount;
     });

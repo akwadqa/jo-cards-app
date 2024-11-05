@@ -19,7 +19,7 @@ class ExtraResitApi {
     var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            '${Strings.BASR_URl}/api/method/jocards_v2.smart_api.update_profile'));
+            '${Strings.BASR_URl}/api/method/jocards.smart_api.update_profile'));
 
     request.fields.addAll({'data': data});
 
@@ -62,7 +62,7 @@ class ExtraResitApi {
       'content-type': 'application/json',
     };
     String url =
-        '${Strings.BASR_URl}/api/method/jocards_v2.smart_api.password_reset?user=$email';
+        '${Strings.BASR_URl}/api/method/jocards.smart_api.password_reset?user=$email';
     var request = await http.post(Uri.parse(url), headers: headers);
     late ResponseModel responseModel;
 

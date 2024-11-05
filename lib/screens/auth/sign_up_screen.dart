@@ -255,7 +255,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                             .profileDetails!
                                                             .email!,
                                                         deviceType,
-                                                        device ?? '');
+                                                        device);
                                               }
                                               await registrationSuccessDialog(
                                                   res.data!.message!);
@@ -521,7 +521,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> showCityListBottmSheet(BuildContext context) async {
     if (context.read<AppProvider>().territoriesModel != null) {
-      var res = await showMaterialModalBottomSheet(
+      await showMaterialModalBottomSheet(
         expand: false,
         context: context,
         backgroundColor: Colors.transparent,
@@ -626,7 +626,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   registrationSuccessDialog(String message) async {
-    var res = await showDialog(
+    await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => Dialog(

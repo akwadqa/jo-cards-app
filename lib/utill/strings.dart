@@ -4,15 +4,21 @@ class Strings {
   static const String FIREBASE_TOKEN = 'firebase_token';
   static const String USER_INFO = 'user_info';
   static const String OLD_PASSWORD = 'old_password';
-  // static const String BASR_URl = 'https://app.jocards.com';
-  static const String BASR_URl = 'https://jocards.akwad.qa';
+  static const String BASR_URl = 'https://app.jocards.com';
+  // static const String BASR_URl = 'https://jocards.akwad.qa';
   // static const String BASR_URl = 'https://www.jocards.com';
+  // static const String BASR_URl = 'https://jocards-15.akwad.qa';
   static const String Token = 'access_token';
   static const String LanguageCode = 'language_code';
   static const String CountryCode = 'countryCode';
   static const String EnablePrintAuto = 'EnablePrintAuto';
   static const String EnableMerchantNamePrint = 'EnableMerchantNamePrint';
   static const String BluetoothDevice = 'BluetoothDevice';
+
+  static const String googlePlayLink =
+      'https://play.google.com/store/apps/details?id=com.akwad.jocards';
+  static const String appStoreLink =
+      'https://apps.apple.com/us/app/id1618616829';
 
   static const List<String> periods = [
     'اليوم',

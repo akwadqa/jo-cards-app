@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -21,9 +20,9 @@ import 'package:jocards/utill/strings.dart';
 import 'package:jocards/utill/utitlities.dart';
 import 'package:jocards/utill/widget_size.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:cached_network_image/cached_network_image.dart';import 'package:page_transition/page_transition.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-
 import 'item_per_categories.dart';
 
 class HomeScreen extends StatefulWidget {

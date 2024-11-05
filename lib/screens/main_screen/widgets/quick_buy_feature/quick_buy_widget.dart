@@ -39,8 +39,7 @@ import '../../product_details.dart';
 import 'custom_button.dart';
 
 class QuickBuyWidget extends StatelessWidget {
-  const QuickBuyWidget({Key? key, required this.homeBlockData})
-      : super(key: key);
+  const QuickBuyWidget({super.key, required this.homeBlockData});
   final HomeBlockData homeBlockData;
 
   @override
@@ -222,9 +221,9 @@ class QuickBuyWidget extends StatelessWidget {
                             CustomButton(
                                 onPressed: () => Navigator.of(context).pop(),
                                 title: 'إلغاء',
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     ColorResources.veryLightShadeOfGray),
-                                foregroundColor: MaterialStateProperty.all(
+                                foregroundColor: WidgetStateProperty.all(
                                     ColorResources.gray61)),
                           ],
                         )
@@ -249,7 +248,6 @@ class QuickBuyWidget extends StatelessWidget {
     List<DirectOrderRequest> directOrderList = [];
     DirectOrderRequest directOrderRequest = DirectOrderRequest();
     directOrderRequest.websiteItemCode = item.websiteItemId;
-    directOrderRequest.orderType = "Direct Order";
     directOrderRequest.itemUom = item.stockUom;
     directOrderRequest.qty = count;
     if (item.productOptions != null && item.productOptions!.isNotEmpty) {
@@ -271,22 +269,26 @@ class QuickBuyWidget extends StatelessWidget {
     if (resultOfConfirmDirectOrder.status == Status.COMPLETED) {
       if (resultOfConfirmDirectOrder.data != null &&
           resultOfConfirmDirectOrder.data!.error == null) {
-        if (context.read<AppProvider>().getEnablePrintAuto()) {
-          if (!androidInfo.model.contains("TPS")) {
-            await printOnBluetoothPrinter(
-                resultOfConfirmDirectOrder.data!,
-                context.read<AppProvider>().getEnableMerchantNamePrint()
-                    ? context.read<AppProvider>().utilitiesModel
-                    : null,
-                context);
-          } else {
-            await printOnTelpo(
-                resultOfConfirmDirectOrder.data!,
-                context.read<AppProvider>().getEnableMerchantNamePrint()
-                    ? context.read<AppProvider>().utilitiesModel
-                    : null,
-                context);
+        try {
+          if (context.read<AppProvider>().getEnablePrintAuto()) {
+            if (!androidInfo.model.contains("TPS")) {
+              await printOnBluetoothPrinter(
+                  resultOfConfirmDirectOrder.data!,
+                  context.read<AppProvider>().getEnableMerchantNamePrint()
+                      ? context.read<AppProvider>().utilitiesModel
+                      : null,
+                  context);
+            } else {
+              await printOnTelpo(
+                  resultOfConfirmDirectOrder.data!,
+                  context.read<AppProvider>().getEnableMerchantNamePrint()
+                      ? context.read<AppProvider>().utilitiesModel
+                      : null,
+                  context);
+            }
           }
+        } on Exception catch (e) {
+          print(e);
         }
         var orderReceiptResult = await showDialog(
             context: context,
@@ -371,7 +373,8 @@ class QuickBuyWidget extends StatelessWidget {
                                                     child: Container(
                                                       decoration: BoxDecoration(
                                                         borderRadius:
-                                                            const BorderRadius.all(
+                                                            const BorderRadius
+                                                                .all(
                                                                 Radius.circular(
                                                                     10)),
                                                         shape:
@@ -445,19 +448,17 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color:
-                                                      Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
                                               Text(
                                                 resultOfConfirmDirectOrder
-                                                    .data!.invoiceId!,
+                                                    .data!.salesOrderId!,
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color:
-                                                      Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: true,
@@ -472,8 +473,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color:
-                                                      Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
@@ -484,8 +484,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color:
-                                                      Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: false,
@@ -524,8 +523,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 22,
-                                                  color:
-                                                      Color(0xffec7e7e),
+                                                  color: Color(0xffec7e7e),
                                                 ),
                                                 softWrap: false,
                                               ),
@@ -536,8 +534,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 18,
-                                                  color:
-                                                      Color(0xffec7e7e),
+                                                  color: Color(0xffec7e7e),
                                                 ),
                                                 softWrap: false,
                                               ),
@@ -550,8 +547,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 12,
-                                                  color:
-                                                      Color(0xffa2a2a2),
+                                                  color: Color(0xffa2a2a2),
                                                 ),
                                                 softWrap: false,
                                               ),
@@ -562,8 +558,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: const TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 14,
-                                                  color:
-                                                      Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                                 softWrap: false,
@@ -597,7 +592,7 @@ class QuickBuyWidget extends StatelessWidget {
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   children: resultOfConfirmDirectOrder
-                                      .data!.orderItems![0].stockDetails!
+                                      .data!.orderItems![0].digitalCardDetails!
                                       .map<Widget>((data) {
                                     return Align(
                                       alignment: Alignment.center,
@@ -631,8 +626,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                     fontFamily:
                                                         'DIN Next LT W23',
                                                     fontSize: 23,
-                                                    color:
-                                                        Color(0xffec7e7e),
+                                                    color: Color(0xffec7e7e),
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                   textAlign: TextAlign.right,
@@ -648,9 +642,10 @@ class QuickBuyWidget extends StatelessWidget {
                                                               text:
                                                                   data.secretCode ??
                                                                       ''));
-                                                      var snackBar = const SnackBar(
-                                                          content:
-                                                              Text("تم النسخ"));
+                                                      var snackBar =
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  "تم النسخ"));
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
@@ -776,7 +771,8 @@ class QuickBuyWidget extends StatelessWidget {
                                     child: Expanded(
                                       child: SafeOnTap(
                                         onSafeTap: () async {
-                                          if (androidInfo.model.contains("TPS")) {
+                                          if (androidInfo.model
+                                              .contains("TPS")) {
                                             await printOnTelpo(
                                                 resultOfConfirmDirectOrder
                                                     .data!,
@@ -845,8 +841,7 @@ class QuickBuyWidget extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontFamily: 'DIN Next LT W23',
                                                   fontSize: 11,
-                                                  color:
-                                                      Color(0xff6b6b6b),
+                                                  color: Color(0xff6b6b6b),
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                                 softWrap: false,
@@ -867,7 +862,13 @@ class QuickBuyWidget extends StatelessWidget {
                                   Expanded(
                                     child: SafeOnTap(
                                       onSafeTap: () {
-                                        context.read<SharedNavBarProvider>().controller.detach(context.read<SharedNavBarProvider>().controller.position);
+                                        context
+                                            .read<SharedNavBarProvider>()
+                                            .controller
+                                            .detach(context
+                                                .read<SharedNavBarProvider>()
+                                                .controller
+                                                .position);
                                         Navigator.pop(context, true);
                                         // context.read<SharedNavBarProvider>().controller.attach(context.read<SharedNavBarProvider>().controller.position);
                                       },
@@ -929,9 +930,8 @@ class QuickBuyWidget extends StatelessWidget {
                                       .isLoading,
                                   child: const Center(
                                     child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                              ColorResources.studio),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          ColorResources.studio),
                                     ),
                                   )),
                             ),
