@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +21,26 @@ import '../main.dart';
 import '../model/agent_model.dart';
 import '../model/login_response_model.dart';
 import '../model/utilities_model.dart';
+// class BluetoothInfo {
+//   final String name;
+//   final String macAdress;
+
+//   BluetoothInfo({required this.name, required this.macAdress});
+
+//   factory BluetoothInfo.fromJson(Map<String, dynamic> json) {
+//     return BluetoothInfo(
+//       name: json['name'] ?? '',
+//       macAdress: json['macAdress'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'name': name,
+//       'macAdress': macAdress,
+//     };
+//   }
+// }
 
 class AppProvider with ChangeNotifier {
   bool isConnected = false;
@@ -59,19 +79,36 @@ class AppProvider with ChangeNotifier {
     await sharedPreferences.setString(Strings.BluetoothDevice, bluetoothDevice);
   }
 
-  BluetoothDevice? getBluetoothDevice() {
-    String? bluetoothDevice =
-        sharedPreferences.getString(Strings.BluetoothDevice);
+  // BluetoothDevice? getBluetoothDevice() {
+  //   String? bluetoothDevice =
+  //       sharedPreferences.getString(Strings.BluetoothDevice);
 
-    if (bluetoothDevice != null) {
-      BluetoothDevice bluetoothDeviceModel =
-          BluetoothDevice.fromMap(json.decode(bluetoothDevice));
+  //   if (bluetoothDevice != null) {
+  //     BluetoothDevice bluetoothDeviceModel =
+  //         BluetoothDevice.fromMap(json.decode(bluetoothDevice));
 
-      return bluetoothDeviceModel;
-    } else {
-      return null;
-    }
+  //     return bluetoothDeviceModel;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+BluetoothInfo? getBluetoothDevice() {
+  String? macAddress = sharedPreferences.getString(Strings.BluetoothDevice);
+  if (macAddress != null) {
+    return BluetoothInfo(name: "", macAdress: macAddress);
+  } else {
+    return null;
   }
+}
+// BluetoothInfo? getBluetoothDevice() {
+//   String? data = sharedPreferences.getString(Strings.BluetoothDevice);
+//   if (data != null) {
+//     return BluetoothInfo.fromJson(json.decode(data));
+//   }
+//   return null;
+// }
+
 
   enableDisablePrintAfterDirectOrder(bool enable) async {
     await sharedPreferences.setBool(Strings.EnablePrintAuto, enable);

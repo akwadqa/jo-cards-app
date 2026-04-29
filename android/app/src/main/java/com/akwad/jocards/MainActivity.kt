@@ -1,9 +1,6 @@
 package com.akwad.jocards
 
 
-
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,10 +31,9 @@ import com.telpo.tps550.api.printer.ThermalPrinter;
 import com.telpo.tps550.api.printer.UsbThermalPrinter;
 import com.telpo.tps550.api.util.StringUtil;
 import com.telpo.tps550.api.util.SystemUtil;
-import com.efikas.flutter_telpo.USBPrinter;
 import android.widget.Toast;
 import android.util.Log;
-
+import com.akwad.jocards.USBPrinter
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -48,7 +44,7 @@ class MainActivity : FlutterActivity()  {
     private lateinit var channel : MethodChannel
     private lateinit var activity:Activity
     private lateinit var context: Context
-    private lateinit var appPluginBinding: FlutterPlugin.FlutterPluginBinding;
+    public lateinit var appPluginBinding: FlutterPlugin.FlutterPluginBinding;
 
     private var LowBattery = false
     private var _isConnected = false;

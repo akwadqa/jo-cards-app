@@ -1,9 +1,10 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/utill/strings.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,12 +14,13 @@ import '../main.dart';
 import '../model/direct_order_response.dart';
 import '../model/row.dart';
 import '../model/utilities_model.dart';
-import '../provider/app_provider.dart';
+import '../provider/app_provider.dart' hide BluetoothInfo;
 import '../screens/auth/sign_in_screen.dart';
 import 'color_resources.dart';
 import 'flutter_telpo.dart';
 
 Future<void> shareOrder(DirectOrderResponse res, BuildContext context) async {
+  
   String mobileNumber = await context
           .read<AppProvider>()
           .getEnableMerchantNamePrint()
@@ -189,67 +191,129 @@ extension TextStyleX on TextStyle {
   }
 }
 
-Future<bool?> connect(BluetoothDevice? device) async {
-  if (device == null) {
-    return false;
-  } else {
-    var res = await bluetooth.isConnected;
-    if (!res!) {
-      try {
-        await bluetooth.connect(device);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-  }
-  return null;
-}
+// Future<bool?> connect(BluetoothDevice? device) async {
+//   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
 
+//   if (device == null) {
+//     return false;
+//   } else {
+//     var res = await bluetooth.isConnected;
+//     if (!res!) {
+//       try {
+//         await bluetooth.connect(device);
+//         return true;
+//       } catch (e) {
+//         return false;
+//       }
+//     }
+//   }
+//   return null;
+// }
+Future<bool> connect(BluetoothInfo device) async {
+  bool isConnected = await PrintBluetoothThermal.connectionStatus;
+
+  if (!isConnected) {
+    final result = await PrintBluetoothThermal.connect(
+      macPrinterAddress: device.macAdress,
+    );
+    return result;
+  }
+  return true;
+}
 Future<void> printOnBluetoothPrinter(DirectOrderResponse directOrderResponse,
     UtilitiesModel? utilitiesModel, BuildContext context) async {
-  for (StockDetails s
-      in directOrderResponse.orderItems![0].digitalCardDetails!) {
+  
+  List<String> lines = [];
+
+  for (StockDetails s in directOrderResponse.orderItems![0].digitalCardDetails!) {
     if (await context.read<AppProvider>().getEnableMerchantNamePrint()) {
-      await bluetooth.printCustom(
-          context.read<AppProvider>().utilitiesModel!.data!.company!, 1, 1);
-      await bluetooth.printCustom(_separator(), 1, 1);
+      lines.add(context.read<AppProvider>().utilitiesModel!.data!.company!);
+      lines.add(_separator());
     }
-    await bluetooth.printCustom(
-        directOrderResponse.orderItems![0].websiteItemCode!, 3, 1);
-    await bluetooth.printNewLine();
-    await bluetooth.printCustom("Pin Code:", 1, 1);
-    await bluetooth.printCustom(_addDashes(s.secretCode!), 3, 1);
-    await bluetooth.printNewLine();
-    await bluetooth.printCustom("Serial No.", 1, 1);
-    await bluetooth.printCustom(s.serialNo!, 1, 1);
-    await bluetooth.printCustom("Ref No.", 1, 1);
-    await bluetooth.printCustom(s.refNo!, 1, 1);
-    await bluetooth.printCustom(_separator(), 1, 1);
-    await bluetooth.printCustom(
-        "Date: ${directOrderResponse.date} Time:${directOrderResponse.postingTime!.split(".")[0]}",
-        1,
-        1);
-    await bluetooth.printCustom(
-        "Order No : ${directOrderResponse.salesOrderId!.toString()}", 1, 1);
-    await bluetooth.printCustom(_separator(), 1, 1);
-    await bluetooth.printCustom(
-        context.read<AppProvider>().utilitiesModel!.data!.companyName!, 1, 1);
-    await bluetooth.printCustom("Phone:", 1, 1);
-    await bluetooth.printCustom(
-        context.read<AppProvider>().utilitiesModel!.data!.mobileNo.toString(),
-        1,
-        1);
+
+    lines.add(directOrderResponse.orderItems![0].websiteItemCode!);
+    lines.add("");
+    lines.add("Pin Code:");
+    lines.add(_addDashes(s.secretCode!));
+    lines.add("");
+    lines.add("Serial No.");
+    lines.add(s.serialNo!);
+    lines.add("Ref No.");
+    lines.add(s.refNo!);
+    lines.add(_separator());
+    lines.add("Date: ${directOrderResponse.date} Time: ${directOrderResponse.postingTime!.split(".")[0]}");
+    lines.add("Order No : ${directOrderResponse.salesOrderId!.toString()}");
+    lines.add(_separator());
+    lines.add(context.read<AppProvider>().utilitiesModel!.data!.companyName!);
+    lines.add("Phone:");
+    lines.add(context.read<AppProvider>().utilitiesModel!.data!.mobileNo.toString());
+
     if (directOrderResponse.orderItems![0].digitalCardDetails!.indexOf(s) !=
         directOrderResponse.orderItems![0].digitalCardDetails!.length - 1) {
-      await bluetooth.printCustom(_separator(), 1, 1);
-      await bluetooth.printNewLine();
-      await bluetooth.printNewLine();
+      lines.add(_separator());
+      lines.add("\n\n");
     }
   }
-  await bluetooth.printNewLine();
-  await bluetooth.printNewLine();
+
+  // Send to printer
+  final result = await PrintBluetoothThermal.writeBytes(
+    Uint8List.fromList(textToBytes(lines.join('\n')))
+  );
+
+  if (!result) {
+    print("Failed to print");
+  }
 }
+
+// Future<void> printOnBluetoothPrinter(DirectOrderResponse directOrderResponse,
+//     UtilitiesModel? utilitiesModel, BuildContext context) async {
+//   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
+
+//   for (StockDetails s
+//       in directOrderResponse.orderItems![0].digitalCardDetails!) {
+//     if (await context.read<AppProvider>().getEnableMerchantNamePrint()) {
+//       await bluetooth.printCustom(
+//           context.read<AppProvider>().utilitiesModel!.data!.company!, 1, 1);
+//       await bluetooth.printCustom(_separator(), 1, 1);
+//     }
+//     await bluetooth.printCustom(
+//         directOrderResponse.orderItems![0].websiteItemCode!, 3, 1);
+//     await bluetooth.printNewLine();
+//     await bluetooth.printCustom("Pin Code:", 1, 1);
+//     await bluetooth.printCustom(_addDashes(s.secretCode!), 3, 1);
+//     await bluetooth.printNewLine();
+//     await bluetooth.printCustom("Serial No.", 1, 1);
+//     await bluetooth.printCustom(s.serialNo!, 1, 1);
+//     await bluetooth.printCustom("Ref No.", 1, 1);
+//     await bluetooth.printCustom(s.refNo!, 1, 1);
+//     await bluetooth.printCustom(_separator(), 1, 1);
+//     await bluetooth.printCustom(
+//         "Date: ${directOrderResponse.date} Time:${directOrderResponse.postingTime!.split(".")[0]}",
+//         1,
+//         1);
+//     await bluetooth.printCustom(
+//         "Order No : ${directOrderResponse.salesOrderId!.toString()}", 1, 1);
+//     await bluetooth.printCustom(_separator(), 1, 1);
+//     await bluetooth.printCustom(
+//         context.read<AppProvider>().utilitiesModel!.data!.companyName!, 1, 1);
+//     await bluetooth.printCustom("Phone:", 1, 1);
+//     await bluetooth.printCustom(
+//         context.read<AppProvider>().utilitiesModel!.data!.mobileNo.toString(),
+//         1,
+//         1);
+//     if (directOrderResponse.orderItems![0].digitalCardDetails!.indexOf(s) !=
+//         directOrderResponse.orderItems![0].digitalCardDetails!.length - 1) {
+//       await bluetooth.printCustom(_separator(), 1, 1);
+//       await bluetooth.printNewLine();
+//       await bluetooth.printNewLine();
+//     }
+//   }
+//   await bluetooth.printNewLine();
+//   await bluetooth.printNewLine();
+// }
+
+
+
 
 Future<void> printOnTelpo(DirectOrderResponse directOrderResponse,
     UtilitiesModel? utilitiesModel, BuildContext context) async {

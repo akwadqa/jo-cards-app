@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jocards/provider/app_provider.dart';
+import 'package:jocards/utill/strings.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../generated/assets.dart';
@@ -25,12 +27,34 @@ class PrintScreen extends StatefulWidget {
 }
 
 class _PrintScreenState extends State<PrintScreen> {
-  List<BluetoothDevice> _devices = [];
-  BluetoothDevice? _device;
+  // List<BluetoothDevice> _devices = [];
+  // BluetoothDevice? _device;
+  List<BluetoothInfo> _devices = [];
+  BluetoothInfo? _device;
+
   bool _connected = false;
   bool autoPrint = false;
   bool printMerchantName = false;
   final ScreenshotController screenshotController = ScreenshotController();
+  PrintBluetoothThermal bluetooth = PrintBluetoothThermal();
+  Future<void> _connect() async {
+    if (_device == null) {
+      _showMessage('No device selected.');
+      return;
+    }
+
+    bool connected = await PrintBluetoothThermal.connect(
+      macPrinterAddress: _device!.macAdress,
+    );
+    setState(() {
+      _connected = connected;
+    });
+  }
+
+  Future<void> _disconnect() async {
+    await PrintBluetoothThermal.disconnect;
+    setState(() => _connected = false);
+  }
 
   @override
   void initState() {
@@ -48,44 +72,52 @@ class _PrintScreenState extends State<PrintScreen> {
   }
 
   Future<void> _initPlatformState() async {
-    try {
-      _devices = await bluetooth.getBondedDevices();
-    } on PlatformException {
-      // Handle Error
-    }
+    final bool isConnected = await PrintBluetoothThermal.connectionStatus;
+    setState(() => _connected = isConnected);
 
-    bluetooth.onStateChanged().listen((state) {
-      setState(() {
-        _connected = state == BlueThermalPrinter.CONNECTED;
-      });
-    });
-
-    if (!mounted) return;
+    final devices = await PrintBluetoothThermal.pairedBluetooths;
     setState(() {
-      _devices = _devices;
+      _devices = devices;
     });
-
-    final isConnected = await bluetooth.isConnected;
-    if (isConnected != null && isConnected) {
-      setState(() {
-        _connected = true;
-      });
-    }
   }
+
+  // Future<void> _initPlatformState() async {
+  //   try {
+  //     _devices = await bluetooth.getBondedDevices();
+  //   } on PlatformException {
+  //     // Handle Error
+  //   }
+
+  //   bluetooth.onStateChanged().listen((state) {
+  //     setState(() {
+  //       _connected = state == BlueThermalPrinter.CONNECTED;
+  //     });
+  //   });
+
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _devices = _devices;
+  //   });
+
+  //   final isConnected = await bluetooth.isConnected;
+  //   if (isConnected != null && isConnected) {
+  //     setState(() {
+  //       _connected = true;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildContent(),
-    );
+    return Scaffold(appBar: _buildAppBar(), body: _buildContent());
   }
 
   Widget _buildContent() {
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: widgetSize.getWidth(16, context),
-          vertical: widgetSize.getHeight(10, context)),
+        horizontal: widgetSize.getWidth(16, context),
+        vertical: widgetSize.getHeight(10, context),
+      ),
       child: Stack(
         children: [
           ListView(
@@ -100,12 +132,13 @@ class _PrintScreenState extends State<PrintScreen> {
                   !androidInfo.model.contains("TPS")) ...[
                 _buildPrintTestButtons(),
                 SizedBox(height: widgetSize.getHeight(100, context)),
-              ]
+              ],
             ],
           ),
           Align(
-              alignment: AlignmentDirectional.bottomCenter,
-              child: _buildSaveButton()),
+            alignment: AlignmentDirectional.bottomCenter,
+            child: _buildSaveButton(),
+          ),
         ],
       ),
     );
@@ -120,9 +153,10 @@ class _PrintScreenState extends State<PrintScreen> {
           flex: 2,
           child: Container(
             decoration: BoxDecoration(
-                color: ColorResources.summerSky,
-                borderRadius: BorderRadius.circular(10)),
-            child: DropdownButton<BluetoothDevice>(
+              color: ColorResources.summerSky,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: DropdownButton<BluetoothInfo>(
               iconEnabledColor: Colors.white,
               dropdownColor: ColorResources.summerSky,
               isExpanded: true,
@@ -158,7 +192,8 @@ class _PrintScreenState extends State<PrintScreen> {
             onChanged: (value) async {
               final appProvider = context.read<AppProvider>();
               await appProvider.enableDisablePrintAfterDirectOrder(
-                  !appProvider.getEnablePrintAuto());
+                !appProvider.getEnablePrintAuto(),
+              );
               setState(() {
                 autoPrint = !autoPrint;
               });
@@ -218,10 +253,13 @@ class _PrintScreenState extends State<PrintScreen> {
             const SizedBox(width: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: _connected ? Colors.red : Colors.green),
+                backgroundColor: _connected ? Colors.red : Colors.green,
+              ),
               onPressed: _connected ? _disconnect : _connect,
-              child: Text(_connected ? 'غير متصل' : 'متصل',
-                  style: const TextStyle(color: Colors.white)),
+              child: Text(
+                _connected ? 'غير متصل' : 'متصل',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -230,16 +268,15 @@ class _PrintScreenState extends State<PrintScreen> {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
             onPressed: _testPrint,
-            child: const Text('اختبار الطباعة',
-                style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'اختبار الطباعة',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
         Screenshot(
           controller: screenshotController,
-          child: Container(
-            color: Colors.white,
-            height: 300,
-          ),
+          child: Container(color: Colors.white, height: 300),
         ),
       ],
     );
@@ -277,54 +314,84 @@ class _PrintScreenState extends State<PrintScreen> {
     );
   }
 
-  List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
+  List<DropdownMenuItem<BluetoothInfo>> _getDeviceItems() {
     if (_devices.isEmpty) {
       return [
         const DropdownMenuItem(
+          value: null,
           child: Center(
-              child:
-                  Text('اختر الطابعة', style: TextStyle(color: Colors.white))),
-        )
+            child: Text('اختر الطابعة', style: TextStyle(color: Colors.white)),
+          ),
+        ),
       ];
     }
+
     return _devices.map((device) {
       return DropdownMenuItem(
         value: device,
         child: Center(
-          child:
-              Text(device.name!, style: const TextStyle(color: Colors.white)),
+          child: Text(device.name, style: const TextStyle(color: Colors.white)),
         ),
       );
     }).toList();
   }
 
+  // List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
+  //   if (_devices.isEmpty) {
+  //     return [
+  //       const DropdownMenuItem(
+  //         child: Center(
+  //             child:
+  //                 Text('اختر الطابعة', style: TextStyle(color: Colors.white))),
+  //       )
+  //     ];
+  //   }
+  //   return _devices.map((device) {
+  //     return DropdownMenuItem(
+  //       value: device,
+  //       child: Center(
+  //         child:
+  //             Text(device.name!, style: const TextStyle(color: Colors.white)),
+  //       ),
+  //     );
+  //   }).toList();
+  // }
   Future<void> _testPrint() async {
-    final imageBytes = await screenshotController.capture(
-            pixelRatio: 1.5, delay: const Duration(seconds: 1)) ??
-        Uint8List(0);
-    bluetooth.printImageBytes(imageBytes);
-    bluetooth.paperCut();
+    final testText = "اختبار الطباعة\n\n";
+    // Uint8List.fromList(textToBytes(testText));
+    // final bytes = PrintBluetoothThermal.textToBytes(testText);
+    final bytes = Uint8List.fromList(textToBytes(testText));
+    ;
+    await PrintBluetoothThermal.writeBytes(bytes);
   }
 
-  void _connect() {
-    if (_device == null) {
-      _showMessage('No device selected.');
-    } else {
-      bluetooth.isConnected.then((isConnected) {
-        if (isConnected == false) {
-          bluetooth.connect(_device!).catchError((_) {
-            setState(() => _connected = false);
-          });
-          setState(() => _connected = true);
-        }
-      });
-    }
-  }
+  // Future<void> _testPrint() async {
+  //   final imageBytes = await screenshotController.capture(
+  //           pixelRatio: 1.5, delay: const Duration(seconds: 1)) ??
+  //       Uint8List(0);
+  //   bluetooth.printImageBytes(imageBytes);
+  //   bluetooth.paperCut();
+  // }
 
-  void _disconnect() {
-    bluetooth.disconnect();
-    setState(() => _connected = false);
-  }
+  // void _connect() {
+  //   if (_device == null) {
+  //     _showMessage('No device selected.');
+  //   } else {
+  //     bluetooth.isConnected.then((isConnected) {
+  //       if (isConnected == false) {
+  //         bluetooth.connect(_device!).catchError((_) {
+  //           setState(() => _connected = false);
+  //         });
+  //         setState(() => _connected = true);
+  //       }
+  //     });
+  //   }
+  // }
+
+  // void _disconnect() {
+  //   bluetooth.disconnect();
+  //   setState(() => _connected = false);
+  // }
 
   Future<void> _saveSettings() async {
     final appProvider = context.read<AppProvider>();
@@ -333,14 +400,17 @@ class _PrintScreenState extends State<PrintScreen> {
 
     if (_device == null) {
       Fluttertoast.showToast(
-          backgroundColor: ColorResources.nightRider,
-          textColor: Colors.white,
-          msg: "الرجاء اختيار جهاز من القائمة",
-          timeInSecForIosWeb: 4,
-          toastLength: Toast.LENGTH_LONG);
+        backgroundColor: ColorResources.nightRider,
+        textColor: Colors.white,
+        msg: "الرجاء اختيار جهاز من القائمة",
+        timeInSecForIosWeb: 4,
+        toastLength: Toast.LENGTH_LONG,
+      );
     } else {
       if (!androidInfo.model.contains("TPS")) {
-        await appProvider.saveBluetoothDevice(jsonEncode(_device!.toMap()));
+        await appProvider.saveBluetoothDevice(
+          jsonEncode({"name": _device!.name, "macAdress": _device!.macAdress}),
+        );
         _disconnect();
         _connect();
       }
@@ -348,15 +418,14 @@ class _PrintScreenState extends State<PrintScreen> {
     }
   }
 
-  Future<void> _showMessage(String message,
-      {Duration duration = const Duration(seconds: 3)}) async {
+  Future<void> _showMessage(
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+  }) async {
     await Future.delayed(const Duration(milliseconds: 100));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
+        content: Text(message, style: const TextStyle(color: Colors.white)),
         duration: duration,
       ),
     );

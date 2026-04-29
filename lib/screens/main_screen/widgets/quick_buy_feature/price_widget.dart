@@ -93,11 +93,11 @@ class _PriceWidgetState extends State<PriceWidget> {
         ),
         SizedBox(height: widgetSize.getHeight(16, context)),
         DottedBorder(
-          borderType: BorderType.RRect,
-          radius: const Radius.circular(10),
-          color: ColorResources.gray89,
-          padding: EdgeInsets.zero,
-          dashPattern: const [10, 10],
+          // borderType: BorderType.RRect,
+          // radius: const Radius.circular(10),
+          // color: ColorResources.gray89,
+          // padding: EdgeInsets.zero,
+          // dashPattern: const [10, 10],
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: Container(

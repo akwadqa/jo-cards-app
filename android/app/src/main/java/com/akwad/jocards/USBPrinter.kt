@@ -1,4 +1,4 @@
-package com.efikas.flutter_telpo
+package com.akwad.jocards
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -60,7 +60,7 @@ class USBPrinter {
     private var documentDetails: MutableList<Map<String, Any>> = ArrayList();
     private var MAX_LEFT_DISTANCE = 255
     private lateinit var printResult: Result;
-    private lateinit var appPluginBinding: FlutterPlugin.FlutterPluginBinding;
+    public lateinit var appPluginBinding: FlutterPlugin.FlutterPluginBinding;
 
 
     constructor(_mainActivity: Activity) {

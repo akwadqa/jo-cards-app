@@ -126,7 +126,7 @@ class _SplashScreen extends State<SplashScreen> {
     if (Platform.isAndroid) {
       if (context.read<AppProvider>().getBluetoothDevice() != null &&
           !androidInfo.model.contains("TPS")) {
-        connect(context.read<AppProvider>().getBluetoothDevice());
+        connect(context.read<AppProvider>().getBluetoothDevice()!);
       }
     }
     AppVersionModel? appVersionModel = context.read<AppProvider>().appVersionModel;

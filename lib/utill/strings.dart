@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 class Strings {
   static const String IS_USER_SIGNED_IN = 'is_signed_in';
   static const String IS_USER_AGREE_NOTI = 'is_agree_noti';
@@ -28,4 +31,7 @@ class Strings {
     'الأسبوع السابق',
     'الشهر السابق'
   ];
+}
+Uint8List textToBytes(String text) {
+  return Uint8List.fromList(utf8.encode(text));
 }

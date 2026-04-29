@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
+// import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +24,7 @@ late SharedPreferences sharedPreferences;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 late PackageInfo packageInfo;
-late BlueThermalPrinter bluetooth;
+// late BlueThermalPrinter bluetooth;
 late DeviceInfoPlugin deviceInfo;
 late AndroidDeviceInfo androidInfo;
 late IosDeviceInfo iosInfo;
@@ -39,7 +39,7 @@ void main() async {
   if (Platform.isAndroid) {
     androidInfo = await deviceInfo.androidInfo;
     if (!androidInfo.model.contains("TPS")) {
-      bluetooth = BlueThermalPrinter.instance;
+      // bluetooth = BlueThermalPrinter.instance;
     }
   } else {
     iosInfo = await deviceInfo.iosInfo;

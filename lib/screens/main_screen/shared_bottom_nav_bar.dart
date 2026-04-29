@@ -44,7 +44,7 @@ class _SharedBottomNavigationBarState extends State<SharedBottomNavigationBar> {
     return BottomAppBar(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(0.0),
           child: SizedBox(
             height: widgetSize.getHeight(70.0, context),
             child: Row(
@@ -68,7 +68,7 @@ class _SharedBottomNavigationBarState extends State<SharedBottomNavigationBar> {
                             'الرئيسية',
                             style: TextStyle(
                               fontFamily: 'DIN Next LT W23',
-                              fontSize: widgetSize.getHeight(13, context),
+                              fontSize: widgetSize.getHeight(12, context),
                               color: context.read<SharedNavBarProvider>().bottomIndex != 0
                                   ? ColorResources.dimGray
                                   : ColorResources.studio,
