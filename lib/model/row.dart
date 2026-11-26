@@ -1,23 +1,24 @@
 class PrintRow {
-  String ?text;
-  int  ?fontSize;
-  int ? position;
+  final String text;
+  final int fontSize;
+  final int position;
+  final bool bold;
 
-  PrintRow({this.text, this.fontSize, this.position});
-
-  PrintRow.fromJson(Map<String, dynamic> json) {
-    text = json['text'];
-    fontSize = json['fontSize'];
-    position = json['position'];
-  }
+  PrintRow({
+    required this.text,
+    required this.fontSize,
+    required this.position,
+    this.bold = false,
+  });
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = "text";
-    data['text'] = text;
-    data['fontSize'] = fontSize;
-    data['position'] = position;
-    return data;
+    return {
+      "type": "text",
+      "text": text,
+      "fontSize": fontSize,
+      "position": position,
+      "bold": bold,
+    };
   }
 }
 

@@ -1,4 +1,4 @@
-package com.akwad.jocards
+package webview.com.jocards
 
 
 import android.app.Activity;
@@ -33,7 +33,7 @@ import com.telpo.tps550.api.util.StringUtil;
 import com.telpo.tps550.api.util.SystemUtil;
 import android.widget.Toast;
 import android.util.Log;
-import com.akwad.jocards.USBPrinter
+import webview.com.jocards.USBPrinter
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

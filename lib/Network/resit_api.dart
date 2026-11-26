@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -95,20 +96,57 @@ abstract class restApi {
       return handler.next(error);
     }));
 
+// Add this after your existing InterceptorsWrapper inside factory restApi()
     if (kDebugMode) {
-      dio.interceptors.add(LogInterceptor(
-          responseBody: true,
-          requestBody: true,
-          logPrint: (logData) {
-            log(logData.toString());
-          }));
+      dio.interceptors.add(InterceptorsWrapper(
+        onRequest: (options, handler) {
+          log('--> ${options.method} ${options.uri}');
+          if (options.data != null) {
+            log('Request Body: ${options.data}');
+          }
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          log('<-- ${response.statusCode} ${response.requestOptions.uri}');
+          
+          // Pretty print JSON response bodies
+          if (response.data != null) {
+            try {
+              final rawData = response.data;
+              final encoder = const JsonEncoder.withIndent('  ');
+              
+              if (rawData is Map || rawData is List) {
+                log('Response JSON:\n${encoder.convert(rawData)}');
+              } else {
+                log('Response Body: $rawData');
+              }
+            } catch (e) {
+              log('Failed to parse response payload: $e');
+            }
+          }
+          return handler.next(response);
+        },
+        onError: (DioException error, handler) {
+          log('[ERROR] <-- ${error.response?.statusCode} ${error.requestOptions.uri}');
+          log('Error Message: ${error.message}');
+          if (error.response?.data != null) {
+            try {
+              final encoder = const JsonEncoder.withIndent('  ');
+              log('Error Data:\n${encoder.convert(error.response?.data)}');
+            } catch (_) {
+              log('Error Data: ${error.response?.data}');
+            }
+          }
+          return handler.next(error);
+        },
+      ));
     }
 
     return _restApi(dio, baseUrl: baseUrl);
   }
 
   @GET('method/jocards.smart_api.get_home_block')
-  Future<HomeModel> getHome(@Query('platform') String platform);
+  Future<HomeModel> getHome();
 
   @GET('method/jocards.smart_api.get_territories')
   Future<TerritoriesModel> getTerritories();
@@ -199,7 +237,7 @@ abstract class restApi {
       @Field("old_password") String oldPassword,
       @Field("new_password") String newPassword);
 
-  @POST("fcm_frappe.api.device_token")
+  @POST("method/fcm_frappe.api.device_token")
   Future<UpdateTokenModel> updateToken(
       @Field("device_token") String token,
       @Field("user_id") String userId,

@@ -29,46 +29,113 @@ late DeviceInfoPlugin deviceInfo;
 late AndroidDeviceInfo androidInfo;
 late IosDeviceInfo iosInfo;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  sharedPreferences = await SharedPreferences.getInstance();
-  HttpOverrides.global = MyHttpOverrides();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  deviceInfo = DeviceInfoPlugin();
-  if (Platform.isAndroid) {
-    androidInfo = await deviceInfo.androidInfo;
-    if (!androidInfo.model.contains("TPS")) {
-      // bluetooth = BlueThermalPrinter.instance;
-    }
-  } else {
-    iosInfo = await deviceInfo.iosInfo;
-  }
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  await Firebase.initializeApp();
-  if (kDebugMode) {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  }
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  packageInfo = await PackageInfo.fromPlatform();
-  runZonedGuarded(() {
-    runApp(MultiProvider(providers: [
-      ChangeNotifierProvider(
-        create: (_) => AppProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => HomeProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => SharedNavBarProvider(),
-      ),
-    ], child: const MyApp()));
-  }, (error, stackTrace) {
-    logError(error, stackTrace);
-  });
-}
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   sharedPreferences = await SharedPreferences.getInstance();
+//   HttpOverrides.global = MyHttpOverrides();
+//   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+//       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+//   deviceInfo = DeviceInfoPlugin();
+//   if (Platform.isAndroid) {
+//     androidInfo = await deviceInfo.androidInfo;
+//     if (!androidInfo.model.contains("TPS")) {
+//       // bluetooth = BlueThermalPrinter.instance;
+//     }
+//   } else {
+//     iosInfo = await deviceInfo.iosInfo;
+//   }
+//   SystemChrome.setPreferredOrientations(
+//       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+//   await Firebase.initializeApp();
+//   if (kDebugMode) {
+//     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+//   }
+//   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+//   // packageInfo = await PackageInfo.fromPlatform();
+//   runZonedGuarded(() {
+//     runApp(MultiProvider(providers: [
+//       ChangeNotifierProvider(
+//         create: (_) => AppProvider(),
+//       ),
+//       ChangeNotifierProvider(
+//         create: (_) => HomeProvider(),
+//       ),
+//       ChangeNotifierProvider(
+//         create: (_) => SharedNavBarProvider(),
+//       ),
+//     ], child: const MyApp()));
+//   }, (error, stackTrace) {
+//     logError(error, stackTrace);
+//   });
+// }
+void main() {
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
+      sharedPreferences = await SharedPreferences.getInstance();
+
+      HttpOverrides.global = MyHttpOverrides();
+
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom,
+          SystemUiOverlay.top,
+        ],
+      );
+
+      deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        androidInfo = await deviceInfo.androidInfo;
+      } else {
+        iosInfo = await deviceInfo.iosInfo;
+      }
+
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+
+      await Firebase.initializeApp();
+
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(false);
+      }
+
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterError;
+
+      runApp(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => AppProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => HomeProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => SharedNavBarProvider(),
+            ),
+          ],
+          child: const MyApp(),
+        ),
+      );
+    },
+    (error, stackTrace) {
+      logError(error, stackTrace);
+
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        fatal: true,
+      );
+    },
+  );
+}
 void logError(Object error, StackTrace stackTrace) {
   // Send errors to your logging service
   print('Error: $error');

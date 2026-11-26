@@ -1,4 +1,4 @@
-package com.akwad.jocards
+package webview.com.jocards
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -121,105 +121,251 @@ class USBPrinter {
     }
 
     fun contentDocument() {
-        mainActivity?.runOnUiThread(Runnable {
-            try {
-                mUsbThermalPrinter?.start(0)
-                mUsbThermalPrinter?.reset()
+    mainActivity?.runOnUiThread {
+        try {
+            // Start printer
+            mUsbThermalPrinter?.start(0)
+            mUsbThermalPrinter?.reset()
 
-                mUsbThermalPrinter?.setAlgin(textAlignment)
-                mUsbThermalPrinter?.setLeftIndent(leftDistance)
-                mUsbThermalPrinter?.setLineSpace(lineDistance)
-                mUsbThermalPrinter?.setGray(printGray)
+            mUsbThermalPrinter?.setAlgin(textAlignment)
+            mUsbThermalPrinter?.setLeftIndent(leftDistance)
+            mUsbThermalPrinter?.setLineSpace(lineDistance)
+            mUsbThermalPrinter?.setGray(printGray)
 
-                for (row in documentDetails) {
+            // Print every row
+            for (row in documentDetails) {
 
-                    if(row["type"].toString() == "walkPaper"){
-                        mUsbThermalPrinter?.walkPaper(row["step"].toString().toIntOrNull() ?: 2)
+                // =========================
+                // WALK PAPER
+                // =========================
+                if (row["type"].toString() == "walkPaper") {
+                    val step =
+                        row["step"].toString().toIntOrNull() ?: 2
+
+                    mUsbThermalPrinter?.walkPaper(step)
+                }
+
+                // =========================
+                // QR CODE
+                // =========================
+                if (row["type"].toString() == "qrcode") {
+
+                    val bitmap = CreateCode(
+                        row["text"].toString(),
+                        BarcodeFormat.QR_CODE,
+                        row["width"]
+                            .toString()
+                            .toIntOrNull() ?: 256,
+                        row["height"]
+                            .toString()
+                            .toIntOrNull() ?: 256
+                    )
+
+                    mUsbThermalPrinter?.setAlgin(
+                        setAlignment(1)
+                    )
+
+                    mUsbThermalPrinter?.printLogo(
+                        bitmap,
+                        true
+                    )
+                }
+
+                // =========================
+                // IMAGE
+                // =========================
+                if (row["type"].toString() == "image") {
+
+                    val filePath =
+                        appPluginBinding
+                            .getFlutterAssets()
+                            .getAssetFilePathBySubpath(
+                                row["pathUrl"].toString()
+                            )
+
+                    val file = File(filePath)
+
+                    if (file.exists()) {
+                        mUsbThermalPrinter?.printLogo(
+                            BitmapFactory.decodeFile(
+                                file.absolutePath
+                            ),
+                            false
+                        )
+
+                        mUsbThermalPrinter?.walkPaper(10)
                     }
+                }
 
-                    if(row["type"].toString() == "qrcode"){
-                        val bitmap: Bitmap = CreateCode(row["text"].toString(), BarcodeFormat.QR_CODE, row["width"].toString().toIntOrNull() ?: 256, row["height"].toString().toIntOrNull() ?: 256)
-                        if (bitmap != null) {
-                            mUsbThermalPrinter?.setAlgin(setAlignment(1))
-                            mUsbThermalPrinter?.printLogo(bitmap, true)
-                        }
-                    }
+                // =========================
+                // TEXT
+                // =========================
+                if (row["type"].toString() == "text") {
 
-                    if(row["type"].toString() == "image"){
-                        val assetManager: AssetManager = appPluginBinding.applicationContext.getAssets()
-//                        val key: String = registrar.lookupKeyForAsset("icons/heart.png")
-                        val filePath: String = appPluginBinding.getFlutterAssets().getAssetFilePathBySubpath(row["pathUrl"].toString())
-                        System.out.println(filePath);
-//                        if (filePath != null) {
-//                            mUsbThermalPrinter?.setAlgin(setAlignment(1))
-//                            mUsbThermalPrinter?.printLogo(BitmapFactory.decodeFile(filePath), true)
-//                        }
-
-                        val file = File(filePath)
-                        System.out.println(file.exists());
-                        if (file.exists()) {
-                            mUsbThermalPrinter?.printLogo(BitmapFactory.decodeFile(file.getAbsolutePath()), false)
-                            mUsbThermalPrinter?.walkPaper(10)
-                        }
-                    }
+                     val text = row["text"]?.toString()
 
 
+                    if (text.isNullOrEmpty())  {
 
+                        mUsbThermalPrinter?.walkPaper(2)
 
-                    if(row["type"].toString() == "text"){
-                        if(row["text"].toString() == "null") {
-                            mUsbThermalPrinter?.walkPaper(2)
-                        }
-                        else {
-                            if (row["fontSize"].toString().toIntOrNull() == 6) {
-                                mUsbThermalPrinter?.setTextSize(64)
-                            } else if (row["fontSize"].toString().toIntOrNull() == 5) {
-                                mUsbThermalPrinter?.setTextSize(54)
-                            } else if (row["fontSize"].toString().toIntOrNull() == 4) {
-                                mUsbThermalPrinter?.setTextSize(44)
-                            } else if (row["fontSize"].toString().toIntOrNull() == 3) {
-                                mUsbThermalPrinter?.setTextSize(34)
-                            } else if (row["fontSize"].toString().toIntOrNull() == 2) {
-                                mUsbThermalPrinter?.setTextSize(28)
-                            } else {
-                                mUsbThermalPrinter?.setTextSize(18)
+                    } else {
+                        val size = row["fontSize"]
+                       ?.toString()
+                       ?.toIntOrNull() ?: 11
+
+                      // Font size
+                        when (
+                            row["fontSize"]
+                                ?.toString()
+                                ?.toIntOrNull()
+                        ) {
+                           
+                            3 -> {
+                                mUsbThermalPrinter?.setTextSize(40)
                             }
 
-                            mUsbThermalPrinter?.setAlgin(setAlignment(row["position"].toString().toIntOrNull() ?: 0))
-                            mUsbThermalPrinter?.addString(row["text"].toString())
-                            mUsbThermalPrinter?.printString()
+                            2 -> {
+                                mUsbThermalPrinter?.setTextSize(32)
+                            }
+
+                            else -> {
+                                mUsbThermalPrinter?.setTextSize(24)
+                            }
                         }
+                      val isBold = row["bold"] as? Boolean ?: false
+
+                        // Alignment
+                        mUsbThermalPrinter?.setAlgin(
+                            setAlignment(
+                                row["position"]
+                                    .toString()
+                                    .toIntOrNull() ?: 0
+                            )
+                        )
+                       mUsbThermalPrinter?.setBold(isBold)
+
+                        // Print text
+                        mUsbThermalPrinter?.addString(text)
+                        mUsbThermalPrinter?.printString()
+                        mUsbThermalPrinter?.setBold(false)
                     }
                 }
-            } catch (e: Exception) {
-//                e.printStackTrace()
-                Result = e.toString()
-                if (Result == "com.telpo.tps550.api.printer.NoPaperException") {
-                    nopaper = true
-                    printResult?.error("noPaper", "No paper available", null);
-                    Toast.makeText(mainActivity, "NO PAPER AVAILABLE", Toast.LENGTH_LONG).show()
-
-                } else if (Result == "com.telpo.tps550.api.printer.OverHeatException") {
-                    printResult?.error("overHeating", "Device over heating", null);
-                    MyHandler().sendMessage(MyHandler().obtainMessage(OVERHEAT, 1, 0, null))
-                } else {
-                    printResult?.error("printerError", "Printer Error", null);
-                    MyHandler().sendMessage(MyHandler().obtainMessage(PRINTERR, 1, 0, null))
-                }
-            } finally {
-                MyHandler().sendMessage(MyHandler().obtainMessage(CANCELPROMPT, 1, 0, null))
-                if (nopaper) {
-                   // printResult?.error("noPaper", "No paper available", null);
-                    MyHandler().sendMessage(MyHandler().obtainMessage(NOPAPER, 1, 0, null))
-                    Toast.makeText(mainActivity, "NO PAPER AVAILABLE 3", Toast.LENGTH_LONG).show()
-                    nopaper = false
-                } else {
-                    mUsbThermalPrinter?.stop()
-                }
-
             }
-        });
+
+            // =====================================================
+            // IMPORTANT
+            // =====================================================
+            // Give the Telpo printer time to physically flush
+            // the final text and paper-walk commands.
+            //
+            // Without this, the last lines such as:
+            //
+            // admin jocards
+            // Phone:
+            // 0770151616
+            //
+            // can remain in the printer buffer and appear
+            // at the beginning of the NEXT print.
+            // =====================================================
+
+            Thread.sleep(500)
+
+            // Stop printer only AFTER the buffer has been flushed
+            mUsbThermalPrinter?.stop()
+
+            Log.d(
+                "USBPrinter",
+                "TELPO PRINT COMPLETED"
+            )
+
+            // Complete Flutter MethodChannel call
+            printResult.success("Print completed")
+
+        } catch (e: Exception) {
+
+            Log.e(
+                "USBPrinter",
+                "========== TELPO PRINT ERROR ==========",
+                e
+            )
+
+            Log.e(
+                "USBPrinter",
+                "Exception class: ${e::class.java.name}"
+            )
+
+            Log.e(
+                "USBPrinter",
+                "Exception message: ${e.message}"
+            )
+
+            mainActivity?.runOnUiThread {
+                Toast.makeText(
+                    mainActivity,
+                    "TELPO ERROR: ${e::class.java.simpleName}: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            when (e) {
+
+                is com.telpo.tps550.api.printer.NoPaperException -> {
+
+                    nopaper = true
+
+                    printResult.error(
+                        "noPaper",
+                        "No paper available",
+                        e.message
+                    )
+                }
+
+                is com.telpo.tps550.api.printer.OverHeatException -> {
+
+                    printResult.error(
+                        "overHeating",
+                        "Device over heating",
+                        e.message
+                    )
+                }
+
+                else -> {
+
+                    printResult.error(
+                        "printerError",
+                        e.message ?: "Printer Error",
+                        Log.getStackTraceString(e)
+                    )
+                }
+            }
+
+        } finally {
+
+            if (nopaper) {
+
+                MyHandler().sendMessage(
+                    MyHandler().obtainMessage(
+                        NOPAPER,
+                        1,
+                        0,
+                        null
+                    )
+                )
+
+                mainActivity?.runOnUiThread {
+                    Toast.makeText(
+                        mainActivity,
+                        "NO PAPER AVAILABLE",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                nopaper = false
+            }
+        }
     }
+}
 
 
     /**

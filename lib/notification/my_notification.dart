@@ -72,6 +72,7 @@ class MyNotification {
 
   static Future<void> getTokenFromFirebase(BuildContext context) async {
     FirebaseMessaging.instance.getToken().then((value) async {
+      debugPrint("FCM TOKEN ==> $value");
       await Provider.of<AppProvider>(context, listen: false)
           .setFirebaseToken(value!);
     });
@@ -79,6 +80,8 @@ class MyNotification {
 
   static Future<void> getRefreshTokenFromFirebase(BuildContext context) async {
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      debugPrint("FCM TOKEN ==> $newToken");
+
       Provider.of<AppProvider>(context, listen: false)
           .setFirebaseToken(newToken);
       if (await Provider.of<AppProvider>(context, listen: false)

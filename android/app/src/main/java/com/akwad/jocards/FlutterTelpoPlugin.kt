@@ -1,4 +1,4 @@
-package com.akwad.jocards
+package webview.com.jocards
 
 
 

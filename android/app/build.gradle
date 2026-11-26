@@ -34,18 +34,18 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    namespace 'com.akwad.jocards' 
+    namespace ='webview.com.jocards' 
     lintOptions {
-        checkReleaseBuilds false
+        checkReleaseBuilds= false
     }
 
-    compileSdkVersion 36
+    compileSdkVersion= 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-        coreLibraryDesugaringEnabled true 
+        sourceCompatibility =JavaVersion.VERSION_11
+        targetCompatibility= JavaVersion.VERSION_11
+        coreLibraryDesugaringEnabled =true 
     }
 
     kotlinOptions {
@@ -59,11 +59,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.akwad.jocards"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 18
-        versionName flutterVersionName
+        applicationId ="webview.com.jocards"
+        minSdkVersion = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     signingConfigs {

@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "542509499023",
     "project_id": "jocards-com",
-    "storage_bucket": "jocards-com.appspot.com"
+    "storage_bucket": "jocards-com.firebasestorage.app"
   },
   "client": [
     {
@@ -20,10 +20,6 @@
             "package_name": "com.akwad.jocards",
             "certificate_hash": "ba75e41e8334ab67ea0a78d709e144acbeabee78"
           }
-        },
-        {
-          "client_id": "542509499023-6o0hd5jdp62o6clk50giujiogs7rdcgt.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -33,19 +29,26 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "542509499023-6o0hd5jdp62o6clk50giujiogs7rdcgt.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "542509499023-fd9lti36kntlar5and7bokbfdopijukc.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.akwad.jocards"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542509499023:android:b37a7bb881f2a0ea04e6fa",
+        "android_client_info": {
+          "package_name": "webview.com.jocards"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mfVW9ESAEFWjqlkpRNPm6g5bALzn_Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }

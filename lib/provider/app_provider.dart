@@ -75,9 +75,15 @@ class AppProvider with ChangeNotifier {
     await sharedPreferences.setString(Strings.FIREBASE_TOKEN, firebaseToken);
   }
 
-  saveBluetoothDevice(String bluetoothDevice) async {
-    await sharedPreferences.setString(Strings.BluetoothDevice, bluetoothDevice);
-  }
+ Future<void> saveBluetoothDevice(BluetoothInfo device) async {
+  await sharedPreferences.setString(
+    Strings.BluetoothDevice,
+    jsonEncode({
+      'name': device.name,
+      'macAdress': device.macAdress,
+    }),
+  );
+}
 
   // BluetoothDevice? getBluetoothDevice() {
   //   String? bluetoothDevice =
@@ -94,12 +100,18 @@ class AppProvider with ChangeNotifier {
   // }
 
 BluetoothInfo? getBluetoothDevice() {
-  String? macAddress = sharedPreferences.getString(Strings.BluetoothDevice);
-  if (macAddress != null) {
-    return BluetoothInfo(name: "", macAdress: macAddress);
-  } else {
+  final data = sharedPreferences.getString(Strings.BluetoothDevice);
+
+  if (data == null || data.isEmpty) {
     return null;
   }
+
+  final Map<String, dynamic> jsonData = jsonDecode(data);
+
+  return BluetoothInfo(
+    name: jsonData['name']?.toString() ?? '',
+    macAdress: jsonData['macAdress']?.toString() ?? '',
+  );
 }
 // BluetoothInfo? getBluetoothDevice() {
 //   String? data = sharedPreferences.getString(Strings.BluetoothDevice);

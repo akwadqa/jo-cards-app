@@ -16,17 +16,29 @@ class FlutterTelpo {
     return await _platform.invokeMethod('isConnected');
   }
   
-  Future<dynamic> print(List<dynamic> rows) async{
-    List<Map<String, dynamic>> printableRows = [];
+  Future<dynamic> print(
+  List<dynamic> rows, {
+  bool q8Mode = false,
+}) async {
+  final printableRows = <Map<String, dynamic>>[];
 
-    for (var row in rows) {
-      if(row.runtimeType == PrintRow || row.runtimeType == PrintQRCode || row.runtimeType == PrintImage || row.runtimeType == WalkPaper){
-        printableRows.add(row.toJson());
-      }
+  for (final row in rows) {
+    if (row is PrintRow ||
+        row is PrintQRCode ||
+        row is PrintImage ||
+        row is WalkPaper) {
+      printableRows.add(row.toJson());
     }
-
-   return await _platform.invokeMethod('printDocument', {"details": printableRows});
   }
+
+  return await _platform.invokeMethod(
+    'printDocument',
+    {
+      'details': printableRows,
+      'q8Mode': q8Mode,
+    },
+  );
+}
 
   Future<dynamic> printNewLine() async{
     return await _platform.invokeMethod('printNewLine');

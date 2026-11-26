@@ -1214,7 +1214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "  الإصدار ${packageInfo.version}",
+                            "  الإصدار ",
                             style: TextStyle(
                               fontSize: widgetSize.getHeight(14, context),
                               color: const Color(0xffc5c5c5),

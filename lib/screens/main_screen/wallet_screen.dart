@@ -2030,9 +2030,9 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    context.read<HomeProvider>().dwrLogPagingController!.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   context.read<HomeProvider>().dwrLogPagingController!.dispose();
+  //   super.dispose();
+  // }
 }
